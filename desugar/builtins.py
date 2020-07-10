@@ -5,7 +5,7 @@ import builtins
 NOTHING = builtins.object()  # C: NULL
 
 
-def getattr(obj: Any, attr: str, default: Any = NOTHING) -> Any:
+def getattr(obj: Any, attr: str, default: Any = NOTHING, /) -> Any:
     """Implement attribute access via  __getattribute__ and __getattr__."""
     # Python/bltinmodule.c:builtin_getattr
     if not isinstance(attr, str):
@@ -36,7 +36,7 @@ def getattr(obj: Any, attr: str, default: Any = NOTHING) -> Any:
 
 
 class object:
-    def __getattribute__(self: Any, attr: str) -> Any:
+    def __getattribute__(self: Any, attr: str, /) -> Any:
         """Attribute access."""
         # Objects/object.c:PyObject_GenericGetAttr
         self_type = type(self)
