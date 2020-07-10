@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+    
+    - name: Install flit
+      run: python -m pip install flit
+    
+    - name: Build sdist and wheel
+      run: flit build
+  
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+    
+    - name: Install flit
+      run: python -m pip install flit
+    
+    - name: Install test dependencies
+      run: flit install --extras test
+    
+    - name: Run tests
+      run: pytest tests
+    
+  format:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+    
+    - name: Install flit
+      run: python -m pip install flit
+    
+    - name: Install dev dependencies
+      run: flit install --extras dev
+    
+    - name: Run formatter
+      run: black --check .
