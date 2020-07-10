@@ -77,6 +77,10 @@ class TestGetattr:
         with pytest.raises(TypeError):
             getattr(GetattrExample(), 42)
 
+    def test_AttributeError(self, getattr):
+        with pytest.raises(AttributeError):
+            getattr(ObjectExample(), "not_real")
+
     def test_getattr_method(self, getattr):
         assert getattr(GetattrMissing(), "not_real") == 42
 
