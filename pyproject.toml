@@ -1,0 +1,14 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "desugar"
+author = "Brett Cannon"
+author-email = "brett@python.org"
+classifiers = ["License :: OSI Approved :: MIT License"]
+requires-python = ">=3.8"
+
+[tool.flit.metadata.requires-extra]
+test = ["pytest==5.4.3"]
+dev = ["black==19.10b0"]
