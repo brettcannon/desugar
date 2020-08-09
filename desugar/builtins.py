@@ -5,27 +5,36 @@ import builtins
 import typing
 
 if typing.TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Iterable
 
     class Object(typing.Protocol):
 
-        """Protocol for all objects."""
+        """Protocol for objects."""
 
         def __getattribute__(self, name: str) -> Any:
+            ...
+
+    class Type(typing.Protocol):
+
+        """Protocol for types."""
+
+        __name__: str
+        __dict__: dict[str, Any]
+
+        def mro() -> Iterable[Type]:
             ...
 
 
 NOTHING = builtins.object()  # C: NULL
 
 
-def _type_getattr(obj, attr):
-    """Get an attribute for an object from its type."""
-    obj_type_mro = type(obj).mro()
-    for base in obj_type_mro:
+def _mro_getattr(type_: Type, attr: str) -> Any:
+    """Get an attribute from a type based on its MRO."""
+    for base in type_.mro():
         if attr in base.__dict__:
             return base.__dict__[attr]
     else:
-        raise AttributeError(f"{obj.__name__!r} object has no attribute {attr!r}")
+        raise AttributeError(f"{type_.__name__!r} object has no attribute {attr!r}")
 
 
 def getattr(obj: Object, attr: str, default: Any = NOTHING, /) -> Any:
@@ -34,18 +43,18 @@ def getattr(obj: Object, attr: str, default: Any = NOTHING, /) -> Any:
     if not isinstance(attr, str):
         raise TypeError("getattr(): attribute name must be string")
 
-    obj_type_mro = type(obj).mro()
+    obj_type = type(obj)
     attr_exc = NOTHING
-    getattribute = _type_getattr(obj, "__getattribute__")
+    getattribute = _mro_getattr(obj_type, "__getattribute__")
     try:
-        return getattribute(obj, attr)
+        return getattribute(obj_type, attr)
     except AttributeError as exc:
         attr_exc = exc
     # Objects/typeobject.c:slot_tp_getattr_hook
     # It is cheating to do this here as CPython actually rebinds the tp_getattro
     # slot with a wrapper that handles __getattr__() when present.
     try:
-        getattr_ = _type_getattr(obj, "__getattr__")
+        getattr_ = _mro_getattr(obj_type, "__getattr__")
     except AttributeError:
         pass
     else:
