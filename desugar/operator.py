@@ -9,7 +9,7 @@ if typing.TYPE_CHECKING:
 
 
 def sub(lhs: Any, rhs: Any, /) -> Any:
-    """Subtraction: `lhs - rhs`."""
+    """Subtraction: `a - b`."""
     if issubclass(type(rhs), type(lhs)):
         call_first = rhs, "__rsub__", lhs
         call_second = lhs, "__sub__", rhs
