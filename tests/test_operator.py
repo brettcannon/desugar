@@ -64,6 +64,10 @@ class TestSub:
         """If the RHS is a subclass of LHS then call __rsub__ first."""
         assert sub(LHSSub(), LHSRHSSub()) == "__rsub__"
 
+    def test_both_subclasses(self, sub):
+        """When both the LHS and RHS are of the same type, call LHS.__sub__() first."""
+        assert sub(LHSRHSSub(), LHSRHSSub()) == "__sub__"
+
     def test_rhs_subclass_but_not_implemented(self, sub):
         """If the RHS is a subclass but returns NotImplemented, call lhs.__sub__()."""
         lhs = LHSSub()
