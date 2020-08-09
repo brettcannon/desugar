@@ -2,10 +2,23 @@
 from __future__ import annotations
 import builtins
 
+import typing
+
+if typing.TYPE_CHECKING:
+    from typing import Any
+
+    class Object(typing.Protocol):
+
+        """Protocol for all objects."""
+
+        def __getattribute__(self, name: str) -> Any:
+            ...
+
+
 NOTHING = builtins.object()  # C: NULL
 
 
-def getattr(obj: Any, attr: str, default: Any = NOTHING, /) -> Any:
+def getattr(obj: Object, attr: str, default: Any = NOTHING, /) -> Any:
     """Implement attribute access via  __getattribute__ and __getattr__."""
     # Python/bltinmodule.c:builtin_getattr
     if not isinstance(attr, str):
