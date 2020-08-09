@@ -67,7 +67,7 @@ def getattr(obj: Object, attr: str, default: Any = NOTHING, /) -> Any:
 
 
 class object:
-    def __getattribute__(self: Any, attr: str, /) -> Any:
+    def __getattribute__(self, attr: str, /) -> Any:
         """Attribute access."""
         # Objects/object.c:PyObject_GenericGetAttr
         self_type = type(self)
