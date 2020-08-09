@@ -9,7 +9,7 @@ if typing.TYPE_CHECKING:
 
 
 def sub(lhs: Any, rhs: Any, /) -> Any:
-    """Subtraction: `a - b`."""
+    """Implement the binary operation `a - b`."""
     rhs_type = type(rhs)
     lhs_type = type(lhs)
     if rhs_type is not lhs_type and issubclass(rhs_type, lhs_type):
