@@ -8,7 +8,7 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
 
-def sub(lhs: Any, rhs: Any) -> Any:
+def sub(lhs: Any, rhs: Any, /) -> Any:
     """Subtraction: `lhs - rhs`."""
     if issubclass(type(rhs), type(lhs)):
         call_first = rhs, "__rsub__", lhs
