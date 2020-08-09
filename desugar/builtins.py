@@ -42,10 +42,8 @@ def getattr(obj: Object, attr: str, default: Any = NOTHING, /) -> Any:
 
     if default is not NOTHING:
         return default
-    elif attr_exc is not NOTHING:
-        raise attr_exc
     else:
-        raise AttributeError(f"{self.__name__!r} object has no attribute {attr!r}")
+        raise attr_exc
 
 
 class object:
