@@ -25,6 +25,12 @@ if typing.TYPE_CHECKING:
             ...
 
 
+# TODO:
+#   - type()
+#   - isinstance()
+#   - issubclass()
+
+
 NOTHING = builtins.object()  # C: NULL
 
 
@@ -101,3 +107,5 @@ class object:
                 return type_attr
         else:
             raise AttributeError(f"{self.__name__!r} object has no attribute {attr!r}")
+
+    # TODO: def mro(self) -> Iterable[Type]: ...
