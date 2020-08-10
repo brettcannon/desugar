@@ -53,7 +53,7 @@ def getattr(obj: Object, attr: str, default: Any = NOTHING, /) -> Any:
     attr_exc = NOTHING
     getattribute = _mro_getattr(obj_type, "__getattribute__")
     try:
-        return getattribute(obj_type, attr)
+        return getattribute(obj, attr)
     except AttributeError as exc:
         attr_exc = exc
     # Objects/typeobject.c:slot_tp_getattr_hook
