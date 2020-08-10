@@ -5,7 +5,8 @@ Unravelling Python source code.
 ## Unravelled syntax
 
 1. `obj.attr` ➠ `builtins.getattr(obj, "attr")` (including `object.__getattribute__()`)
-
+1. `a + b` ➠ `operator.add(a, b)`
+1. `a - b` ➠ `operator.sub(a, b)`
 
 ## Syntax to (potentially) unravel
 
@@ -61,8 +62,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 ### Tokens
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
 
-1. `+` (binary)
-1. `-` (binary)
 1. `*`
 1. `@`
 1. `/`
