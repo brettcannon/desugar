@@ -12,6 +12,12 @@ class LHS:
     def __sub__(self, _):
         return "__sub__"
 
+    def __mul__(self, _):
+        return "__mul__"
+
+    def __matmul__(self, _):
+        return "__matmul__"
+
 
 class LHSNotImplemented:
     def __init__(self):
@@ -25,6 +31,14 @@ class LHSNotImplemented:
         self.called = True
         return NotImplemented
 
+    def __mul__(self, _):
+        self.called = True
+        return NotImplemented
+
+    def __matmul__(self, _):
+        self.called = True
+        return NotImplemented
+
 
 class RHS:
     def __radd__(self, _):
@@ -32,6 +46,12 @@ class RHS:
 
     def __rsub__(self, _):
         return "__rsub__"
+
+    def __rmul__(self, _):
+        return "__rmul__"
+
+    def __rmatmul__(self, _):
+        return "__rmatmul__"
 
 
 class RHSNotImplemented:
@@ -43,6 +63,14 @@ class RHSNotImplemented:
         return NotImplemented
 
     def __rsub__(self, _):
+        self.rcalled = True
+        return NotImplemented
+
+    def __rmul__(self, _):
+        self.rcalled = True
+        return NotImplemented
+
+    def __rmatmul__(self, _):
         self.rcalled = True
         return NotImplemented
 
@@ -144,3 +172,21 @@ class TestSubtaction(BinaryOperationTests):
 
     lhs_method = "__sub__"
     rhs_method = "__rsub__"
+
+
+@pytest.mark.parametrize("op", [operator.mul, desugar.operator.mul])
+class TestMultiplicaiton(BinaryOperationTests):
+
+    """Tests for desugar.operator.mul()."""
+
+    lhs_method = "__mul__"
+    rhs_method = "__rmul__"
+
+
+@pytest.mark.parametrize("op", [operator.matmul, desugar.operator.matmul])
+class TestMatrixMultiplicaiton(BinaryOperationTests):
+
+    """Tests for desugar.operator.matmul()."""
+
+    lhs_method = "__matmul__"
+    rhs_method = "__rmatmul__"

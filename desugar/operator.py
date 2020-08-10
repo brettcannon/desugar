@@ -50,3 +50,5 @@ def _create_binary_op(name: str, operator: str) -> Callable[[Any, Any], Any]:
 
 add = _create_binary_op("add", "+")
 sub = _create_binary_op("sub", "-")
+mul = _create_binary_op("mul", "*")
+matmul = _create_binary_op("matmul", "@")
