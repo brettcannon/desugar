@@ -36,6 +36,9 @@ class LHS:
     def __rshift__(self, _):
         return "__rshift__"
 
+    def __and__(self, _):
+        return "__and__"
+
 
 class LHSNotImplemented:
     def __init__(self):
@@ -82,6 +85,10 @@ class LHSNotImplemented:
         self.called += 1
         return NotImplemented
 
+    def __and__(self, _):
+        self.called += 1
+        return NotImplemented
+
 
 class RHS:
     def __radd__(self, _):
@@ -113,6 +120,9 @@ class RHS:
 
     def __rrshift__(self, _):
         return "__rrshift__"
+
+    def __rand__(self, _):
+        return "__rand__"
 
 
 class RHSNotImplemented:
@@ -157,6 +167,10 @@ class RHSNotImplemented:
         return NotImplemented
 
     def __rrshift__(self, _):
+        self.rcalled += 1
+        return NotImplemented
+
+    def __rand__(self, _):
         self.rcalled += 1
         return NotImplemented
 
@@ -330,6 +344,15 @@ class TestRightShift(BinaryOperationTests):
 
     lhs_method = "__rshift__"
     rhs_method = "__rrshift__"
+
+
+@pytest.mark.parametrize("op", [operator.and_, desugar.operator.and_])
+class TestAnd(BinaryOperationTests):
+
+    """Tests for desugar.operator.and_()."""
+
+    lhs_method = "__and__"
+    rhs_method = "__rand__"
 
 
 # @pytest.mark.parametrize("op", [operator.XXX, desugar.operator.XXX])
