@@ -27,6 +27,9 @@ class LHS:
     def __mod__(self, _):
         return "__mod__"
 
+    def __pow__(self, _):
+        return "__pow__"
+
 
 class LHSNotImplemented:
     def __init__(self):
@@ -61,6 +64,10 @@ class LHSNotImplemented:
         self.called += 1
         return NotImplemented
 
+    def __pow__(self, _):
+        self.called += 1
+        return NotImplemented
+
 
 class RHS:
     def __radd__(self, _):
@@ -83,6 +90,9 @@ class RHS:
 
     def __rmod__(self, _):
         return "__rmod__"
+
+    def __rpow__(self, _):
+        return "__rpow__"
 
 
 class RHSNotImplemented:
@@ -115,6 +125,10 @@ class RHSNotImplemented:
         return NotImplemented
 
     def __rmod__(self, _):
+        self.rcalled += 1
+        return NotImplemented
+
+    def __rpow__(self, _):
         self.rcalled += 1
         return NotImplemented
 
@@ -261,6 +275,15 @@ class TestModulo(BinaryOperationTests):
 
     lhs_method = "__mod__"
     rhs_method = "__rmod__"
+
+
+@pytest.mark.parametrize("op", [operator.pow, desugar.operator.pow])
+class TestPower(BinaryOperationTests):
+
+    """Tests for desugar.operator.pow()."""
+
+    lhs_method = "__pow__"
+    rhs_method = "__rpow__"
 
 
 # @pytest.mark.parametrize("op", [operator.XXX, desugar.operator.XXX])
