@@ -18,6 +18,9 @@ class LHS:
     def __matmul__(self, _):
         return "__matmul__"
 
+    def __truediv__(self, _):
+        return "__truediv__"
+
 
 class LHSNotImplemented:
     def __init__(self):
@@ -39,6 +42,10 @@ class LHSNotImplemented:
         self.called = True
         return NotImplemented
 
+    def __truediv__(self, _):
+        self.called = True
+        return NotImplemented
+
 
 class RHS:
     def __radd__(self, _):
@@ -52,6 +59,9 @@ class RHS:
 
     def __rmatmul__(self, _):
         return "__rmatmul__"
+
+    def __rtruediv__(self, _):
+        return "__rtruediv__"
 
 
 class RHSNotImplemented:
@@ -71,6 +81,10 @@ class RHSNotImplemented:
         return NotImplemented
 
     def __rmatmul__(self, _):
+        self.rcalled = True
+        return NotImplemented
+
+    def __rtruediv__(self, _):
         self.rcalled = True
         return NotImplemented
 
@@ -190,3 +204,21 @@ class TestMatrixMultiplicaiton(BinaryOperationTests):
 
     lhs_method = "__matmul__"
     rhs_method = "__rmatmul__"
+
+
+@pytest.mark.parametrize("op", [operator.truediv, desugar.operator.truediv])
+class TestTrueDivision(BinaryOperationTests):
+
+    """Tests for desugar.operator.truediv()."""
+
+    lhs_method = "__truediv__"
+    rhs_method = "__rtruediv__"
+
+
+# @pytest.mark.parametrize("op", [operator.XXX, desugar.operator.XXX])
+# class TestXXX(BinaryOperationTests):
+
+#     """Tests for desugar.operator.XXX()."""
+
+#     lhs_method = "__XXX__"
+#     rhs_method = "__rXXX__"
