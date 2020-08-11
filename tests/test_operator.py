@@ -184,7 +184,7 @@ class TestAddition(BinaryOperationTests):
 
 
 @pytest.mark.parametrize("op", [operator.sub, desugar.operator.sub])
-class TestSubtaction(BinaryOperationTests):
+class TestSubtraction(BinaryOperationTests):
 
     """Tests for desugar.operator.sub()."""
 
@@ -202,7 +202,7 @@ class TestMultiplicaiton(BinaryOperationTests):
 
 
 @pytest.mark.parametrize("op", [operator.matmul, desugar.operator.matmul])
-class TestMatrixMultiplicaiton(BinaryOperationTests):
+class TestMatrixMultiplication(BinaryOperationTests):
 
     """Tests for desugar.operator.matmul()."""
 
