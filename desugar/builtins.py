@@ -10,6 +10,8 @@ if typing.TYPE_CHECKING:
     class Object(typing.Protocol):
 
         """Protocol for objects."""
+        
+        __dict__: dict[str, Any]
 
         def __getattribute__(self, name: str) -> Any:
             ...
