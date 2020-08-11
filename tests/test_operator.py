@@ -21,6 +21,9 @@ class LHS:
     def __truediv__(self, _):
         return "__truediv__"
 
+    def __floordiv__(self, _):
+        return "__floordiv__"
+
 
 class LHSNotImplemented:
     def __init__(self):
@@ -47,6 +50,10 @@ class LHSNotImplemented:
         self.called += 1
         return NotImplemented
 
+    def __floordiv__(self, _):
+        self.called += 1
+        return NotImplemented
+
 
 class RHS:
     def __radd__(self, _):
@@ -63,6 +70,9 @@ class RHS:
 
     def __rtruediv__(self, _):
         return "__rtruediv__"
+
+    def __rfloordiv__(self, _):
+        return "__rfloordiv__"
 
 
 class RHSNotImplemented:
@@ -90,6 +100,8 @@ class RHSNotImplemented:
         self.rcalled += 1
         return NotImplemented
 
+    def __rfloordiv__(self, _):
+        self.rcalled += 1
         return NotImplemented
 
 
@@ -217,6 +229,15 @@ class TestTrueDivision(BinaryOperationTests):
 
     lhs_method = "__truediv__"
     rhs_method = "__rtruediv__"
+
+
+@pytest.mark.parametrize("op", [operator.floordiv, desugar.operator.floordiv])
+class TestFloorDivision(BinaryOperationTests):
+
+    """Tests for desugar.operator.floordiv()."""
+
+    lhs_method = "__floordiv__"
+    rhs_method = "__rfloordiv__"
 
 
 # @pytest.mark.parametrize("op", [operator.XXX, desugar.operator.XXX])

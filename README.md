@@ -10,6 +10,7 @@ Unravelling Python source code.
 1. `a * b` ➠ `operator.mul(a, b)`
 1. `a @ b` ➠ `operator.matmul(a, b)`
 1. `a / b` ➠ `operator.truediv(a, b)`
+1. `a // b` ➠ `operator.floordiv(a, b)`
 
 ## Syntax to (potentially) unravel
 
@@ -65,7 +66,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 ### Tokens
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
 
-1. `//`
 1. `%`
 1. `**`
 1. `<<`
