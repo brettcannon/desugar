@@ -24,26 +24,27 @@ class LHS:
 
 class LHSNotImplemented:
     def __init__(self):
-        self.called = False
+        super().__init__()
+        self.called = 0
 
     def __add__(self, _):
-        self.called = True
+        self.called += 1
         return NotImplemented
 
     def __sub__(self, _):
-        self.called = True
+        self.called += 1
         return NotImplemented
 
     def __mul__(self, _):
-        self.called = True
+        self.called += 1
         return NotImplemented
 
     def __matmul__(self, _):
-        self.called = True
+        self.called += 1
         return NotImplemented
 
     def __truediv__(self, _):
-        self.called = True
+        self.called += 1
         return NotImplemented
 
 
@@ -66,26 +67,29 @@ class RHS:
 
 class RHSNotImplemented:
     def __init__(self):
-        self.rcalled = False
+        super().__init__()
+        self.rcalled = 0
 
     def __radd__(self, _):
-        self.rcalled = True
+        self.rcalled += 1
         return NotImplemented
 
     def __rsub__(self, _):
-        self.rcalled = True
+        self.rcalled += 1
         return NotImplemented
 
     def __rmul__(self, _):
-        self.rcalled = True
+        self.rcalled += 1
         return NotImplemented
 
     def __rmatmul__(self, _):
-        self.rcalled = True
+        self.rcalled += 1
         return NotImplemented
 
     def __rtruediv__(self, _):
-        self.rcalled = True
+        self.rcalled += 1
+        return NotImplemented
+
         return NotImplemented
 
 
@@ -134,7 +138,7 @@ class BinaryOperationTests:
         rhs = LHSRHSNotImplemented()
         assert op(lhs, rhs) == self.lhs_method
         assert not rhs.called  # rhs.__*__() should not be called at any point.
-        assert rhs.rcalled
+        assert rhs.rcalled == 1
 
     def test_rhs_not_substituting_for_lhs(self, op):
         """If the RHS defines __*__ but not the LHS, it is still not called."""
@@ -160,7 +164,7 @@ class BinaryOperationTests:
         """If lhs.__*__() returns NotImplemented, call RHS.__r*__()."""
         lhs = LHSNotImplemented()
         assert op(lhs, RHS()) == self.rhs_method
-        assert lhs.called
+        assert lhs.called == 1
 
     def test_both_sides_not_implemented(self, op):
         """If both lhs.__*__() and rhs.__r*__() return NotImplemented, raise TypeError."""
