@@ -24,6 +24,7 @@ if typing.TYPE_CHECKING:
         __dict__: dict[str, Any]
 
         def mro() -> Iterable[Type]:
+            # https://docs.python.org/3.8/library/stdtypes.html?highlight=mro#class.mro
             ...
 
 
