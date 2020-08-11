@@ -13,6 +13,7 @@ Unravelling Python source code.
 1. `a // b` ➠ `operator.floordiv(a, b)`
 1. `a % b` ➠ `operator.mod(a, b)`
 1. `a ** b` ➠ `operator.pow(a, b)`
+1. `a << b` ➠ `operator.lshift(a, b)`
 
 ## Syntax to (potentially) unravel
 
