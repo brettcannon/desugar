@@ -24,6 +24,9 @@ class LHS:
     def __floordiv__(self, _):
         return "__floordiv__"
 
+    def __mod__(self, _):
+        return "__mod__"
+
 
 class LHSNotImplemented:
     def __init__(self):
@@ -54,6 +57,10 @@ class LHSNotImplemented:
         self.called += 1
         return NotImplemented
 
+    def __mod__(self, _):
+        self.called += 1
+        return NotImplemented
+
 
 class RHS:
     def __radd__(self, _):
@@ -73,6 +80,9 @@ class RHS:
 
     def __rfloordiv__(self, _):
         return "__rfloordiv__"
+
+    def __rmod__(self, _):
+        return "__rmod__"
 
 
 class RHSNotImplemented:
@@ -101,6 +111,10 @@ class RHSNotImplemented:
         return NotImplemented
 
     def __rfloordiv__(self, _):
+        self.rcalled += 1
+        return NotImplemented
+
+    def __rmod__(self, _):
         self.rcalled += 1
         return NotImplemented
 
@@ -238,6 +252,15 @@ class TestFloorDivision(BinaryOperationTests):
 
     lhs_method = "__floordiv__"
     rhs_method = "__rfloordiv__"
+
+
+@pytest.mark.parametrize("op", [operator.mod, desugar.operator.mod])
+class TestModulo(BinaryOperationTests):
+
+    """Tests for desugar.operator.mod()."""
+
+    lhs_method = "__mod__"
+    rhs_method = "__rmod__"
 
 
 # @pytest.mark.parametrize("op", [operator.XXX, desugar.operator.XXX])
