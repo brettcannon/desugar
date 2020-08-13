@@ -1,3 +1,23 @@
+"""A pure Python implementation of the operator module that pertains to syntax.
+
+1. `a + b` ➠ `operator.add(a, b)`
+2. `a - b` ➠ `operator.sub(a, b)`
+3. `a * b` ➠ `operator.mul(a, b)`
+4. `a @ b` ➠ `operator.matmul(a, b)`
+5. `a / b` ➠ `operator.truediv(a, b)`
+6. `a // b` ➠ `operator.floordiv(a, b)`
+7. `a % b` ➠ `operator.mod(a, b)`
+8. `a ** b` ➠ `operator.pow(a, b)`
+9. `a << b` ➠ `operator.lshift(a, b)`
+10. `a >> b` ➠ `operator.rshift(a, b)`
+11. `a & b` ➠ `operator.and_(a, b)`
+12. `a ^ b` ➠ `operator.xor(a, b)`
+13. `a | b` ➠ `operator.or_(a, b)`
+
+"""
+# https://docs.python.org/3.8/reference/datamodel.html#emulating-numeric-types
+# https://docs.python.org/3.8/library/operator.html#mapping-operators-to-functions
+# https://docs.python.org/3.8/library/operator.html#in-place-operators
 from __future__ import annotations
 
 import typing
