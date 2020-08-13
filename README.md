@@ -17,6 +17,7 @@ Unravelling Python source code.
 1. `a >> b` ➠ `operator.rshift(a, b)`
 1. `a & b` ➠ `operator.and_(a, b)`
 1. `a ^ b` ➠ `operator.xor(a, b)`
+1. `a | b` ➠ `operator.or_(a, b)`
 
 ## Syntax to (potentially) unravel
 
@@ -71,8 +72,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 ### Tokens
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
-
-1. `|`
 
 1. `~`
 1. `-` (unary)

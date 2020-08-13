@@ -42,6 +42,9 @@ class LHS:
     def __xor__(self, _):
         return "__xor__"
 
+    def __or__(self, _):
+        return "__or__"
+
 
 class LHSNotImplemented:
     def __init__(self):
@@ -96,6 +99,10 @@ class LHSNotImplemented:
         self.called += 1
         return NotImplemented
 
+    def __or__(self, _):
+        self.called += 1
+        return NotImplemented
+
 
 class RHS:
     def __radd__(self, _):
@@ -133,6 +140,9 @@ class RHS:
 
     def __rxor__(self, _):
         return "__rxor__"
+
+    def __ror__(self, _):
+        return "__ror__"
 
 
 class RHSNotImplemented:
@@ -185,6 +195,10 @@ class RHSNotImplemented:
         return NotImplemented
 
     def __rxor__(self, _):
+        self.rcalled += 1
+        return NotImplemented
+
+    def __ror__(self, _):
         self.rcalled += 1
         return NotImplemented
 
@@ -378,10 +392,10 @@ class TestExclusiveOr(BinaryOperationTests):
     rhs_method = "__rxor__"
 
 
-# @pytest.mark.parametrize("op", [operator.XXX, desugar.operator.XXX])
-# class TestXXX(BinaryOperationTests):
+@pytest.mark.parametrize("op", [operator.or_, desugar.operator.or_])
+class TestOr(BinaryOperationTests):
 
-#     """Tests for desugar.operator.XXX()."""
+    """Tests for desugar.operator.or_()."""
 
-#     lhs_method = "__XXX__"
-#     rhs_method = "__rXXX__"
+    lhs_method = "__or__"
+    rhs_method = "__ror__"
