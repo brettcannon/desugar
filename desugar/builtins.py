@@ -1,4 +1,9 @@
-# Based on https://github.com/python/cpython/tree/v3.8.3.
+"""A pure Python implementation of the builtins module that relates to syntax.
+
+1. `obj.attr` ➠ `builtins.getattr(obj, "attr")` (including `object.__getattribute__()`)
+
+"""
+# https://docs.python.org/3.8/library/builtins.html
 from __future__ import annotations
 import builtins
 
