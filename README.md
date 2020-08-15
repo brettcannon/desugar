@@ -101,13 +101,10 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `=`
 1. `:=`
 
-1. `[`
-1. `]`
-1. `{`
-1. `}`
+1. `[]`
+1. `{}`
 
-1. `(`
-1. `)`
+1. `()`
 1. `,`
 1. `:`
 1. `;`
@@ -118,8 +115,8 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 
 ### [Literals](https://docs.python.org/3.8/reference/lexical_analysis.html#literals)
 
-This ignores literals which are represented via syntax above.
-For instance, lists are left off as they are represented by `[`/`]` tokens.
+The list below ignores literals which are represented via syntax above.
+For instance, lists are left off as they are represented by `[]` tokens.
 
 1. Bytes (`b`, `r`)
 1. Strings (`u`, `f`, `r`; single line, multi-line)
