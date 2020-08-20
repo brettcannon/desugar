@@ -29,6 +29,9 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
 
+_MISSING = object()
+
+
 def _create_binary_op(name: str, operator: str) -> Callable[[Any, Any], Any]:
     """Create a binary operation function.
 
@@ -40,20 +43,43 @@ def _create_binary_op(name: str, operator: str) -> Callable[[Any, Any], Any]:
 
     def binary_op(lhs: Any, rhs: Any, /) -> Any:
         """A closure implementing a binary operation in Python."""
-        rhs_type = type(rhs)
-        lhs_type = type(lhs)
-        if rhs_type is not lhs_type and issubclass(rhs_type, lhs_type):
-            call_first = (rhs, rhs_type), f"__r{name}__", lhs
-            call_second = (lhs, lhs_type), f"__{name}__", rhs
-        else:
-            call_first = (lhs, lhs_type), f"__{name}__", rhs
-            call_second = (rhs, rhs_type), f"__r{name}__", lhs
+        lhs_method_name = f"__{name}__"
+        rhs_method_name = f"__r{name}__"
 
-        for first, meth, second_obj in (call_first, call_second):
-            first_obj, first_type = first
-            try:
-                meth = debuiltins._mro_getattr(first_type, meth)
-            except AttributeError:
+        # lhs.__*__
+        lhs_type = type(lhs)
+        try:
+            lhs_method = debuiltins._mro_getattr(lhs_type, lhs_method_name)
+        except AttributeError:
+            lhs_method = _MISSING
+
+        # lhs.__r*__ (for knowing if rhs.__r*__ should be called first)
+        try:
+            lhs_rmethod = debuiltins._mro_getattr(lhs_type, rhs_method_name)
+        except AttributeError:
+            lhs_rmethod = _MISSING
+
+        # rhs.__r*__
+        rhs_type = type(rhs)
+        try:
+            rhs_method = debuiltins._mro_getattr(rhs_type, rhs_method_name)
+        except AttributeError:
+            rhs_method = _MISSING
+
+        if (
+            rhs_type is not _MISSING  # Do why care?
+            and rhs_type is not lhs_type  # Could RHS be a subclass?
+            and issubclass(rhs_type, lhs_type)  # RHS is a subclass!
+            and lhs_rmethod is not rhs_method  # Is __r*__ actually different?
+        ):
+            call_first = rhs, rhs_method, lhs
+            call_second = lhs, lhs_method, rhs
+        else:
+            call_first = lhs, lhs_method, rhs
+            call_second = rhs, rhs_method, lhs
+
+        for first_obj, meth, second_obj in (call_first, call_second):
+            if meth is _MISSING:
                 continue
             value = meth(first_obj, second_obj)
             if value is not NotImplemented:

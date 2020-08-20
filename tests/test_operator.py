@@ -6,6 +6,9 @@ import desugar.operator
 
 
 class LHS:
+
+    """__*__ methods returning their own name."""
+
     def __add__(self, _):
         return "__add__"
 
@@ -47,6 +50,9 @@ class LHS:
 
 
 class LHSNotImplemented:
+
+    """__*__ methods returning NotImplemented."""
+
     def __init__(self):
         super().__init__()
         self.called = 0
@@ -105,6 +111,9 @@ class LHSNotImplemented:
 
 
 class RHS:
+
+    """__r*__ methods returning their name."""
+
     def __radd__(self, _):
         return "__radd__"
 
@@ -146,6 +155,9 @@ class RHS:
 
 
 class RHSNotImplemented:
+
+    """__r*__ methods returning NotImplemented."""
+
     def __init__(self):
         super().__init__()
         self.rcalled = 0
@@ -204,10 +216,17 @@ class RHSNotImplemented:
 
 
 class LHSRHS(LHS, RHS):
-    pass
+
+    """Class that implements both __*__ and __r*__."""
+
+
+class LHSRHSSubclass(LHSRHS):
+
+    """A subclass implementing both __*__ and __r*__ which does not differ from its superclass."""
 
 
 class LHSRHSNotImplemented(LHSNotImplemented, LHS, RHSNotImplemented):
+
     """A subclass for RHS which always returns NotImplemented."""
 
 
@@ -237,6 +256,10 @@ class BinaryOperationTests:
     def test_rhs_subclass_over_lhs(self, op):
         """If the RHS is a subclass of LHS then call __r*__ first."""
         assert op(LHS(), LHSRHS()) == self.rhs_method
+
+    def test_rhs_subclass_with_same_methods(self, op):
+        """If the RHS is a subclass of the LHS **but** __r*__ is the same object, call __*__ first."""
+        assert op(LHSRHS(), LHSRHSSubclass()) == self.lhs_method
 
     def test_both_subclasses(self, op):
         """When both the LHS and RHS are of the same type, call LHS.__*__() first."""
