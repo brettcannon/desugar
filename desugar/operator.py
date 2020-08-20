@@ -20,6 +20,7 @@
 # https://docs.python.org/3.8/library/operator.html#in-place-operators
 from __future__ import annotations
 
+import keyword
 import typing
 from typing import Callable
 
@@ -89,7 +90,9 @@ def _create_binary_op(name: str, operator: str) -> Callable[[Any, Any], Any]:
                 f"unsupported operand type(s) for {operator}: {lhs_type!r} and {rhs_type!r}"
             )
 
-    binary_op.__name__ = binary_op.__qualname__ = name
+    binary_op.__name__ = binary_op.__qualname__ = (
+        name if not keyword.iskeyword(name) else f"{name}_"
+    )
     binary_op.__doc__ = f"""Implement the binary operation `a {operator} b`."""
     return binary_op
 
