@@ -306,6 +306,12 @@ class BinaryOperationTests:
         with pytest.raises(TypeError):
             op(lhs, rhs)
 
+    def test_function_name(self, op):
+        """The method's name should be appropriate."""
+        op_name = self.lhs_method[2:-2]
+        assert op_name in op.__name__
+        assert op_name in op.__qualname__
+
 
 @pytest.mark.parametrize("op", [operator.add, desugar.operator.add])
 class TestAddition(BinaryOperationTests):
