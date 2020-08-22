@@ -51,19 +51,22 @@ def _create_binary_op(name: str, operator: str) -> Callable[[Any, Any], Any]:
         except AttributeError:
             rhs_method = _MISSING
 
+        call_lhs = lhs, lhs_method, rhs
+        call_rhs = rhs, rhs_method, lhs
+
         if (
-            rhs_type is not _MISSING  # Do why care?
+            rhs_type is not _MISSING  # Do we care?
             and rhs_type is not lhs_type  # Could RHS be a subclass?
             and issubclass(rhs_type, lhs_type)  # RHS is a subclass!
             and lhs_rmethod is not rhs_method  # Is __r*__ actually different?
         ):
-            call_first = rhs, rhs_method, lhs
-            call_second = lhs, lhs_method, rhs
+            calls = call_rhs, call_lhs
+        elif lhs_type is not rhs_type:
+            calls = call_lhs, call_rhs
         else:
-            call_first = lhs, lhs_method, rhs
-            call_second = rhs, rhs_method, lhs
+            calls = (call_lhs,)
 
-        for first_obj, meth, second_obj in (call_first, call_second):
+        for first_obj, meth, second_obj in calls:
             if meth is _MISSING:
                 continue
             value = meth(first_obj, second_obj)

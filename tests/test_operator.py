@@ -227,7 +227,13 @@ class LHSRHSSubclass(LHSRHS):
 
 class LHSRHSNotImplemented(LHSNotImplemented, LHS, RHSNotImplemented):
 
-    """A subclass for RHS which always returns NotImplemented."""
+    """A subclass which always returns NotImplemented."""
+
+
+class LHSRHSNotImplementedSubclass(LHSRHSNotImplemented):
+
+    """A subclass which always returns NotImplemented that is a different type
+    of the superclass."""
 
 
 class BinaryOperationTests:
@@ -285,13 +291,17 @@ class BinaryOperationTests:
 
     def test_lhs_not_implemented(self, op):
         """If the LHS returns NotImplemented, raise TypeError."""
+        lhs = LHSNotImplemented()
         with pytest.raises(TypeError):
-            op(LHSNotImplemented(), object())
+            op(lhs, object())
+        assert lhs.called == 1
 
     def test_rhs_not_implemented(self, op):
         """If the RHS returns NotImplemented, raise TypeError."""
+        rhs = RHSNotImplemented()
         with pytest.raises(TypeError):
-            op(object(), RHSNotImplemented())
+            op(object(), rhs)
+        assert rhs.rcalled == 1
 
     def test_lhs_not_implemented_but_rhs_is(self, op):
         """If lhs.__*__() returns NotImplemented, call RHS.__r*__()."""
@@ -305,6 +315,33 @@ class BinaryOperationTests:
         rhs = RHSNotImplemented()
         with pytest.raises(TypeError):
             op(lhs, rhs)
+        assert lhs.called == 1
+        assert rhs.rcalled == 1
+
+    def test_all_methods_not_implemented(self, op):
+        """If all related methods return NotImplemented, TypeError is raised.
+
+        When the types of both sides are the same then only lhs.__*__ is called.
+
+        """
+        lhs = LHSRHSNotImplemented()
+        rhs = LHSRHSNotImplemented()
+        with pytest.raises(TypeError):
+            op(lhs, rhs)
+        assert lhs.called == 1
+        assert not lhs.rcalled
+        assert not rhs.called
+        assert not rhs.rcalled
+
+    def test_both_sides_not_implemented_different_types(self, op):
+        lhs = LHSRHSNotImplemented()
+        rhs = LHSRHSNotImplementedSubclass()
+        with pytest.raises(TypeError):
+            op(lhs, rhs)
+        assert lhs.called == 1
+        assert not lhs.rcalled
+        assert not rhs.called
+        assert rhs.rcalled == 1
 
     def test_function_name(self, op):
         """The method's name should be appropriate."""
