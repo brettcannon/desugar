@@ -318,7 +318,7 @@ class BinaryOperationTests:
         assert lhs.called == 1
         assert rhs.rcalled == 1
 
-    def test_all_methods_not_implemented(self, op):
+    def test_all_methods_not_implemented_same_type(self, op):
         """If all related methods return NotImplemented, TypeError is raised.
 
         When the types of both sides are the same then only lhs.__*__ is called.
