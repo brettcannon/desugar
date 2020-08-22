@@ -333,7 +333,7 @@ class BinaryOperationTests:
         assert not rhs.called
         assert not rhs.rcalled
 
-    def test_both_sides_not_implemented_different_types(self, op):
+    def test_all_methods_not_implemented_different_types(self, op):
         lhs = LHSRHSNotImplemented()
         rhs = LHSRHSNotImplementedSubclass()
         with pytest.raises(TypeError):
