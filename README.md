@@ -18,6 +18,8 @@ Unravelling Python source code.
 1. `a & b` ➠ `operator.and_(a, b)`
 1. `a ^ b` ➠ `operator.xor(a, b)`
 1. `a | b` ➠ `operator.or_(a, b)`
+1. `a += b` ➠ `a = operator.iadd(a, b)`
+1. `a -= b` ➠ `a = operator.isub(a, b)`
 
 ## Syntax to (potentially) unravel
 
@@ -77,8 +79,6 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `-` (unary)
 1. `+` (unary)
 
-1. `+=`
-1. `-=`
 1. `*=`
 1. `@=`
 1. `/=`

@@ -5,18 +5,29 @@ pertain to syntax."""
 from __future__ import annotations
 
 import typing
-from typing import Callable
 
 from . import builtins as debuiltins
 
 if typing.TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Callable
+
+    class _BinaryOp(typing.Protocol):
+
+        """The interface for a callable implementing a binary arithmetic operation."""
+
+        __doc__: str
+        __name__: str
+        __qualname__: str
+        _operator: str
+
+        def __call__(self, lhs: Any, rhs: Any, /) -> Any:
+            ...
 
 
 _MISSING = object()
 
 
-def _create_binary_op(name: str, operator: str) -> Callable[[Any, Any], Any]:
+def _create_binary_op(name: str, operator: str) -> _BinaryOp:
     """Create a binary operation function.
 
     The `name` parameter specifies the name of the special method used for the
@@ -73,15 +84,18 @@ def _create_binary_op(name: str, operator: str) -> Callable[[Any, Any], Any]:
             if value is not NotImplemented:
                 return value
         else:
-            raise TypeError(
+            exc = TypeError(
                 f"unsupported operand type(s) for {operator}: {lhs_type!r} and {rhs_type!r}"
             )
+            exc._binary_op = operator
+            raise exc
 
     # This differs from the "real" 'operator' module, but it simplies the function
     # creation aspect by not having to specify alternative name when it would
     # clash with a keyword, or using the 'keyword' module to automatically
     # detect the clash.
     binary_op.__name__ = binary_op.__qualname__ = lhs_method_name
+    binary_op._operator = operator  # For introspective __i*__ implementations.
     binary_op.__doc__ = f"""Implement the binary operation `a {operator} b`."""
     return binary_op
 
@@ -99,3 +113,41 @@ rshift = __rshift__ = _create_binary_op("rshift", ">>")
 and_ = __and__ = _create_binary_op("and", "&")
 xor = __xor__ = _create_binary_op("xor", "^")
 or_ = __or__ = _create_binary_op("or", "|")
+
+
+def _create_binary_inplace_op(binary_op: _BinaryOp) -> Callable[[Any, Any], Any]:
+
+    binary_operation_name = binary_op.__name__[2:-2]
+    method_name = f"__i{binary_operation_name}__"
+    operator = f"{binary_op._operator}="
+
+    def binary_inplace_op(lvalue: Any, rvalue: Any, /) -> Any:
+        lvalue_type = type(lvalue)
+        try:
+            method = debuiltins._mro_getattr(lvalue_type, method_name)
+        except AttributeError:
+            pass
+        else:
+            value = method(lvalue, rvalue)
+            if value is not NotImplemented:
+                return value
+        try:
+            return binary_op(lvalue, rvalue)
+        except TypeError as exc:
+            # If the TypeError is due to the binary arithmetic operator, suppress
+            # it so we can raise the appropriate one for the agumented assignment.
+            if exc._binary_op != binary_op._operator:
+                raise
+        raise TypeError(
+            f"unsupported operand type(s) for {operator}: {lvalue_type!r} and {type(rvalue)!r}"
+        )
+
+    binary_inplace_op.__name__ = binary_inplace_op.__qualname__ = method_name
+    binary_inplace_op.__doc__ = (
+        f"""Implement the augmented arithmetic assignment `a {operator} b`."""
+    )
+    return binary_inplace_op
+
+
+iadd = __iadd__ = _create_binary_inplace_op(__add__)
+isub = __isub__ = _create_binary_inplace_op(__sub__)

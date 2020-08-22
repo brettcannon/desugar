@@ -465,3 +465,131 @@ class TestOr(BinaryOperationTests):
 
     lhs_method = "__or__"
     rhs_method = "__ror__"
+
+
+class Lvalue:
+
+    """Implement __i*__ methods."""
+
+    def __iadd__(self, _):
+        return "__iadd__"
+
+    def __isub__(self, _):
+        return "__isub__"
+
+
+class LvalueNotImplemented:
+
+    """__i*__ methods which return NotImplemented."""
+
+    def __init__(self):
+        super().__init__()
+        self.icalled = 0
+
+    def __iadd__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __isub__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+
+class LvalueNotImplementedLHS(LvalueNotImplemented, LHS):
+
+    """__i*__ returns NotImplemented, __*__ implemented."""
+
+
+class LvalueLHSRHSNotImplemented(
+    LvalueNotImplemented, LHSNotImplemented, RHSNotImplemented
+):
+
+    """__*__, __r*__, and __i*__ all return NotImplemented."""
+
+
+class LHSRHSNotImplementedLvalue(LHSRHSNotImplemented, Lvalue):
+
+    """__i*__ implemented, __*__, __r*__ return NotImplemented."""
+
+
+class AugmentedAssignmentTests:
+
+    """Tests for augmented arithmetic assignment.
+
+    Subclasses are expected to provide the actual assignment to test.
+
+    """
+
+    def test_inplace(self, op):
+        """Providing __i*__ should work."""
+        assert op(Lvalue(), object()) == self.lvalue_method
+
+    def test_lhs_fallback(self, op):
+        """If __i*__ is not defined, fallback to __*__."""
+        assert op(LHS(), object()) == self.lhs_method
+
+    def test_lhs_fallback_from_not_implemented(self, op):
+        """If __i*__ returned NotImplemented fall back to __*__."""
+        lvalue = LvalueNotImplementedLHS()
+        assert op(lvalue, object()) == self.lhs_method
+        assert lvalue.icalled == 1
+
+    def test_rhs_fallback(self, op):
+        """If __i*__ and __*__ are not defined, fallback to __r*__."""
+        assert op(object(), RHS()) == self.rhs_method
+
+    def test_no_methods(self, op):
+        """TypeError is raised if no appropriate methods are available."""
+        with pytest.raises(TypeError):
+            op(object(), object())
+
+    def test_all_not_implemented(self, op):
+        """TypeError is raised if all appropriate methods return NotImplemented.
+
+        When the LHS and RHS are the same type then only __i*__ and __*__ are
+        called.
+
+        """
+        lvalue = LvalueLHSRHSNotImplemented()
+        rvalue = LvalueLHSRHSNotImplemented()
+        with pytest.raises(TypeError):
+            op(lvalue, rvalue)
+        assert lvalue.icalled == 1
+        assert lvalue.called == 1
+        assert not lvalue.rcalled
+        assert not rvalue.icalled
+        assert not rvalue.called
+        assert not rvalue.rcalled
+
+    def test_inplace_when_others_not_implemented(self, op):
+        """__i*__ used when __*__ and __r*__ return NotImplemented."""
+        op(LHSRHSNotImplementedLvalue(), object()) == self.lvalue_method
+
+    def test_function_name(self, op):
+        short_name = self.lhs_method[2:-2]
+        assert short_name in op.__name__
+        assert short_name in op.__qualname__
+
+
+@pytest.mark.parametrize("op", [operator.iadd, desugar.operator.iadd])
+class TestAdditionInplace(AugmentedAssignmentTests):
+
+    lvalue_method = "__iadd__"
+    lhs_method = "__add__"
+    rhs_method = "__radd__"
+
+
+@pytest.mark.parametrize("op", [operator.isub, desugar.operator.isub])
+class TestSubtractionInplace(AugmentedAssignmentTests):
+
+    lvalue_method = "__isub__"
+    lhs_method = "__sub__"
+    rhs_method = "__rsub__"
+
+
+# @pytest.mark.parametrize("op", [operator.iXXX, desugar.operator.iXXX])
+# class TestXXXInplace(AugmentedAssignmentTests):
+
+#     lvalue_method = "__iXXX__"
+#     lhs_method = "__XXX__"
+#     rhs_method = "__rXXX__"
