@@ -1,4 +1,5 @@
 import operator
+import sys
 
 import pytest
 
@@ -477,6 +478,39 @@ class Lvalue:
     def __isub__(self, _):
         return "__isub__"
 
+    def __imul__(self, _):
+        return "__imul__"
+
+    def __imatmul__(self, _):
+        return "__imatmul__"
+
+    def __itruediv__(self, _):
+        return "__itruediv__"
+
+    def __ifloordiv__(self, _):
+        return "__ifloordiv__"
+
+    def __imod__(self, _):
+        return "__imod__"
+
+    def __ipow__(self, _):
+        return "__ipow__"
+
+    def __ilshift__(self, _):
+        return "__ilshift__"
+
+    def __irshift__(self, _):
+        return "__irshift__"
+
+    def __iand__(self, _):
+        return "__iand__"
+
+    def __ixor__(self, _):
+        return "__ixor__"
+
+    def __ior__(self, _):
+        return "__ior__"
+
 
 class LvalueNotImplemented:
 
@@ -491,6 +525,50 @@ class LvalueNotImplemented:
         return NotImplemented
 
     def __isub__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __imul__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __imatmul__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __itruediv__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __ifloordiv__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __imod__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __ipow__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __ilshift__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __irshift__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __iand__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __ixor__(self, _):
+        self.icalled += 1
+        return NotImplemented
+
+    def __ior__(self, _):
         self.icalled += 1
         return NotImplemented
 
@@ -530,8 +608,12 @@ class AugmentedAssignmentTests:
 
     def test_lhs_fallback_from_not_implemented(self, op):
         """If __i*__ returned NotImplemented fall back to __*__."""
+        # https://bugs.python.org/issue38302
+        if sys.version_info[:2] < (3, 10) and op.__name__ == "ipow":
+            pytest.skip("CPython's **= implementation does not call __pow__")
         lvalue = LvalueNotImplementedLHS()
-        assert op(lvalue, object()) == self.lhs_method
+        result = op(lvalue, object())
+        assert result == self.lhs_method
         assert lvalue.icalled == 1
 
     def test_rhs_fallback(self, op):
@@ -555,6 +637,9 @@ class AugmentedAssignmentTests:
         with pytest.raises(TypeError):
             op(lvalue, rvalue)
         assert lvalue.icalled == 1
+        # https://bugs.python.org/issue38302
+        if sys.version_info[:2] < (3, 10) and op.__name__ == "ipow":
+            return
         assert lvalue.called == 1
         assert not lvalue.rcalled
         assert not rvalue.icalled
@@ -572,7 +657,7 @@ class AugmentedAssignmentTests:
 
 
 @pytest.mark.parametrize("op", [operator.iadd, desugar.operator.iadd])
-class TestAdditionInplace(AugmentedAssignmentTests):
+class TestAdditionInPlace(AugmentedAssignmentTests):
 
     lvalue_method = "__iadd__"
     lhs_method = "__add__"
@@ -580,16 +665,96 @@ class TestAdditionInplace(AugmentedAssignmentTests):
 
 
 @pytest.mark.parametrize("op", [operator.isub, desugar.operator.isub])
-class TestSubtractionInplace(AugmentedAssignmentTests):
+class TestSubtractionInPlace(AugmentedAssignmentTests):
 
     lvalue_method = "__isub__"
     lhs_method = "__sub__"
     rhs_method = "__rsub__"
 
 
-# @pytest.mark.parametrize("op", [operator.iXXX, desugar.operator.iXXX])
-# class TestXXXInplace(AugmentedAssignmentTests):
+@pytest.mark.parametrize("op", [operator.imul, desugar.operator.imul])
+class TestMultiplicationInPlace(AugmentedAssignmentTests):
 
-#     lvalue_method = "__iXXX__"
-#     lhs_method = "__XXX__"
-#     rhs_method = "__rXXX__"
+    lvalue_method = "__imul__"
+    lhs_method = "__mul__"
+    rhs_method = "__rmul__"
+
+
+@pytest.mark.parametrize("op", [operator.imatmul, desugar.operator.imatmul])
+class TestMatrixMultiplicationInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__imatmul__"
+    lhs_method = "__matmul__"
+    rhs_method = "__rmatmul__"
+
+
+@pytest.mark.parametrize("op", [operator.itruediv, desugar.operator.itruediv])
+class TestTrueDivisionInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__itruediv__"
+    lhs_method = "__truediv__"
+    rhs_method = "__rtruediv__"
+
+
+@pytest.mark.parametrize("op", [operator.ifloordiv, desugar.operator.ifloordiv])
+class TestFloorDivisionInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__ifloordiv__"
+    lhs_method = "__floordiv__"
+    rhs_method = "__rfloordiv__"
+
+
+@pytest.mark.parametrize("op", [operator.imod, desugar.operator.imod])
+class TestModuloInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__imod__"
+    lhs_method = "__mod__"
+    rhs_method = "__rmod__"
+
+
+@pytest.mark.parametrize("op", [operator.ipow, desugar.operator.ipow])
+class TestPowerInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__ipow__"
+    lhs_method = "__pow__"
+    rhs_method = "__rpow__"
+
+
+@pytest.mark.parametrize("op", [operator.ilshift, desugar.operator.ilshift])
+class TestLeftShiftInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__ilshift__"
+    lhs_method = "__lshift__"
+    rhs_method = "__rlshift__"
+
+
+@pytest.mark.parametrize("op", [operator.irshift, desugar.operator.irshift])
+class TestRightShiftInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__irshift__"
+    lhs_method = "__rshift__"
+    rhs_method = "__rrshift__"
+
+
+@pytest.mark.parametrize("op", [operator.iand, desugar.operator.iand])
+class TestAndInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__iand__"
+    lhs_method = "__and__"
+    rhs_method = "__rand__"
+
+
+@pytest.mark.parametrize("op", [operator.ixor, desugar.operator.ixor])
+class TestExclusiveOrInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__ixor__"
+    lhs_method = "__xor__"
+    rhs_method = "__rxor__"
+
+
+@pytest.mark.parametrize("op", [operator.ior, desugar.operator.ior])
+class TestOrInPlace(AugmentedAssignmentTests):
+
+    lvalue_method = "__ior__"
+    lhs_method = "__or__"
+    rhs_method = "__ror__"

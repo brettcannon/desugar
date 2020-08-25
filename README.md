@@ -20,6 +20,17 @@ Unravelling Python source code.
 1. `a | b` ➠ `operator.or_(a, b)`
 1. `a += b` ➠ `a = operator.iadd(a, b)`
 1. `a -= b` ➠ `a = operator.isub(a, b)`
+1. `*=` ➠ `a = operator.imul(a, b)`
+1. `@=` ➠ `a = operator.imatmul(a, b)`
+1. `/=` ➠ `a = operator.itruediv(a, b)`
+1. `//=` ➠ `a = operator.ifloordiv(a, b)`
+1. `%=` ➠ `a = operator.imod(a, b)`
+1. `**=` ➠ `a = operator.ipow(a, b)`
+1. `<<=` ➠ `a = operator.ilshift(a, b)`
+1. `>>=` ➠ `a = operator.irshift(a, b)`
+1. `&=` ➠ `a = operator.iand(a, b)`
+1. `^=` ➠ `a = operator.ixor(a, b)`
+1. `|=` ➠ `a = operator.ior(a, b)`
 
 ## Syntax to (potentially) unravel
 
@@ -78,18 +89,6 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `~`
 1. `-` (unary)
 1. `+` (unary)
-
-1. `*=`
-1. `@=`
-1. `/=`
-1. `//=`
-1. `%=`
-1. `**=`
-1. `<<=`
-1. `>>=`
-1. `&=`
-1. `^=`
-1. `|=`
 
 1. `==`
 1. `!=`
