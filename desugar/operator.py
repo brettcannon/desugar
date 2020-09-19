@@ -27,6 +27,31 @@ if typing.TYPE_CHECKING:
 _MISSING = object()
 
 
+def _create_unary_op(name: str, operator: str) -> Callable[[Any], Any]:
+    """Create a unary arithmetic operation function."""
+    method_name = f"__{name}__"
+
+    def unary_op(object_: Any, /) -> Any:
+        """A closure implementing a unary arithmetic operation."""
+        type_ = type(object_)
+        try:
+            unary_method = debuiltins._mro_getattr(type_, method_name)
+        except AttributeError:
+            raise TypeError(f"bad operand type for unary {operator}: {type_!r}")
+        else:
+            return unary_method(object_)
+
+    unary_op.__name__ = unary_op.__qualname__ = method_name
+    unary_op.__doc__ = f"Implement the unary operation `{operator} a`."
+    return unary_op
+
+
+neg = __neg__ = _create_unary_op("neg", "-")
+pos = __pos__ = _create_unary_op("pos", "+")
+# inv/__inv__ are from Python 1; invert/__invert__ introduced in Python 2.0.
+inv = __inv__ = invert = __invert__ = _create_unary_op("invert", "~")
+
+
 def _create_binary_op(name: str, operator: str) -> _BinaryOp:
     """Create a binary operation function.
 

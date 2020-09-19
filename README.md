@@ -5,32 +5,35 @@ Unravelling Python source code.
 ## Unravelled syntax
 
 1. `obj.attr` ➠ `builtins.getattr(obj, "attr")` (including `object.__getattribute__()`)
-1. `a + b` ➠ `operator.add(a, b)`
-1. `a - b` ➠ `operator.sub(a, b)`
-1. `a * b` ➠ `operator.mul(a, b)`
-1. `a @ b` ➠ `operator.matmul(a, b)`
-1. `a / b` ➠ `operator.truediv(a, b)`
-1. `a // b` ➠ `operator.floordiv(a, b)`
-1. `a % b` ➠ `operator.mod(a, b)`
-1. `a ** b` ➠ `operator.pow(a, b)`
-1. `a << b` ➠ `operator.lshift(a, b)`
-1. `a >> b` ➠ `operator.rshift(a, b)`
-1. `a & b` ➠ `operator.and_(a, b)`
-1. `a ^ b` ➠ `operator.xor(a, b)`
-1. `a | b` ➠ `operator.or_(a, b)`
-1. `a += b` ➠ `a = operator.iadd(a, b)`
-1. `a -= b` ➠ `a = operator.isub(a, b)`
-1. `*=` ➠ `a = operator.imul(a, b)`
-1. `@=` ➠ `a = operator.imatmul(a, b)`
-1. `/=` ➠ `a = operator.itruediv(a, b)`
-1. `//=` ➠ `a = operator.ifloordiv(a, b)`
-1. `%=` ➠ `a = operator.imod(a, b)`
-1. `**=` ➠ `a = operator.ipow(a, b)`
-1. `<<=` ➠ `a = operator.ilshift(a, b)`
-1. `>>=` ➠ `a = operator.irshift(a, b)`
-1. `&=` ➠ `a = operator.iand(a, b)`
-1. `^=` ➠ `a = operator.ixor(a, b)`
-1. `|=` ➠ `a = operator.ior(a, b)`
+1. `a + b` ➠ `operator.__add__(a, b)`
+1. `a - b` ➠ `operator.__sub__(a, b)`
+1. `a * b` ➠ `operator.__mul__(a, b)`
+1. `a @ b` ➠ `operator.__matmul__(a, b)`
+1. `a / b` ➠ `operator.__truediv__(a, b)`
+1. `a // b` ➠ `operator.__floordiv__(a, b)`
+1. `a % b` ➠ `operator.__mod__(a, b)`
+1. `a ** b` ➠ `operator.__pow__(a, b)`
+1. `a << b` ➠ `operator.__lshift__(a, b)`
+1. `a >> b` ➠ `operator.__rshift__(a, b)`
+1. `a & b` ➠ `operator.__and__(a, b)`
+1. `a ^ b` ➠ `operator.__xor__(a, b)`
+1. `a | b` ➠ `operator.__or__(a, b)`
+1. `a += b` ➠ `a = operator.__iadd__(a, b)`
+1. `a -= b` ➠ `a = operator.__isub__(a, b)`
+1. `a *= b` ➠ `a = operator.__imul__(a, b)`
+1. `a @= b` ➠ `a = operator.__imatmul__(a, b)`
+1. `a /= b` ➠ `a = operator.__itruediv__(a, b)`
+1. `a //= b` ➠ `a = operator.__ifloordiv__(a, b)`
+1. `a %= b` ➠ `a = operator.__imod__(a, b)`
+1. `a **= b` ➠ `a = operator.__ipow__(a, b)`
+1. `a <<= b` ➠ `a = operator.__ilshift__(a, b)`
+1. `a >>= b` ➠ `a = operator.__irshift__(a, b)`
+1. `a &= b` ➠ `a = operator.__iand__(a, b)`
+1. `a ^= b` ➠ `a = operator.__ixor__(a, b)`
+1. `a |= b` ➠ `a = operator.__ior__(a, b)`
+1. `~ a` ➠ `operator.__invert__(a)`
+1. `- a` ➠ `operator.__neg__(a)`
+1. `+ a` ➠ `operator.__pos__(a)`
 
 ## Syntax to (potentially) unravel
 
@@ -85,10 +88,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 ### Tokens
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
-
-1. `~`
-1. `-` (unary)
-1. `+` (unary)
 
 1. `==`
 1. `!=`
