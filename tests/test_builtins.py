@@ -128,3 +128,80 @@ class TestObjectGetattribute:
         """Only strings are acceptable as the attribute name."""
         with pytest.raises(TypeError):
             __getattribute__(ObjectExample(), 42)
+
+
+@pytest.mark.parametrize(
+    "__eq__", [builtins.object.__eq__, desugar.builtins.object.__eq__]
+)
+class TestEq:
+    def test_same(self, __eq__):
+        """Same objects result in True."""
+        ob = object()
+        assert __eq__(ob, ob) is True
+
+    def test_different(self, __eq__):
+        """Different objects result in NotImplemented."""
+        assert __eq__(object(), object()) is NotImplemented
+
+
+@pytest.mark.parametrize(
+    "__ne__", [builtins.object.__ne__, desugar.builtins.object.__ne__]
+)
+class TestNe:
+    def test_same(self, __ne__):
+        """Same objects result in False."""
+        ob = object()
+        assert __ne__(ob, ob) is False
+
+    def test_different(self, __ne__):
+        """Different objects, by default, result in NotImplemented."""
+        assert __ne__(object(), object()) is NotImplemented
+
+    def test_defer_to_eq(self, __ne__):
+        """__ne__ differs and and negates what __eq__ returns.
+
+        This only applies if the result is not NotImplemented.
+
+        """
+
+        class ImplementEq:
+            def __init__(self):
+                self.called = False
+
+            def __eq__(self, _):
+                self.called = True
+                return True
+
+        ob = ImplementEq()
+
+        assert not __ne__(ob, object())
+        assert ob.called
+
+    def test_defer_to_eq_not_implemented(self, __ne__):
+        """if __eq__ returns NotImplemented, so does __ne__."""
+
+        class EqNotImplemented:
+            def __eq__(self, _):
+                return NotImplemented
+
+        assert __ne__(EqNotImplemented(), EqNotImplemented()) is NotImplemented
+
+    def test_coercion_false(self, __ne__):
+        """If __eq__ does not return NotImplemented and a true value, then
+        __ne__ always returns False."""
+
+        class EqTrueNumber:
+            def __eq__(self, _):
+                return 42
+
+        assert __ne__(EqTrueNumber(), EqTrueNumber()) is False
+
+    def test_coercion_true(self, __ne__):
+        """If __eq__ does not return NotImplemented and a false value, then
+        __ne__ always returns True."""
+
+        class EqFalseNumber:
+            def __eq__(self, _):
+                return 0
+
+        assert __ne__(EqFalseNumber(), EqFalseNumber()) is True

@@ -34,8 +34,8 @@ Unravelling Python source code.
 1. `~ a` ➠ `operator.__invert__(a)`
 1. `- a` ➠ `operator.__neg__(a)`
 1. `+ a` ➠ `operator.__pos__(a)`
-1. `a == b` ➠ `operator.__eq__(a, b)`
-1. `a != b` ➠ `operator.__ne__(a, b)`
+1. `a == b` ➠ `operator.__eq__(a, b)`  (including `object.__eq__()`)
+1. `a != b` ➠ `operator.__ne__(a, b)`  (including `object.__eq__()`)
 1. `a < b` ➠ `operator.__lt__(a, b)`
 1. `a <= b` ➠ `operator.__le__(a, b)`
 1. `a > b` ➠ `operator.__gt__(a, b)`

@@ -10,7 +10,7 @@ import builtins
 import typing
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Iterable
+    from typing import Any, Iterable, Union
 
     class Object(typing.Protocol):
 
@@ -115,5 +115,24 @@ class object:
                 return type_attr
         else:
             raise AttributeError(f"{self.__name__!r} object has no attribute {attr!r}")
+
+    def __eq__(self, other, /) -> Union[bool, NotImplemented]:
+        """Implement equality via identity.
+
+        If the objects are not equal then return NotImplemented to give the
+        other object's __eq__ implementation a chance to participate in the
+        comparison.
+
+        """
+        # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
+        return id(self) == id(other) or NotImplemented
+
+    def __ne__(self, other, /) -> Union[bool, NotImplemented]:
+        """Implement inequality by delegating to __eq__."""
+        # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
+        result = self.__eq__(other)
+        if result is not NotImplemented:
+            result = not bool(result)
+        return result
 
     # TODO: def mro(self) -> Iterable[Type]: ...
