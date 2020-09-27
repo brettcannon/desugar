@@ -34,6 +34,12 @@ Unravelling Python source code.
 1. `~ a` ➠ `operator.__invert__(a)`
 1. `- a` ➠ `operator.__neg__(a)`
 1. `+ a` ➠ `operator.__pos__(a)`
+1. `a == b` ➠ `operator.__eq__(a, b)`
+1. `a != b` ➠ `operator.__ne__(a, b)`
+1. `a < b` ➠ `operator.__lt__(a, b)`
+1. `a <= b` ➠ `operator.__le__(a, b)`
+1. `a > b` ➠ `operator.__gt__(a, b)`
+1. `a >= b` ➠ `operator.__ge__(a, b)`
 
 ## Syntax to (potentially) unravel
 
@@ -88,13 +94,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 ### Tokens
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
-
-1. `==`
-1. `!=`
-1. `<`
-1. `<=`
-1. `>`
-1. `>=`
 
 1. `=`
 1. `:=`

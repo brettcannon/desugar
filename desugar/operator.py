@@ -187,3 +187,135 @@ irshift = __irshift__ = _create_binary_inplace_op(__rshift__)
 iand = __iand__ = _create_binary_inplace_op(__and__)
 ixor = __ixor__ = _create_binary_inplace_op(__xor__)
 ior = __ior__ = _create_binary_inplace_op(__or__)
+
+
+def __gt__(lhs, rhs, /):
+    lhs_type = type(lhs)
+    try:
+        lhs_method = debuiltins._mro_getattr(lhs_type, "__gt__")
+    except AttributeError:
+        pass
+    else:
+        result = lhs_method(lhs, rhs)
+        if result is not NotImplemented:
+            return result
+    raise TypeError(
+        f"'>' not supported between instances of {lhs_type!r} and {type(rhs)!r}"
+    )
+
+
+def __gt__(lhs, rhs, /):
+    lhs_type = type(lhs)
+    try:
+        lhs_method = debuiltins._mro_getattr(lhs_type, "__gt__")
+    except AttributeError:
+        lhs_method = _MISSING
+
+    rhs_type = type(rhs)
+    try:
+        rhs_method = debuiltins._mro_getattr(rhs_type, "__lt__")
+    except AttributeError:
+        rhs_method = _MISSING
+
+    call_lhs = lhs, lhs_method, rhs
+    call_rhs = rhs, rhs_method, lhs
+
+    if (
+        rhs_type is not _MISSING  # Do we care?
+        and rhs_type is not lhs_type  # Could RHS be an actual subclass?
+        and issubclass(rhs_type, lhs_type)  # Is RHS a subclass?
+    ):
+        calls = call_rhs, call_lhs
+    else:
+        calls = call_lhs, call_rhs
+
+    for first_obj, meth, second_obj in calls:
+        if meth is _MISSING:
+            continue
+        value = meth(first_obj, second_obj)
+        if value is not NotImplemented:
+            return value
+    else:
+        raise TypeError(
+            f"unsupported operand type(s) for '>': {lhs_type!r} and {rhs_type!r}"
+        )
+
+
+def _create_rich_comparison(
+    operator: str, name: str, inverse: str, default: Callable[[str, Any, Any], bool]
+) -> Callable[[Any, Any], Any]:
+    """Create a rich comparison function.
+
+    The 'operator' parameter is the human-readable symbol of the operation (e.g.
+    `>`). The 'name' parameter is the primary function (e.g. __gt__), while
+    'inverse' is the inverse of that function (e.g. __lt__). The 'default'
+    parameter is a callable to use when both functions don't exist and/or return
+    NotImplemented.
+
+    """
+
+    def _rich_comparison(lhs: Any, rhs: Any, /) -> Any:
+        lhs_type = type(lhs)
+        try:
+            lhs_method = debuiltins._mro_getattr(lhs_type, name)
+        except AttributeError:
+            lhs_method = _MISSING
+
+        rhs_type = type(rhs)
+        try:
+            rhs_method = debuiltins._mro_getattr(rhs_type, inverse)
+        except AttributeError:
+            rhs_method = _MISSING
+
+        call_lhs = lhs, lhs_method, rhs
+        call_rhs = rhs, rhs_method, lhs
+
+        if (
+            rhs_type is not _MISSING  # Do we care?
+            and rhs_type is not lhs_type  # Could RHS be an actual subclass?
+            and issubclass(rhs_type, lhs_type)  # Is RHS a subclass?
+        ):
+            calls = call_rhs, call_lhs
+        else:
+            calls = call_lhs, call_rhs
+
+        for first_obj, meth, second_obj in calls:
+            if meth is _MISSING:
+                continue
+            value = meth(first_obj, second_obj)
+            if value is not NotImplemented:
+                return value
+        else:
+            return default(operator, lhs, rhs)
+
+    _rich_comparison.__name__ = _rich_comparison.__qualname__ = name
+    _rich_comparison.__doc__ = f"Implement the rich comparison `a {operator} b`."
+    return _rich_comparison
+
+
+def _rich_comparison_unsupported(operator: str, lhs: Any, rhs: Any) -> None:
+    """Raise TypeError when a rich comparison how no fallback logic."""
+    raise TypeError(
+        f"unsupported operand type(s) for {operator!r}: {type(lhs)!r} and {type(rhs)!r}"
+    )
+
+
+gt = __gt__ = _create_rich_comparison(
+    ">", "__gt__", "__lt__", _rich_comparison_unsupported
+)
+lt = __lt__ = _create_rich_comparison(
+    "<", "__lt__", "__gt__", _rich_comparison_unsupported
+)
+ge = __ge__ = _create_rich_comparison(
+    ">=", "__ge__", "__le__", _rich_comparison_unsupported
+)
+le = __le__ = _create_rich_comparison(
+    "<=", "__le__", "__ge__", _rich_comparison_unsupported
+)
+eq = __eq__ = _create_rich_comparison(
+    "==", "__eq__", "__eq__", lambda _, a, b: id(a) == id(b)
+)
+ne = __ne__ = _create_rich_comparison(
+    "!=", "__ne__", "__ne__", lambda _, a, b: id(a) != id(b)
+)
+

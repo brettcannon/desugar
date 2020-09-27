@@ -399,3 +399,87 @@ class LvalueLHSRHSNotImplemented(
 class LHSRHSNotImplementedLvalue(LHSRHSNotImplemented, Lvalue):
 
     """__i*__ implemented, __*__, __r*__ return NotImplemented."""
+
+
+class GtEqGeComparisons:
+    def __gt__(self, _):
+        return "__gt__"
+
+    def __eq__(self, _):
+        return "__eq__"
+
+    def __ge__(self, _):
+        return "__ge__"
+
+
+class LtNeLeComparisons:
+    def __lt__(self, _):
+        return "__lt__"
+
+    def __ne__(self, _):
+        return "__ne__"
+
+    def __le__(self, _):
+        return "__le__"
+
+
+class ComparisonsNotImplemented:
+    def __init__(self, collection):
+        self.called = collection
+
+    def __gt__(self, _):
+        self.called.append((self, "__gt__"))
+        return NotImplemented
+
+    def __eq__(self, _):
+        self.called.append((self, "__eq__"))
+        return NotImplemented
+
+    def __ge__(self, _):
+        self.called.append((self, "__ge__"))
+        return NotImplemented
+
+    def __lt__(self, _):
+        self.called.append((self, "__lt__"))
+        return NotImplemented
+
+    def __ne__(self, _):
+        self.called.append((self, "__ne__"))
+        return NotImplemented
+
+    def __le__(self, _):
+        self.called.append((self, "__le__"))
+        return NotImplemented
+
+
+class ComparisonsNotImplementedSubclass(ComparisonsNotImplemented):
+    pass
+
+
+class DifferentComparisonsNotImplemented:
+    def __init__(self, collection):
+        self.called = collection
+
+    def __gt__(self, _):
+        self.called.append((self, "__gt__"))
+        return NotImplemented
+
+    def __eq__(self, _):
+        self.called.append((self, "__eq__"))
+        return NotImplemented
+
+    def __ge__(self, _):
+        self.called.append((self, "__ge__"))
+        return NotImplemented
+
+    def __lt__(self, _):
+        self.called.append((self, "__lt__"))
+        return NotImplemented
+
+    def __ne__(self, _):
+        self.called.append((self, "__ne__"))
+        return NotImplemented
+
+    def __le__(self, _):
+        self.called.append((self, "__le__"))
+        return NotImplemented
