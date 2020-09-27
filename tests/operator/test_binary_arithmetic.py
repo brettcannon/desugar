@@ -104,7 +104,22 @@ class BinaryOperationTests:
         assert not rhs.called
         assert not rhs.rcalled
 
+    def test_all_methods_not_implemented_different_types_same_impl(self, op):
+        """If both LHS and RHS are different types but same implementation for
+        __r*__, then __r*__ is still called (__*__ is also still called)."""
+        lhs = common.LHSRHSNotImplemented()
+        rhs = common.DifferentRHSNotImplemented()
+        with pytest.raises(TypeError):
+            op(lhs, rhs)
+        assert lhs.called == 1
+        assert not lhs.rcalled
+        assert rhs.rcalled == 1
+
     def test_all_methods_not_implemented_different_types(self, op):
+        """If all related methods return NotImplemented, TypeError is raised.
+
+        When the types differ appropriately, both sides are called.
+        """
         lhs = common.LHSRHSNotImplemented()
         rhs = common.LHSRHSNotImplementedSubclass()
         with pytest.raises(TypeError):

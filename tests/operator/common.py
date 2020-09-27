@@ -147,6 +147,71 @@ class RHS:
         return "__ror__"
 
 
+def radd_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rsub_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rmul_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rmatmul_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rtruediv_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rfloordiv_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rmod_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rpow_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rlshift_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rrshift_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rand_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def rxor_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
+def ror_not_implemented(self, _):
+    self.rcalled += 1
+    return NotImplemented
+
+
 class RHSNotImplemented:
 
     """__r*__ methods returning NotImplemented."""
@@ -155,57 +220,42 @@ class RHSNotImplemented:
         super().__init__()
         self.rcalled = 0
 
-    def __radd__(self, _):
-        self.rcalled += 1
-        return NotImplemented
+    __radd__ = radd_not_implemented
+    __rsub__ = rsub_not_implemented
+    __rmul__ = rmul_not_implemented
+    __rmatmul__ = rmatmul_not_implemented
+    __rtruediv__ = rtruediv_not_implemented
+    __rfloordiv__ = rfloordiv_not_implemented
+    __rmod__ = rmod_not_implemented
+    __rpow__ = rpow_not_implemented
+    __rlshift__ = rlshift_not_implemented
+    __rrshift__ = rrshift_not_implemented
+    __rand__ = rand_not_implemented
+    __rxor__ = rxor_not_implemented
+    __ror__ = ror_not_implemented
 
-    def __rsub__(self, _):
-        self.rcalled += 1
-        return NotImplemented
 
-    def __rmul__(self, _):
-        self.rcalled += 1
-        return NotImplemented
+class DifferentRHSNotImplemented:
 
-    def __rmatmul__(self, _):
-        self.rcalled += 1
-        return NotImplemented
+    """__r*__ methods returning NotImplemented."""
 
-    def __rtruediv__(self, _):
-        self.rcalled += 1
-        return NotImplemented
+    def __init__(self):
+        super().__init__()
+        self.rcalled = 0
 
-    def __rfloordiv__(self, _):
-        self.rcalled += 1
-        return NotImplemented
-
-    def __rmod__(self, _):
-        self.rcalled += 1
-        return NotImplemented
-
-    def __rpow__(self, _):
-        self.rcalled += 1
-        return NotImplemented
-
-    def __rlshift__(self, _):
-        self.rcalled += 1
-        return NotImplemented
-
-    def __rrshift__(self, _):
-        self.rcalled += 1
-        return NotImplemented
-
-    def __rand__(self, _):
-        self.rcalled += 1
-        return NotImplemented
-
-    def __rxor__(self, _):
-        self.rcalled += 1
-        return NotImplemented
-
-    def __ror__(self, _):
-        self.rcalled += 1
-        return NotImplemented
+    __radd__ = radd_not_implemented
+    __rsub__ = rsub_not_implemented
+    __rmul__ = rmul_not_implemented
+    __rmatmul__ = rmatmul_not_implemented
+    __rtruediv__ = rtruediv_not_implemented
+    __rfloordiv__ = rfloordiv_not_implemented
+    __rmod__ = rmod_not_implemented
+    __rpow__ = rpow_not_implemented
+    __rlshift__ = rlshift_not_implemented
+    __rrshift__ = rrshift_not_implemented
+    __rand__ = rand_not_implemented
+    __rxor__ = rxor_not_implemented
+    __ror__ = ror_not_implemented
 
 
 class LHSRHS(LHS, RHS):
