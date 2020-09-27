@@ -141,7 +141,7 @@ or_ = __or__ = _create_binary_op("or", "|")
 
 
 def _create_binary_inplace_op(binary_op: _BinaryOp) -> Callable[[Any, Any], Any]:
-
+    """Create a binary, in-place arithmetic operator."""
     binary_operation_name = binary_op.__name__[2:-2]
     method_name = f"__i{binary_operation_name}__"
     operator = f"{binary_op._operator}="
