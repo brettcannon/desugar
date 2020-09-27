@@ -92,8 +92,8 @@ def _create_binary_op(name: str, operator: str) -> _BinaryOp:
 
         if (
             rhs_type is not _MISSING  # Do we care?
-            and rhs_type is not lhs_type  # Could RHS be a subclass?
-            and issubclass(rhs_type, lhs_type)  # RHS is a subclass!
+            and rhs_type is not lhs_type  # Could RHS be an actual subclass?
+            and issubclass(rhs_type, lhs_type)  # Is RHS a subclass?
             and lhs_rmethod is not rhs_method  # Is __r*__ actually different?
         ):
             calls = call_rhs, call_lhs
