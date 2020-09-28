@@ -100,6 +100,7 @@ def _create_binary_op(name: str, operator: str) -> _BinaryOp:
         elif lhs_type is not rhs_type:
             calls = call_lhs, call_rhs
         else:
+            # https://mail.python.org/archives/list/python-dev@python.org/thread/7NZUCODEAPQFMRFXYRMGJXDSIS3WJYIV/
             calls = (call_lhs,)
 
         for first_obj, meth, second_obj in calls:
@@ -187,21 +188,6 @@ irshift = __irshift__ = _create_binary_inplace_op(__rshift__)
 iand = __iand__ = _create_binary_inplace_op(__and__)
 ixor = __ixor__ = _create_binary_inplace_op(__xor__)
 ior = __ior__ = _create_binary_inplace_op(__or__)
-
-
-def __gt__(lhs, rhs, /):
-    lhs_type = type(lhs)
-    try:
-        lhs_method = debuiltins._mro_getattr(lhs_type, "__gt__")
-    except AttributeError:
-        pass
-    else:
-        result = lhs_method(lhs, rhs)
-        if result is not NotImplemented:
-            return result
-    raise TypeError(
-        f"'>' not supported between instances of {lhs_type!r} and {type(rhs)!r}"
-    )
 
 
 def __gt__(lhs, rhs, /):
