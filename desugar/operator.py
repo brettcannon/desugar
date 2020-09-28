@@ -267,4 +267,3 @@ eq = __eq__ = _create_rich_comparison(
 ne = __ne__ = _create_rich_comparison(
     "!=", "__ne__", "__ne__", lambda _, a, b: id(a) != id(b)
 )
-
