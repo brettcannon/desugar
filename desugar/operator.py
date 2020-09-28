@@ -190,43 +190,6 @@ ixor = __ixor__ = _create_binary_inplace_op(__xor__)
 ior = __ior__ = _create_binary_inplace_op(__or__)
 
 
-def __gt__(lhs, rhs, /):
-    lhs_type = type(lhs)
-    try:
-        lhs_method = debuiltins._mro_getattr(lhs_type, "__gt__")
-    except AttributeError:
-        lhs_method = _MISSING
-
-    rhs_type = type(rhs)
-    try:
-        rhs_method = debuiltins._mro_getattr(rhs_type, "__lt__")
-    except AttributeError:
-        rhs_method = _MISSING
-
-    call_lhs = lhs, lhs_method, rhs
-    call_rhs = rhs, rhs_method, lhs
-
-    if (
-        rhs_type is not _MISSING  # Do we care?
-        and rhs_type is not lhs_type  # Could RHS be an actual subclass?
-        and issubclass(rhs_type, lhs_type)  # Is RHS a subclass?
-    ):
-        calls = call_rhs, call_lhs
-    else:
-        calls = call_lhs, call_rhs
-
-    for first_obj, meth, second_obj in calls:
-        if meth is _MISSING:
-            continue
-        value = meth(first_obj, second_obj)
-        if value is not NotImplemented:
-            return value
-    else:
-        raise TypeError(
-            f"unsupported operand type(s) for '>': {lhs_type!r} and {rhs_type!r}"
-        )
-
-
 def _create_rich_comparison(
     operator: str, name: str, inverse: str, default: Callable[[str, Any, Any], bool]
 ) -> Callable[[Any, Any], Any]:
