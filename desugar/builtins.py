@@ -10,7 +10,7 @@ import builtins
 import typing
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Iterable, Union
+    from typing import Any, Iterable, Literal, Union
 
     class Object(typing.Protocol):
 
@@ -116,7 +116,7 @@ class object:
         else:
             raise AttributeError(f"{self.__name__!r} object has no attribute {attr!r}")
 
-    def __eq__(self, other, /) -> Union[bool, NotImplemented]:
+    def __eq__(self, other, /) -> Union[Literal[True], NotImplemented]:
         """Implement equality via identity.
 
         If the objects are not equal then return NotImplemented to give the
@@ -127,7 +127,7 @@ class object:
         # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
         return (self is other) or NotImplemented
 
-    def __ne__(self, other, /) -> Union[bool, NotImplemented]:
+    def __ne__(self, other, /) -> Union[Literal[True], NotImplemented]:
         """Implement inequality by delegating to __eq__."""
         # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
         result = self.__eq__(other)
