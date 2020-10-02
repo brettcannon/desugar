@@ -31,6 +31,10 @@ class _Missing:
 _MISSING = _Missing()
 
 
+def _is_proper_subclass(subcls: type, supercls: type, /):
+    """Check if a class is the subclass of another without being the same type."""
+    return (subcls is not supercls) and issubclass(subcls, supercls)
+
 
 def _create_unary_op(name: str, operator: str) -> Callable[[Any], Any]:
     """Create a unary arithmetic operation function."""
@@ -96,9 +100,7 @@ def _create_binary_op(name: str, operator: str) -> _BinaryOp:
         call_rhs = rhs, rhs_method, lhs
 
         if (
-            rhs_type is not _MISSING  # Do we care?
-            and rhs_type is not lhs_type  # Could RHS be an actual subclass?
-            and issubclass(rhs_type, lhs_type)  # Is RHS a subclass?
+            _is_proper_subclass(rhs_type, lhs_type)
             and lhs_rmethod is not rhs_method  # Is __r*__ actually different?
         ):
             calls = call_rhs, call_lhs
@@ -224,11 +226,7 @@ def _create_rich_comparison(
         call_lhs = lhs, lhs_method, rhs
         call_rhs = rhs, rhs_method, lhs
 
-        if (
-            rhs_type is not _MISSING  # Do we care?
-            and rhs_type is not lhs_type  # Could RHS be an actual subclass?
-            and issubclass(rhs_type, lhs_type)  # Is RHS a subclass?
-        ):
+        if _is_proper_subclass(rhs_type, lhs_type):
             calls = call_rhs, call_lhs
         else:
             calls = call_lhs, call_rhs
