@@ -127,7 +127,7 @@ class object:
         # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
         return (self is other) or NotImplemented
 
-    def __ne__(self, other, /) -> Union[Literal[True], NotImplemented]:
+    def __ne__(self, other, /) -> Union[bool, NotImplemented]:
         """Implement inequality by delegating to __eq__."""
         # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
         result = self.__eq__(other)
