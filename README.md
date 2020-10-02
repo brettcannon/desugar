@@ -35,7 +35,7 @@ Unravelling Python source code.
 1. `- a` ➠ `operator.__neg__(a)`
 1. `+ a` ➠ `operator.__pos__(a)`
 1. `a == b` ➠ `operator.__eq__(a, b)`  (including `object.__eq__()`)
-1. `a != b` ➠ `operator.__ne__(a, b)`  (including `object.__eq__()`)
+1. `a != b` ➠ `operator.__ne__(a, b)`  (including `object.__ne__()`)
 1. `a < b` ➠ `operator.__lt__(a, b)`
 1. `a <= b` ➠ `operator.__le__(a, b)`
 1. `a > b` ➠ `operator.__gt__(a, b)`
@@ -113,7 +113,7 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 ### [Literals](https://docs.python.org/3.8/reference/lexical_analysis.html#literals)
 
 The list below ignores literals which are represented via syntax above.
-For instance, lists are left off as they are represented by `[]` tokens.
+For instance, lists are ignored as they are represented by `[]` tokens.
 
 1. Bytes (`b`, `r`)
 1. Strings (`u`, `f`, `r`; single line, multi-line)
