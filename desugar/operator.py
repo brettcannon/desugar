@@ -24,7 +24,12 @@ if typing.TYPE_CHECKING:
             ...
 
 
-_MISSING = object()
+class _Missing:
+    """Class to represent an unfound object."""
+
+
+_MISSING = _Missing()
+
 
 
 def _create_unary_op(name: str, operator: str) -> Callable[[Any], Any]:
