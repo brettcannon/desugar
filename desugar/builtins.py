@@ -125,14 +125,15 @@ class object:
 
         """
         # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
-        return id(self) == id(other) or NotImplemented
+        return (self is other) or NotImplemented
 
     def __ne__(self, other, /) -> Union[bool, NotImplemented]:
         """Implement inequality by delegating to __eq__."""
         # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
         result = self.__eq__(other)
         if result is not NotImplemented:
-            result = not bool(result)
-        return result
+            return not result
+        else:
+            return NotImplemented
 
     # TODO: def mro(self) -> Iterable[Type]: ...
