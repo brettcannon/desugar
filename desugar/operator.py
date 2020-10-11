@@ -198,13 +198,13 @@ ior = __ior__ = _create_binary_inplace_op(__or__)
 
 
 def _create_rich_comparison(
-    operator: str, name: str, inverse: str, default: Callable[[str, Any, Any], bool]
+    operator: str, name: str, reflection: str, default: Callable[[str, Any, Any], bool]
 ) -> Callable[[Any, Any], Any]:
     """Create a rich comparison function.
 
     The 'operator' parameter is the human-readable symbol of the operation (e.g.
     `>`). The 'name' parameter is the primary function (e.g. __gt__), while
-    'inverse' is the inverse of that function (e.g. __lt__). The 'default'
+    'reflection' is the reflection of that function (e.g. __lt__). The 'default'
     parameter is a callable to use when both functions don't exist and/or return
     NotImplemented.
 
@@ -219,7 +219,7 @@ def _create_rich_comparison(
 
         rhs_type = type(rhs)
         try:
-            rhs_method = debuiltins._mro_getattr(rhs_type, inverse)
+            rhs_method = debuiltins._mro_getattr(rhs_type, reflection)
         except AttributeError:
             rhs_method = _MISSING
 
