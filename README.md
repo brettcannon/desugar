@@ -1,6 +1,8 @@
 # desugar
 Unravelling Python source code.
 
+There are [accompanying blog posts](https://snarky.ca/tag/syntactic-sugar/) to
+go with all of the code in this repository.
 
 ## Unravelled syntax
 
@@ -50,8 +52,8 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. `False`~
 1. `True`~
 
-1. `and`~
-1. `or`~
+1. [`and`](https://docs.python.org/3/reference/expressions.html#boolean-operations)~
+1. [`or`](https://docs.python.org/3/reference/expressions.html#boolean-operations)~
 
 1. `assert`*
 1. `await`~
@@ -86,9 +88,9 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 1. `del`
 
-1. `not`
-1. `in`*
-1. `is`*
+1. [`not`](https://docs.python.org/3/reference/expressions.html#boolean-operations)*
+1. [`in`](https://docs.python.org/3/reference/expressions.html#membership-test-operations)*
+1. [`is`](https://docs.python.org/3/reference/expressions.html#is-not)*
 
 1. `raise`
 1. `return`
