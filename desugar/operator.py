@@ -246,7 +246,7 @@ def _create_rich_comparison(
 
 
 def _rich_comparison_unsupported(operator: str, lhs: Any, rhs: Any) -> None:
-    """Raise TypeError when a rich comparison how no fallback logic."""
+    """Raise TypeError when a rich comparison has no fallback logic."""
     raise TypeError(
         f"unsupported operand type(s) for {operator!r}: {type(lhs)!r} and {type(rhs)!r}"
     )
