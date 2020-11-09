@@ -57,61 +57,62 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. [`and`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
 1. [`or`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
 
-1. `assert` *
-1. `await` ~
+1. [`assert`](https://docs.python.org/3.8/reference/simple_stmts.html#the-assert-statement) *
+1. [`await`](https://docs.python.org/3.8/reference/expressions.html#await) ~
 
-1. `break`
-1. `continue`
-1. `pass` *
+1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement)
+1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement)
+1. [`pass`](https://docs.python.org/3.8/reference/simple_stmts.html#the-pass-statement) *
 
 
-1. `def`
-1. `class` ~
-1. `async` ~
-1. `lambda`
+1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
+1. [`class`](https://docs.python.org/3.8/reference/compound_stmts.html#class-definitions) ~
+1. [`async`](https://docs.python.org/3.8/reference/compound_stmts.html#coroutine-function-definition) ~
+1. [`lambda`](https://docs.python.org/3.8/reference/expressions.html#lambda)
 
-1. `if`
-1. `elif`
-1. `else`
-1. `while`
-1. `for` *
-1. `with` *
+1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
+1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
+1. [`for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-for-statement) *
+1. [`with`](https://docs.python.org/3.8/reference/compound_stmts.html#the-with-statement) *
 
-1. `try`
-1. `except`
-1. `finally`
+1. [`try`/`except`/`else`/`finally`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement)
 
-1. `global`
-1. `nonlocal`
+1. [`global`](https://docs.python.org/3.8/reference/simple_stmts.html#the-global-statement)
+1. [`nonlocal`](https://docs.python.org/3.8/reference/simple_stmts.html#the-nonlocal-statement)
 
-1. `import` *
-1. `from` *
-1. `as` *
+1. [`import`/`from`/`as`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) *
 
-1. `del`
+1. [`del`](https://docs.python.org/3.8/reference/simple_stmts.html#the-del-statement)
 
 1. [`not`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
 1. [`in`](https://docs.python.org/3/reference/expressions.html#membership-test-operations) *
 
-1. `raise`
-1. `return`
-1. `yield`
+1. [`raise`/`from`](https://docs.python.org/3.8/reference/simple_stmts.html#the-raise-statement)
+1. [`return`](https://docs.python.org/3.8/reference/simple_stmts.html#the-return-statement)
+1. [`yield`](https://docs.python.org/3.8/reference/simple_stmts.html#the-yield-statement)
 
 ### Tokens
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
 
-1. `=`
-1. `:=`
+1. [`=`](https://docs.python.org/3.8/reference/simple_stmts.html#assignment-statements)
+1. [`:=`](https://docs.python.org/3.8/reference/expressions.html#assignment-expressions)
 
-1. `[]` *
-1. `{}` *
+1. `[]` for [list display](https://docs.python.org/3.8/reference/expressions.html#list-displays) *
+1. `[]` for list [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) *
+1. `[]` for [subscriptions](https://docs.python.org/3.8/reference/expressions.html#subscriptions), `:` for [slicing](https://docs.python.org/3.8/reference/expressions.html#slicings) *
 
-1. `()`
+1. `{}` for [set display](https://docs.python.org/3.8/reference/expressions.html#set-displays) *
+1. `{}` for set [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) *
+
+1. `{}` for [dictionary display](https://docs.python.org/3.8/reference/expressions.html#dictionary-displays) *
+1. `{}` for dictionary [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) *
+
+1. `()` for [tuple display](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms)
+
+1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
+
 1. `,`
-1. `:`
 1. `;` *
-
-1. `->` *
 
 1. `...` *
 
