@@ -270,3 +270,13 @@ eq = __eq__ = _create_rich_comparison(
 ne = __ne__ = _create_rich_comparison(
     "!=", "__ne__", "__ne__", lambda _, a, b: id(a) != id(b)
 )
+
+
+def is_(a: Any, b: Any) -> bool:
+    """Check if the arguments are the same object."""
+    return id(a) == id(b)
+
+
+def is_not(a: Any, b: Any) -> bool:
+    """Check if the arguments are different objects."""
+    return id(a) != id(b)
