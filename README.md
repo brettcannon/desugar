@@ -51,31 +51,31 @@ go with all of the code in this repository.
 Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/Lib/keyword.py).
 
 1. `None`
-1. `False`~
-1. `True`~
+1. `False` ~
+1. `True` ~
 
-1. [`and`](https://docs.python.org/3/reference/expressions.html#boolean-operations)~
-1. [`or`](https://docs.python.org/3/reference/expressions.html#boolean-operations)~
+1. [`and`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
+1. [`or`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
 
-1. `assert`*
-1. `await`~
+1. `assert` *
+1. `await` ~
 
 1. `break`
 1. `continue`
-1. `pass`*
+1. `pass` *
 
 
 1. `def`
-1. `class`*
-1. `async`~
-1. `lambda`~
+1. `class` ~
+1. `async` ~
+1. `lambda`
 
 1. `if`
 1. `elif`
 1. `else`
 1. `while`
-1. `for`*
-1. `with`*
+1. `for` *
+1. `with` *
 
 1. `try`
 1. `except`
@@ -84,14 +84,14 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. `global`
 1. `nonlocal`
 
-1. `import`*
-1. `from`*
-1. `as`
+1. `import` *
+1. `from` *
+1. `as` *
 
 1. `del`
 
-1. [`not`](https://docs.python.org/3/reference/expressions.html#boolean-operations)*
-1. [`in`](https://docs.python.org/3/reference/expressions.html#membership-test-operations)*
+1. [`not`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
+1. [`in`](https://docs.python.org/3/reference/expressions.html#membership-test-operations) *
 
 1. `raise`
 1. `return`
@@ -103,17 +103,17 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `=`
 1. `:=`
 
-1. `[]`*
-1. `{}`*
+1. `[]` *
+1. `{}` *
 
 1. `()`
 1. `,`
 1. `:`
-1. `;`*
+1. `;` *
 
-1. `->`*
+1. `->` *
 
-1. `...`*
+1. `...` *
 
 ### [Literals](https://docs.python.org/3.8/reference/lexical_analysis.html#literals)
 
