@@ -1,5 +1,5 @@
 # desugar
-Unravelling Python source code.
+Unravelling Python's syntactic sugar source code.
 
 There are [accompanying blog posts](https://snarky.ca/tag/syntactic-sugar/) to
 go with all of the code in this repository.
@@ -50,46 +50,48 @@ go with all of the code in this repository.
 ### Keywords
 Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/Lib/keyword.py).
 
-1. `None`
-1. `False` ~
-1. `True` ~
+#### Expressions
+1. [`not`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
+1. [`in`/`not in`](https://docs.python.org/3/reference/expressions.html#membership-test-operations) *
 
 1. [`and`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
 1. [`or`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
 
-1. [`assert`](https://docs.python.org/3.8/reference/simple_stmts.html#the-assert-statement) *
+1. [`yield`](https://docs.python.org/3.8/reference/simple_stmts.html#the-yield-statement)
 1. [`await`](https://docs.python.org/3.8/reference/expressions.html#await) ~
 
+1. [`lambda`](https://docs.python.org/3.8/reference/expressions.html#lambda)
+
+#### Statements
+1. [`assert`](https://docs.python.org/3.8/reference/simple_stmts.html#the-assert-statement) *
+
+1. [`import`/`from`/`as`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) *
+
+1. [`pass`](https://docs.python.org/3.8/reference/simple_stmts.html#the-pass-statement) *
 1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement)
 1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement)
-1. [`pass`](https://docs.python.org/3.8/reference/simple_stmts.html#the-pass-statement) *
-
-
-1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
-1. [`class`](https://docs.python.org/3.8/reference/compound_stmts.html#class-definitions) ~
-1. [`async`](https://docs.python.org/3.8/reference/compound_stmts.html#coroutine-function-definition) ~
-1. [`lambda`](https://docs.python.org/3.8/reference/expressions.html#lambda)
 
 1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
 1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
 1. [`for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-for-statement) *
+1. [`async for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) *
+
 1. [`with`](https://docs.python.org/3.8/reference/compound_stmts.html#the-with-statement) *
+1. [`async with`](https://docs.python.org/3.8/reference/compound_stmts.html#async-with) *
+
+1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
+1. [`async def`](https://docs.python.org/3.8/reference/compound_stmts.html#coroutine-function-definition) ~
+1. [`class`](https://docs.python.org/3.8/reference/compound_stmts.html#class-definitions) ~
 
 1. [`try`/`except`/`else`/`finally`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement)
 
 1. [`global`](https://docs.python.org/3.8/reference/simple_stmts.html#the-global-statement)
 1. [`nonlocal`](https://docs.python.org/3.8/reference/simple_stmts.html#the-nonlocal-statement)
 
-1. [`import`/`from`/`as`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) *
-
 1. [`del`](https://docs.python.org/3.8/reference/simple_stmts.html#the-del-statement)
-
-1. [`not`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
-1. [`in`](https://docs.python.org/3/reference/expressions.html#membership-test-operations) *
 
 1. [`raise`/`from`](https://docs.python.org/3.8/reference/simple_stmts.html#the-raise-statement)
 1. [`return`](https://docs.python.org/3.8/reference/simple_stmts.html#the-return-statement)
-1. [`yield`](https://docs.python.org/3.8/reference/simple_stmts.html#the-yield-statement)
 
 ### Tokens
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
@@ -121,6 +123,9 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 The list below ignores literals which are represented via syntax above.
 For instance, lists are ignored as they are represented by `[]` tokens.
 
+1. `None`
+1. `False`
+1. `True`
 1. Bytes (`b`, `r`)
 1. Strings (`u`, `f`, `r`; single line, multi-line)
 1. Integers (base-10, `b`, `o`, `x`)
