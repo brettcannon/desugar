@@ -109,11 +109,10 @@ class object:
 
         if attr in self.__dict__:
             return self.__dict__[attr]
+        elif descriptor_type_get is not NOTHING:
+            return descriptor_type_get(type_attr, self, self_type)
         elif type_attr is not NOTHING:
-            if descriptor_type_get is not NOTHING:
-                return descriptor_type_get(type_attr, self, self_type)
-            else:
-                return type_attr
+            return type_attr
         else:
             raise AttributeError(f"{self_type.__name__!r} object has no attribute {attr!r}")
 
