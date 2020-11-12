@@ -116,7 +116,9 @@ class object:
         elif type_attr is not NOTHING:
             return type_attr
         else:
-            raise AttributeError(f"{self_type.__name__!r} object has no attribute {attr!r}")
+            raise AttributeError(
+                f"{self_type.__name__!r} object has no attribute {attr!r}"
+            )
 
     def __eq__(self, other, /) -> Union[Literal[True], NotImplemented]:
         """Implement equality via identity.
