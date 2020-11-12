@@ -98,8 +98,10 @@ class object:
                 if "__get__" in type_attr_type.__dict__:
                     descriptor_type_get = type_attr_type.__dict__["__get__"]
                     # Include/descrobject.h:PyDescr_IsData
-                    if ("__set__" in type_attr_type.__dict__
-                            or "__delete__" in type_attr_type.__dict__):
+                    if (
+                        "__set__" in type_attr_type.__dict__
+                        or "__delete__" in type_attr_type.__dict__
+                    ):
                         # Data descriptor.
                         return descriptor_type_get(type_attr, self, self_type)
                     else:
