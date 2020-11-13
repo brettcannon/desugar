@@ -6,8 +6,28 @@ import desugar.builtins
 
 
 class NonDataProp:
+    msg = "non-data property"
+
     def __get__(self, instance, owner=None):
-        return "non-data property"
+        return self.msg
+
+
+class NonDataPropSubclass(NonDataProp):
+    pass
+
+
+class SetDataProp(NonDataProp):
+    msg = "__set__"
+
+    def __set__(self, instance, value):
+        return value
+
+
+class DeleteDataProp(NonDataProp):
+    msg = "__delete__"
+
+    def __delete__(self, instance):
+        return "__delete__"
 
 
 class ObjectBaseExample:
@@ -23,11 +43,17 @@ class ObjectExample(ObjectBaseExample):
     def data_prop(self):
         return "data property"
 
+    set_data_prop = SetDataProp()
+    delete_data_prop = DeleteDataProp()
+
     def __init__(self):
         self.ins_attr = "instance attribute"
-        self.__dict__["data_prop"] = "Should never be reached (instance attribute)"
+        self.__dict__["data_prop"] = self.__dict__["set_data_prop"] = self.__dict__[
+            "delete_data_prop"
+        ] = "Should never be reached (instance attribute)"
 
     non_data_prop = NonDataProp()
+    non_data_prop_subclass = NonDataPropSubclass()
 
     class_attr = "class attribute"
     ins_attr = "should never be reached (class attribute)"
@@ -96,9 +122,15 @@ class TestObjectGetattribute:
 
     """Tests for  object.__getattribute__()."""
 
-    def test_data_descriptor(self, __getattribute__):
+    def test_full_data_descriptor(self, __getattribute__):
         """A data descriptor on the class will be found."""
         assert __getattribute__(ObjectExample(), "data_prop") == "data property"
+
+    def test_set_data_descriptor(self, __getattribute__):
+        assert __getattribute__(ObjectExample(), "set_data_prop") == "__set__"
+
+    def test_delete_data_descriptor(self, __getattribute__):
+        assert __getattribute__(ObjectExample(), "delete_data_prop") == "__delete__"
 
     def test_instance_attr(self, __getattribute__):
         """An attribute on the instance will be found."""
@@ -107,6 +139,13 @@ class TestObjectGetattribute:
     def test_non_data_descriptor(self, __getattribute__):
         """A non-data descriptor on the class will be found."""
         assert __getattribute__(ObjectExample(), "non_data_prop") == "non-data property"
+
+    def test_non_data_descriptor_subclass(self, __getattribute__):
+        """A subclass of a non-data descriptor should work."""
+        assert (
+            __getattribute__(ObjectExample(), "non_data_prop_subclass")
+            == "non-data property"
+        )
 
     def test_class_attr(self, __getattribute__):
         """An attribute on the class will be found."""

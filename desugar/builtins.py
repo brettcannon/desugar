@@ -91,28 +91,32 @@ class object:
             )
 
         type_attr = descriptor_type_get = NOTHING
-        for base in self_type.mro():
-            if attr in base.__dict__:
-                type_attr = base.__dict__[attr]
-                type_attr_type = type(type_attr)
-                if "__get__" in type_attr_type.__dict__:
-                    descriptor_type_get = type_attr_type.__dict__["__get__"]
-                    # Include/descrobject.h:PyDescr_IsData
-                    if "__set__" in type_attr_type.__dict__:
+        try:
+            type_attr = _mro_getattr(self_type, attr)
+        except AttributeError:
+            pass  # Hopefully an instance attribute.
+        else:
+            type_attr_type = type(type_attr)
+            try:
+                descriptor_type_get = _mro_getattr(type_attr_type, "__get__")
+            except AttributeError:
+                pass  # At least a class attribute.
+            else:
+                # At least a non-data descriptor.
+                for base in type_attr_type.mro():
+                    if "__set__" in base.__dict__ or "__delete__" in base.__dict__:
                         # Data descriptor.
                         return descriptor_type_get(type_attr, self, self_type)
-                    else:
-                        break  # Non-data descriptor.
-                else:
-                    break  # Plain object.
 
         if attr in self.__dict__:
+            # Instance attribute.
             return self.__dict__[attr]
+        elif descriptor_type_get is not NOTHING:
+            # Non-data descriptor.
+            return descriptor_type_get(type_attr, self, self_type)
         elif type_attr is not NOTHING:
-            if descriptor_type_get is not NOTHING:
-                return descriptor_type_get(type_attr, self, self_type)
-            else:
-                return type_attr
+            # Class attribute.
+            return type_attr
         else:
             raise AttributeError(f"{self.__name__!r} object has no attribute {attr!r}")
 
