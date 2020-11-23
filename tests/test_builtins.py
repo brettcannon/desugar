@@ -1,4 +1,5 @@
 import builtins
+import warnings
 
 import pytest
 
@@ -112,6 +113,97 @@ class TestGetattr:
 
     def test_default(self, getattr):
         assert getattr(ObjectExample(), "not_real", 42) == 42
+
+
+class Len:
+    def __init__(self, length):
+        self._len = length
+
+    def __len__(self):
+        return self._len
+
+
+class Index:
+    def __init__(self, index):
+        self._index = index
+
+    def __index__(self):
+        return self._index
+
+
+@pytest.mark.parametrize("len", [builtins.len, desugar.builtins.len])
+class TestLen:
+
+    """Tests for len()."""
+
+    def test_list(self, len):
+        """Returns the length of a list."""
+        example = [1, 2, 3, 4, 5]
+        assert len(example) == 5
+
+    def test_non_container(self, len):
+        """TypeError is raised when called on an object that lacks __len__()."""
+        with pytest.raises(TypeError):
+            len(42)
+
+    def test_int_subclass(self, len):
+        """__len__() may return an int subclass."""
+
+        class SubInt(int):
+            def __repr__(self):
+                return f"<SubInt of {int.__repr__(self)}>"
+
+        sub_42 = SubInt(42)
+
+        length = len(Len(sub_42))
+        assert length == 42
+        assert not isinstance(length, SubInt)
+        assert isinstance(length, int)
+
+    def test_index_on_non_int(self, len):
+        """Call __index__() if the object returned by __len__() is not a subclass of int."""
+        index = Index(42)
+        length = Len(index)
+        assert len(length) == 42
+
+    def test_index_raises_on_non_int(self, len):
+        """Raises TypeError when __index__() returns a non-int."""
+        index = Index("42")
+        length = Len(index)
+        with pytest.raises(TypeError):
+            len(length)
+
+    def test_index_raises_on_int_subclass(self, len):
+        """Raises TypeError if __index__() return an int subclass."""
+
+        class SubInt(int):
+            pass
+
+        index = Index(SubInt(42))
+        length = Len(index)
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DeprecationWarning)
+            try:
+                len(length)
+            except (TypeError, DeprecationWarning):
+                return
+            pytest.fail(
+                "__index__() returning an int subclass did not trigger a "
+                "TypeError or DeprecationWarning"
+            )
+
+    def test_negative_length(self, len):
+        """Raises ValueError if the index is < 0."""
+        index = Index(-1)
+        length = Len(index)
+        with pytest.raises(ValueError):
+            len(length)
+
+    def test_negative_index(self, len):
+        """Raises ValueError if the length is < 0."""
+        length = Len(-1)
+        with pytest.raises(ValueError):
+            len(length)
 
 
 @pytest.mark.parametrize(

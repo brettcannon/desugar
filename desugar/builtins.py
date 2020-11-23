@@ -80,6 +80,57 @@ def getattr(obj: Object, attr: str, default: Any = NOTHING, /) -> Any:
         raise attr_exc
 
 
+def _index(obj: Any, /) -> int:
+    """Losslessly convert an object to an integer object.
+
+    If obj is an instance of int, return it directly. Otherwise call __index__()
+    and require it be a direct instance of int (raising TypeError if it isn't).
+    """
+    # https://github.com/python/cpython/blob/v3.8.3/Objects/abstract.c#L1260-L1302
+    if isinstance(obj, int):
+        return obj
+
+    length_type = type(obj)
+    try:
+        __index__ = _mro_getattr(length_type, "__index__")
+    except AttributeError:
+        msg = (
+            f"{length_type!r} cannot be interpreted as an integer "
+            "(must be either a subclass of 'int' or have an __index__() method)"
+        )
+        raise TypeError(msg)
+    index = __index__(obj)
+    # Returning a subclass of int is deprecated in CPython.
+    if index.__class__ is int:
+        return index
+    else:
+        raise TypeError(
+            f"the __index__() method of {length_type!r} returned an object of "
+            "type {type(index)!r}, not 'int'"
+        )
+
+
+def len(obj: Any, /) -> int:
+    """Return the number of items in a container."""
+    # https://github.com/python/cpython/blob/v3.8.3/Python/bltinmodule.c#L1536-L1557
+    # https://github.com/python/cpython/blob/v3.8.3/Objects/abstract.c#L45-L63
+    # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L6184-L6209
+    type_ = type(obj)
+    try:
+        __len__ = _mro_getattr(type_, "__len__")
+    except AttributeError:
+        raise TypeError(f"type {type!r} does not have a __len__() method")
+    length = __len__(obj)
+    # Due to len() using PyObject_Size() (which returns Py_ssize_t),
+    # the returned value is always a direct instance of int via
+    # PyLong_FromSsize_t().
+    index = int(_index(length))
+    if index < 0:
+        raise ValueError("__len__() should return >= 0")
+    else:
+        return index
+
+
 class object:
     def __getattribute__(self, attr: str, /) -> Any:
         """Attribute access."""
