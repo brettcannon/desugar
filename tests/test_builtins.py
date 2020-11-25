@@ -208,7 +208,7 @@ class TestLen:
 
 @pytest.mark.parametrize(
     "__getattribute__",
-    [builtins.type.__getattribute__, desugar.builtins.type.__getattribute__],
+    [builtins.object.__getattribute__, desugar.builtins.object.__getattribute__],
 )
 class TestObjectGetattribute:
 
@@ -261,7 +261,9 @@ class TestObjectGetattribute:
             __getattribute__(ObjectExample(), 42)
 
 
-@pytest.mark.parametrize("__eq__", [builtins.type.__eq__, desugar.builtins.type.__eq__])
+@pytest.mark.parametrize(
+    "__eq__", [builtins.object.__eq__, desugar.builtins.object.__eq__]
+)
 class TestEq:
     def test_same(self, __eq__):
         """Same objects result in True."""
@@ -273,7 +275,9 @@ class TestEq:
         assert __eq__(object(), object()) is NotImplemented
 
 
-@pytest.mark.parametrize("__ne__", [builtins.type.__ne__, desugar.builtins.type.__ne__])
+@pytest.mark.parametrize(
+    "__ne__", [builtins.object.__ne__, desugar.builtins.object.__ne__]
+)
 class TestNe:
     def test_same(self, __ne__):
         """Same objects result in False."""

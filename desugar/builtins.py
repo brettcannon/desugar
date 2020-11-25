@@ -12,38 +12,17 @@ import typing
 if typing.TYPE_CHECKING:
     from typing import Any, Iterable, Literal, Union
 
-    class Type(typing.Protocol):
-
-        """Protocol for types."""
-
-        __name__: str
-        __dict__: dict[str, Any]
-
-        def mro() -> Iterable[Type]:
-            # https://docs.python.org/3.8/library/stdtypes.html?highlight=mro#class.mro
-            ...
-
-        def __getattribute__(self, name: str) -> Any:
-            ...
-
-    class Object(typing.Protocol):
-
-        """Protocol for objects."""
-
-        __class__: Type
-        __dict__: dict[str, Any]
-
-
 # TODO:
 #   - type()
 #   - isinstance()
 #   - issubclass()
+#   - type.mro()
 
 
 _NOTHING = builtins.object()  # C: NULL
 
 
-def _mro_getattr(type_: Type, attr: str) -> Any:
+def _mro_getattr(type_: type, attr: str) -> Any:
     """Get an attribute from a type based on its MRO."""
     for base in type_.mro():
         if attr in base.__dict__:
@@ -52,7 +31,7 @@ def _mro_getattr(type_: Type, attr: str) -> Any:
         raise AttributeError(f"{type_.__name__!r} object has no attribute {attr!r}")
 
 
-def getattr(obj: Object, attr: str, default: Any = _NOTHING, /) -> Any:
+def getattr(obj: object, attr: str, default: Any = _NOTHING, /) -> Any:
     """Implement attribute access via  __getattribute__ and __getattr__."""
     # Python/bltinmodule.c:builtin_getattr
     if not isinstance(attr, str):
@@ -81,7 +60,7 @@ def getattr(obj: Object, attr: str, default: Any = _NOTHING, /) -> Any:
         raise attr_exc
 
 
-def _index(obj: Object, /) -> int:
+def _index(obj: object, /) -> int:
     """Losslessly convert an object to an integer object.
 
     If obj is an instance of int, return it directly. Otherwise call __index__()
@@ -111,7 +90,7 @@ def _index(obj: Object, /) -> int:
         )
 
 
-def len(obj: Object, /) -> int:
+def len(obj: object, /) -> int:
     """Return the number of items in a container."""
     # https://github.com/python/cpython/blob/v3.8.3/Python/bltinmodule.c#L1536-L1557
     # https://github.com/python/cpython/blob/v3.8.3/Objects/abstract.c#L45-L63
@@ -132,7 +111,7 @@ def len(obj: Object, /) -> int:
         return index
 
 
-class type:
+class object:
     def __getattribute__(self, attr: str, /) -> Any:
         """Attribute access."""
         # Objects/object.c:PyObject_GenericGetAttr
@@ -191,5 +170,3 @@ class type:
             return not result
         else:
             return NotImplemented
-
-    # TODO: def mro(self) -> Iterable[Type]: ...
