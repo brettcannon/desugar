@@ -280,3 +280,8 @@ def is_(a: Any, b: Any, /) -> bool:
 def is_not(a: Any, b: Any, /) -> bool:
     """Check if the arguments are different objects."""
     return id(a) != id(b)
+
+
+def index(a: Any, /) -> int:
+    """Losslessly convert a numeric object to an integer."""
+    return debuiltins._index(a)
