@@ -272,11 +272,11 @@ ne = __ne__ = _create_rich_comparison(
 )
 
 
-def is_(a: Any, b: Any) -> bool:
+def is_(a: Any, b: Any, /) -> bool:
     """Check if the arguments are the same object."""
     return id(a) == id(b)
 
 
-def is_not(a: Any, b: Any) -> bool:
+def is_not(a: Any, b: Any, /) -> bool:
     """Check if the arguments are different objects."""
     return id(a) != id(b)
