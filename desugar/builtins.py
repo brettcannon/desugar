@@ -12,15 +12,6 @@ import typing
 if typing.TYPE_CHECKING:
     from typing import Any, Iterable, Literal, Union
 
-    class Object(typing.Protocol):
-
-        """Protocol for objects."""
-
-        __dict__: dict[str, Any]
-
-        def __getattribute__(self, name: str) -> Any:
-            ...
-
     class Type(typing.Protocol):
 
         """Protocol for types."""
@@ -32,6 +23,30 @@ if typing.TYPE_CHECKING:
             # https://docs.python.org/3.8/library/stdtypes.html?highlight=mro#class.mro
             ...
 
+        def __getattribute__(self, name: str) -> Any:
+            ...
+
+    class Object(typing.Protocol):
+
+        """Protocol for objects."""
+
+        __class__: Type
+        __dict__: dict[str, Any]
+
+    class Indexed(Type):
+
+        """Protocol for objects defining lossless integer conversion."""
+
+        def __index__(self) -> int:
+            ...
+
+    class Sized(Type):
+
+        """Protocol for length/sized containers."""
+
+        def __len__(self) -> int | Indexed:
+            ...
+
 
 # TODO:
 #   - type()
@@ -39,7 +54,7 @@ if typing.TYPE_CHECKING:
 #   - issubclass()
 
 
-NOTHING = builtins.object()  # C: NULL
+_NOTHING = builtins.object()  # C: NULL
 
 
 def _mro_getattr(type_: Type, attr: str) -> Any:
@@ -51,14 +66,14 @@ def _mro_getattr(type_: Type, attr: str) -> Any:
         raise AttributeError(f"{type_.__name__!r} object has no attribute {attr!r}")
 
 
-def getattr(obj: Object, attr: str, default: Any = NOTHING, /) -> Any:
+def getattr(obj: Object, attr: str, default: Any = _NOTHING, /) -> Any:
     """Implement attribute access via  __getattribute__ and __getattr__."""
     # Python/bltinmodule.c:builtin_getattr
     if not isinstance(attr, str):
         raise TypeError("getattr(): attribute name must be string")
 
-    obj_type = type(obj)
-    attr_exc = NOTHING
+    obj_type = builtins.type(obj)
+    attr_exc = _NOTHING
     getattribute = _mro_getattr(obj_type, "__getattribute__")
     try:
         return getattribute(obj, attr)
@@ -74,13 +89,13 @@ def getattr(obj: Object, attr: str, default: Any = NOTHING, /) -> Any:
     else:
         return getattr_(obj, attr)
 
-    if default is not NOTHING:
+    if default is not _NOTHING:
         return default
     else:
         raise attr_exc
 
 
-def _index(obj: Any, /) -> int:
+def _index(obj: int | Indexed, /) -> int:
     """Losslessly convert an object to an integer object.
 
     If obj is an instance of int, return it directly. Otherwise call __index__()
@@ -90,7 +105,7 @@ def _index(obj: Any, /) -> int:
     if isinstance(obj, int):
         return obj
 
-    length_type = type(obj)
+    length_type = builtins.type(obj)
     try:
         __index__ = _mro_getattr(length_type, "__index__")
     except AttributeError:
@@ -106,16 +121,16 @@ def _index(obj: Any, /) -> int:
     else:
         raise TypeError(
             f"the __index__() method of {length_type!r} returned an object of "
-            "type {type(index)!r}, not 'int'"
+            "type {builtins.type(index)!r}, not 'int'"
         )
 
 
-def len(obj: Any, /) -> int:
+def len(obj: Sized, /) -> int:
     """Return the number of items in a container."""
     # https://github.com/python/cpython/blob/v3.8.3/Python/bltinmodule.c#L1536-L1557
     # https://github.com/python/cpython/blob/v3.8.3/Objects/abstract.c#L45-L63
     # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L6184-L6209
-    type_ = type(obj)
+    type_ = builtins.type(obj)
     try:
         __len__ = _mro_getattr(type_, "__len__")
     except AttributeError:
@@ -131,23 +146,23 @@ def len(obj: Any, /) -> int:
         return index
 
 
-class object:
+class type:
     def __getattribute__(self, attr: str, /) -> Any:
         """Attribute access."""
         # Objects/object.c:PyObject_GenericGetAttr
-        self_type = type(self)
+        self_type = builtins.type(self)
         if not isinstance(attr, str):
             raise TypeError(
-                f"attribute name must be string, not {type(attr).__name__!r}"
+                f"attribute name must be string, not {builtins.type(attr).__name__!r}"
             )
 
-        type_attr = descriptor_type_get = NOTHING
+        type_attr = descriptor_type_get = _NOTHING
         try:
             type_attr = _mro_getattr(self_type, attr)
         except AttributeError:
             pass  # Hopefully an instance attribute.
         else:
-            type_attr_type = type(type_attr)
+            type_attr_type = builtins.type(type_attr)
             try:
                 descriptor_type_get = _mro_getattr(type_attr_type, "__get__")
             except AttributeError:
@@ -162,16 +177,16 @@ class object:
         if attr in self.__dict__:
             # Instance attribute.
             return self.__dict__[attr]
-        elif descriptor_type_get is not NOTHING:
+        elif descriptor_type_get is not _NOTHING:
             # Non-data descriptor.
             return descriptor_type_get(type_attr, self, self_type)
-        elif type_attr is not NOTHING:
+        elif type_attr is not _NOTHING:
             # Class attribute.
             return type_attr
         else:
             raise AttributeError(f"{self.__name__!r} object has no attribute {attr!r}")
 
-    def __eq__(self, other, /) -> Union[Literal[True], NotImplemented]:
+    def __eq__(self, other: Any, /) -> Union[Literal[True], NotImplemented]:
         """Implement equality via identity.
 
         If the objects are not equal then return NotImplemented to give the
@@ -182,7 +197,7 @@ class object:
         # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
         return (self is other) or NotImplemented
 
-    def __ne__(self, other, /) -> Union[bool, NotImplemented]:
+    def __ne__(self, other: Any, /) -> Union[bool, NotImplemented]:
         """Implement inequality by delegating to __eq__."""
         # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
         result = self.__eq__(other)
