@@ -33,20 +33,6 @@ if typing.TYPE_CHECKING:
         __class__: Type
         __dict__: dict[str, Any]
 
-    class Indexed(Type):
-
-        """Protocol for objects defining lossless integer conversion."""
-
-        def __index__(self) -> int:
-            ...
-
-    class Sized(Type):
-
-        """Protocol for length/sized containers."""
-
-        def __len__(self) -> int | Indexed:
-            ...
-
 
 # TODO:
 #   - type()
@@ -95,7 +81,7 @@ def getattr(obj: Object, attr: str, default: Any = _NOTHING, /) -> Any:
         raise attr_exc
 
 
-def _index(obj: int | Indexed, /) -> int:
+def _index(obj: Object, /) -> int:
     """Losslessly convert an object to an integer object.
 
     If obj is an instance of int, return it directly. Otherwise call __index__()
@@ -125,7 +111,7 @@ def _index(obj: int | Indexed, /) -> int:
         )
 
 
-def len(obj: Sized, /) -> int:
+def len(obj: Object, /) -> int:
     """Return the number of items in a container."""
     # https://github.com/python/cpython/blob/v3.8.3/Python/bltinmodule.c#L1536-L1557
     # https://github.com/python/cpython/blob/v3.8.3/Objects/abstract.c#L45-L63
