@@ -35,7 +35,7 @@ def getattr(obj: object, attr: str, default: Any = _NOTHING, /) -> Any:
     """Implement attribute access via  __getattribute__ and __getattr__."""
     # Python/bltinmodule.c:builtin_getattr
     if not isinstance(attr, str):
-        raise TypeError("getattr(): attribute name must be string")
+        raise TypeError("attribute name must be a 'str'")
 
     obj_type = builtins.type(obj)
     attr_exc = _NOTHING
@@ -84,10 +84,7 @@ def _index(obj: object, /) -> int:
     if index.__class__ is int:
         return index
     else:
-        raise TypeError(
-            f"the __index__() method of {length_type!r} returned an object of "
-            "type {builtins.type(index)!r}, not 'int'"
-        )
+        raise TypeError(f"expected an 'int', not {builtins.type(index).__name__!r}")
 
 
 def len(obj: object, /) -> int:
