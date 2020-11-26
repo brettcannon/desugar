@@ -282,6 +282,7 @@ def is_not(a: Any, b: Any, /) -> bool:
     return id(a) != id(b)
 
 
-def index(a: Any, /) -> int:
+def index(obj: Any, /) -> int:
     """Losslessly convert a numeric object to an integer."""
-    return debuiltins._index(a)
+    return debuiltins._index(obj)
+
