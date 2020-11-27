@@ -44,6 +44,7 @@ go with all of the code in this repository.
 1. `a >= b` ➠ `operator.__ge__(a, b)`
 1. `a is b` ➠ `operator.is_(a, b)`
 1. `a is not b` ➠ `operator.is_not(a, b)`
+1. `not a` ➠ `operator.not_(a)`
 
 ## Syntax to (potentially) unravel
 
@@ -51,7 +52,6 @@ go with all of the code in this repository.
 Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/Lib/keyword.py).
 
 #### Expressions
-1. [`not`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
 1. [`in`/`not in`](https://docs.python.org/3/reference/expressions.html#membership-test-operations) *
 
 1. [`and`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
