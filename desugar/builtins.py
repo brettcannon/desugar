@@ -103,7 +103,7 @@ def len(obj: object, /) -> int:
     # PyLong_FromSsize_t().
     index = int(_index(length))
     if index < 0:
-        raise ValueError("__len__() should return >= 0")
+        raise ValueError(f"{type_.__name__}.__len__() should return >= 0")
     else:
         return index
 
