@@ -113,6 +113,8 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 
 1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
 
+1. `@` for [decorators](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions) *
+
 1. `,`
 1. `;` *
 
