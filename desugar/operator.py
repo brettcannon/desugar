@@ -329,3 +329,21 @@ def not_(a: Any, /) -> bool:
 
 
 __not__ = not_
+
+
+def __contains__(container: Any, item: Any, /) -> bool:
+    """Check if the first item contains the second item: `b in a`."""
+    container_type = type(container)
+    try:
+        contains_method = debuiltins._mro_getattr(container_type, "__contains__")
+    except AttributeError:
+        # XXX iter
+        raise TypeError("XXX")  # Should fall through from not being iterable.
+    else:
+        if contains_method is None:
+            raise TypeError(f"{container_type.__name!r} object is not a container")
+        is_contained = contains_method(container, item)
+        return truth(is_contained)
+
+
+contains = __contains__
