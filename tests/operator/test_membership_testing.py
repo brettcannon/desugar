@@ -17,7 +17,7 @@ class TestMembershipTesting:
     def test_non_container(self, __contains__):
         """Raise TypeError when a non-container is checked against."""
         with pytest.raises(TypeError):
-            assert __contains__(42, "does not matter")
+            __contains__(42, "does not matter")
 
     def test_contains(self, __contains__):
         """__contains__ returning True or False results in that being returned."""
@@ -34,3 +34,6 @@ class TestMembershipTesting:
         class ContainsNone:
             __contains__ = None
             # XXX iter
+
+        with pytest.raises(TypeError):
+            __contains__(ContainsNone, True)
