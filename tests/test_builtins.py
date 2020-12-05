@@ -206,6 +206,26 @@ class TestLen:
             len(length)
 
 
+@pytest.mark.parametrize("any", [builtins.any, desugar.builtins.any])
+class TestAny:
+    def test_success(self, any):
+        """Return True if the iterable has the object."""
+        assert any([42]) is True
+
+    def test_failure(self, any):
+        """Return False if the iterable is missing the object."""
+        assert any([0]) is False
+
+    def test_empty(self, any):
+        """Return False if the iterable is empty."""
+        assert any([]) is False
+
+    def test_non_iterable(self, any):
+        """Raise TypeError if given a non-iterable."""
+        with pytest.raises(TypeError):
+            any(42)
+
+
 @pytest.mark.parametrize(
     "__getattribute__",
     [builtins.object.__getattribute__, desugar.builtins.object.__getattribute__],

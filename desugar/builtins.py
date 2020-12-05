@@ -108,6 +108,50 @@ def len(obj: object, /) -> int:
         return index
 
 
+def _is_true(obj: Any, /) -> bool:
+    if obj is True:
+        return True
+    elif obj is False:
+        return False
+    elif obj is None:
+        return False
+    obj_type = builtins.type(obj)
+    try:
+        __bool__ = _mro_getattr(obj_type, "__bool__")
+    except AttributeError:
+        # Only try calling len() if it makes sense.
+        try:
+            __len__ = _mro_getattr(obj_type, "__len__")
+        except AttributeError:
+            # If all else fails...
+            return True
+        else:
+            return True if len(obj) > 0 else False
+    else:
+        boolean = __bool__(obj)
+        if isinstance(boolean, bool):
+            # Coerce into True or False.
+            return _is_true(boolean)
+        else:
+            raise TypeError(
+                f"expected a 'bool' from {obj_type.__name__}.__bool__(), "
+                f"not {type(boolean).__name__!r}"
+            )
+
+
+def any(iterable: Any, /) -> bool:
+    """Return True if bool(x) is True for any x in the iterable.
+
+    If the iterable is empty, return False.
+
+    """
+    for item in iterable:
+        if item:
+            return True
+    else:
+        return False
+
+
 class object:
     def __getattribute__(self, attr: str, /) -> Any:
         """Attribute access."""

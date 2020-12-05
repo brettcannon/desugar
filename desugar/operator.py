@@ -293,34 +293,7 @@ def truth(obj: Any, /) -> bool:
     Analogous to calling bool().
 
     """
-    if obj is True:
-        return True
-    elif obj is False:
-        return False
-    elif obj is None:
-        return False
-    obj_type = type(obj)
-    try:
-        __bool__ = debuiltins._mro_getattr(obj_type, "__bool__")
-    except AttributeError:
-        # Only try calling len() if it makes sense.
-        try:
-            __len__ = debuiltins._mro_getattr(obj_type, "__len__")
-        except AttributeError:
-            # If all else fails...
-            return True
-        else:
-            return True if debuiltins.len(obj) > 0 else False
-    else:
-        boolean = __bool__(obj)
-        if isinstance(boolean, bool):
-            # Coerce into True or False.
-            return truth(boolean)
-        else:
-            raise TypeError(
-                f"expected a 'bool' from {obj_type.__name__}.__bool__(), "
-                f"not {type(boolean).__name__!r}"
-            )
+    return debuiltins._is_true(obj)
 
 
 def not_(a: Any, /) -> bool:
