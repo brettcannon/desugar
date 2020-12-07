@@ -314,7 +314,7 @@ def __contains__(container: Any, item: Any, /) -> bool:
         return debuiltins.any(x is item or x == item for x in container)
     else:
         if contains_method is None:
-            raise TypeError(f"{container_type.__name!r} object is not a container")
+            raise TypeError(f"{container_type.__name__!r} object is not a container")
         is_contained = contains_method(container, item)
         return truth(is_contained)
 
