@@ -47,7 +47,7 @@ class TestMembershipTesting:
                 raise RuntimeError
 
         with pytest.raises(TypeError):
-            __contains__(ContainsNone, True)
+            __contains__(ContainsNone(), True)
 
     def test_iterable_id_success(self, __contains__):
         """Search via __iter__ for an object that matches via id()."""
