@@ -310,7 +310,7 @@ def __contains__(container: Any, item: Any, /) -> bool:
     try:
         contains_method = debuiltins._mro_getattr(container_type, "__contains__")
     except AttributeError:
-        # Cheating until `while` is unravelled (and thus iterators).
+        # Cheating until `for` is unravelled (and thus iterators).
         return debuiltins.any(x is item or x == item for x in container)
     else:
         if contains_method is None:
