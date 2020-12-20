@@ -24,8 +24,8 @@ _NOTHING = builtins.object()  # C: NULL
 
 def _mro_getattr(type_: type, attr: str) -> Any:
     """Get an attribute from a type based on its MRO."""
-    for base in type_.mro():
-        if attr in base.__dict__:
+    for base in type_.mro():  # TODO: Look up how CPython specifically resolves this.
+        if attr in base.__dict__:  # Pretend this is fetched directly from the object.
             return base.__dict__[attr]
     else:
         raise AttributeError(f"{type_.__name__!r} object has no attribute {attr!r}")
@@ -155,6 +155,8 @@ def any(iterable: Any, /) -> bool:
 class object:
     def __getattribute__(self, attr: str, /) -> Any:
         """Attribute access."""
+        # There should be no attribute access that isn't somehow justified in
+        # _mro_getattr().
         # Objects/object.c:PyObject_GenericGetAttr
         self_type = builtins.type(self)
         if not isinstance(attr, str):
