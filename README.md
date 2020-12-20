@@ -101,7 +101,7 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 
 1. `[]` for [list display](https://docs.python.org/3.8/reference/expressions.html#list-displays) *
 1. `[]` for list [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) *
-1. `[]` for [subscriptions](https://docs.python.org/3.8/reference/expressions.html#subscriptions), `:` for [slicing](https://docs.python.org/3.8/reference/expressions.html#slicings) *
+1. `[]` for [subscriptions](https://docs.python.org/3.8/reference/expressions.html#subscriptions) (get, set, del), `:` for [slicing](https://docs.python.org/3.8/reference/expressions.html#slicings) *
 
 1. `{}` for [set display](https://docs.python.org/3.8/reference/expressions.html#set-displays) *
 1. `{}` for set [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) *
