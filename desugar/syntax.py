@@ -43,8 +43,8 @@ def _create_aug_assign(
         new_node.operator = ""
         left = node.target.dumps()
         right = node.value.dumps()
-        lhs = redbaron.RedBaron(f"operator.{method}({left}, {right})")[0]
-        new_node.value = lhs
+        rhs = redbaron.RedBaron(f"operator.{method}({left}, {right})")[0]
+        new_node.value = rhs
         return new_node
 
     unravel.__name__ = unravel.__qualname__ = f"unravel_{method[2:-2]}"
