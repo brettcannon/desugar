@@ -4,9 +4,26 @@ import redbaron
 from redbaron import nodes
 
 
+def _wrap(op: str, method: str, doc: str):
+    """Decorator to update an unravelling closure's details."""
+
+    if method.startswith("__") and method.endswith("__"):
+        method_name = method[2:-2]
+    else:
+        method_name = method
+
+    def wrapper(func):
+        func.__name__ = func.__qualname__ = f"unravel_{method_name}"
+        func.__doc__ = doc.format(op=op, method=method_name)
+        return func
+
+    return wrapper
+
+
 def _create_binary_op(
     op: str, method: str
 ) -> Callable[[nodes.BinaryOperatorNode], nodes.AtomtrailersNode]:
+    @_wrap(op, method, "Convert `a {op} b` to `operator.{method}(a, b)`.")
     def unravel(node: nodes.BinaryOperatorNode) -> nodes.AtomtrailersNode:
         """Convert `a {op} b` to `operator.{method}(a, b)`."""
         left = node.first.dumps()
@@ -14,8 +31,6 @@ def _create_binary_op(
         top_node = redbaron.RedBaron(f"operator.{method}({left}, {right})")
         return top_node[0]
 
-    unravel.__name__ = unravel.__qualname__ = f"unravel_{method[2:-2]}"
-    unravel.__doc__ = f"Convert `a {op} b` to `operator.{method}(a, b)`."
     return unravel
 
 
@@ -37,8 +52,8 @@ unravel_or = _create_binary_op("|", "__or__")
 def _create_aug_assign(
     op: str, method: str
 ) -> Callable[[nodes.AssignmentNode], nodes.AssignmentNode]:
+    @_wrap(op, method, "Convert `a {op}= b` to `a = operator.{method}(a, b)`.")
     def unravel(node: nodes.AssignmentNode) -> nodes.AssignmentNode:
-        """Convert `a {op}= b` to `a = operator.{method}(a, b)`."""
         new_node = node.copy()
         new_node.operator = ""
         left = node.target.dumps()
@@ -47,8 +62,6 @@ def _create_aug_assign(
         new_node.value = rhs
         return new_node
 
-    unravel.__name__ = unravel.__qualname__ = f"unravel_{method[2:-2]}"
-    unravel.__doc__ = f"Convert `a {op}= b` to `a = operator.{method}(a, b)`."
     return unravel
 
 
@@ -70,86 +83,50 @@ unravel_ior = _create_aug_assign("|", "__ior__")
 def _create_unary_op(
     op: str, method: str
 ) -> Callable[[nodes.UnitaryOperatorNode], nodes.AtomtrailersNode]:
+    @_wrap(op, method, "Convert `{op} a` to `operator.{method}(a)`.")
     def unravel(node: nodes.UnitaryOperatorNode) -> nodes.AtomtrailersNode:
         target = node.target.dumps()
         return redbaron.RedBaron(f"operator.{method}({target})")[0]
 
-    unravel.__name__ = unravel.__qualname__ = f"unravel_{method[2:-2]}"
-    unravel.__doc__ = f"Convert `{op} a` to `operator.{method}(a)`."
     return unravel
 
 
 unravel_invert = _create_unary_op("~", "__invert__")
 unravel_neg = _create_unary_op("-", "__neg__")
 unravel_pos = _create_unary_op("+", "__pos__")
+unravel_not = _create_unary_op("not", "not_")
 
-# 1. `a == b` ➠ `operator.__eq__(a, b)`  (including `object.__eq__()`)
-# 1. `a != b` ➠ `operator.__ne__(a, b)`  (including `object.__ne__()`)
-# 1. `a < b` ➠ `operator.__lt__(a, b)`
-# 1. `a <= b` ➠ `operator.__le__(a, b)`
-# 1. `a > b` ➠ `operator.__gt__(a, b)`
-# 1. `a >= b` ➠ `operator.__ge__(a, b)`
-# >>> given = redbaron.RedBaron("a < b"); given[0].help()
-# ComparisonNode()
-#   # identifiers: comparison, comparison_, comparisonnode
-#   first ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='a'
-#   value ->
-#     ComparisonOperatorNode()
-#       # identifiers: comparison_operator, comparison_operator_, comparisonoperator, comparisonoperatornode
-#       first='<'
-#       second=''
-#   second ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='b'
 
-# 1. `a is b` ➠ `operator.is_(a, b)`
-# 1. `a is not b` ➠ `operator.is_not(a, b)`
-# >>> given = redbaron.RedBaron("a is not b"); given[0].help()
-# ComparisonNode()
-#   # identifiers: comparison, comparison_, comparisonnode
-#   first ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='a'
-#   value ->
-#     ComparisonOperatorNode()
-#       # identifiers: comparison_operator, comparison_operator_, comparisonoperator, comparisonoperatornode
-#       first='is'
-#       second='not'
-#   second ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='b'
+def _create_compare_op(
+    op: str, method: str
+) -> Callable[[nodes.ComparisonNode], nodes.AtomtrailersNode]:
+    @_wrap(op, method, "Convert `a {op} b` to `operator.{method}(a, b)`.")
+    def unravel(node: nodes.ComparisonNode) -> nodes.AtomtrailersNode:
+        lhs = node.first.dumps()
+        rhs = node.second.dumps()
+        return redbaron.RedBaron(f"operator.{method}({lhs}, {rhs})")[0]
 
-# 1. `not a` ➠ `operator.not_(a)`
-# >>> given = redbaron.RedBaron("not a"); given[0].help()
-# UnitaryOperatorNode()
-#   # identifiers: unitary_operator, unitary_operator_, unitaryoperator, unitaryoperatornode
-#   value='not'
-#   target ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='a'
+    return unravel
 
-# 1. `a in b` ➠ `operator.__contains__(b, a)`
-# 1. `a not in b` ➠ `operator.not_(operator.__contains__(b, a))`
-# >>> given = redbaron.RedBaron("a not in b"); given[0].help()
-# ComparisonNode()
-#   # identifiers: comparison, comparison_, comparisonnode
-#   first ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='a'
-#   value ->
-#     ComparisonOperatorNode()
-#       # identifiers: comparison_operator, comparison_operator_, comparisonoperator, comparisonoperatornode
-#       first='not'
-#       second='in'
-#   second ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='b'
+
+unravel_eq = _create_compare_op("==", "__eq__")
+unravel_ne = _create_compare_op("!=", "__ne__")
+unravel_lt = _create_compare_op("<", "__lt__")
+unravel_le = _create_compare_op("<=", "__le__")
+unravel_gt = _create_compare_op(">", "__gt__")
+unravel_ge = _create_compare_op(">=", "__ge__")
+unravel_is = _create_compare_op("is", "is_")
+unravel_is_not = _create_compare_op("is not", "is_not")
+
+
+def unravel_in(node: nodes.ComparisonNode) -> nodes.AtomtrailersNode:
+    """Convert `a in b` to `operator.__contains__(b, a)`."""
+    lhs = node.first.dumps()
+    rhs = node.second.dumps()
+    return redbaron.RedBaron(f"operator.__contains__({rhs}, {lhs})")[0]
+
+
+def unravel_not_in(node: nodes.ComparisonNode) -> nodes.AtomtrailersNode:
+    """Convert `a not in b` to `operator.not_(operator.__contains__(b, a))."""
+    contains = unravel_in(node)
+    return redbaron.RedBaron(f"operator.not_({contains})")[0]

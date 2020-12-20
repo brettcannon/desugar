@@ -112,3 +112,52 @@ class TestUnaryOp:
 
     def test_pos(self):
         self._test_unary_op("+", "__pos__", syntax.unravel_pos)
+
+    def test_not(self):
+        self._test_unary_op("not", "not_", syntax.unravel_not)
+
+
+class TestComparison:
+    def _test_comparison(self, op, method, unravel):
+        given = f"a {op} b"
+        expect = f"operator.{method}(a, b)"
+        result = unravel(redbaron.RedBaron(given)[0])
+        assert result.dumps() == expect
+
+    def test_eq(self):
+        self._test_comparison("==", "__eq__", syntax.unravel_eq)
+
+    def test_ne(self):
+        self._test_comparison("!=", "__ne__", syntax.unravel_ne)
+
+    def test_lt(self):
+        self._test_comparison("<", "__lt__", syntax.unravel_lt)
+
+    def test_le(self):
+        self._test_comparison("<=", "__le__", syntax.unravel_le)
+
+    def test_gt(self):
+        self._test_comparison(">", "__gt__", syntax.unravel_gt)
+
+    def test_ge(self):
+        self._test_comparison(">=", "__ge__", syntax.unravel_ge)
+
+    def test_is(self):
+        self._test_comparison("is", "is_", syntax.unravel_is)
+
+    def test_is_not(self):
+        self._test_comparison("is not", "is_not", syntax.unravel_is_not)
+
+
+class TestContainment:
+    def test_in(self):
+        given = "a in b"
+        expect = "operator.__contains__(b, a)"
+        result = syntax.unravel_in(redbaron.RedBaron(given)[0])
+        assert result.dumps() == expect
+
+    def test_not_int(self):
+        given = "a not in b"
+        expect = "operator.not_(operator.__contains__(b, a))"
+        result = syntax.unravel_not_in(redbaron.RedBaron(given)[0])
+        assert result.dumps() == expect
