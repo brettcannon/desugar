@@ -47,6 +47,8 @@ go with all of the code in this repository.
 1. `not a` ➠ `operator.not_(a)`
 1. `a in b` ➠ `operator.__contains__(b, a)`
 1. `a not in b` ➠ `operator.not_(operator.__contains__(b, a))`
+1. `a or b` ➠ `_temp if (_temp := a) else b`
+1. `a and b` ➠ `_temp if not (_temp := a) else b`
 
 ## Syntax to (potentially) unravel
 
@@ -54,9 +56,6 @@ go with all of the code in this repository.
 Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/Lib/keyword.py).
 
 #### Expressions
-1. [`and`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
-1. [`or`](https://docs.python.org/3/reference/expressions.html#boolean-operations) *
-
 1. [`yield`](https://docs.python.org/3.8/reference/simple_stmts.html#the-yield-statement)
 1. [`await`](https://docs.python.org/3.8/reference/expressions.html#await) ~
 

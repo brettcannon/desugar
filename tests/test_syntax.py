@@ -1,3 +1,4 @@
+import pytest
 import redbaron
 
 from desugar import syntax
@@ -161,3 +162,23 @@ class TestContainment:
         expect = "operator.not_(operator.__contains__(b, a))"
         result = syntax.unravel_not_in(redbaron.RedBaron(given)[0])
         assert result.dumps() == expect
+
+
+class TestBooleanExpressions:
+    def test_or(self):
+        given = "a or b"
+        expect = "_temp if (_temp := a) else b"
+        with pytest.raises(NotImplementedError):
+            result = syntax.unravel_boolean_or(
+                redbaron.RedBaron(given)[0], temp_var="_temp"
+            )
+            assert result.dumps() == expect
+
+    def test_and(self):
+        given = "a and b"
+        expect = "_temp if not (_temp := a) else b"
+        with pytest.raises(NotImplementedError):
+            result = syntax.unravel_boolean_and(
+                redbaron.RedBaron(given)[0], temp_var="_temp"
+            )
+            assert result.dumps() == expect

@@ -130,3 +130,13 @@ def unravel_not_in(node: nodes.ComparisonNode) -> nodes.AtomtrailersNode:
     """Convert `a not in b` to `operator.not_(operator.__contains__(b, a))."""
     contains = unravel_in(node)
     return redbaron.RedBaron(f"operator.not_({contains})")[0]
+
+
+def unravel_boolean_or(node: nodes.BooleanOperatorNode, temp_var: str):
+    """Convert `a or b` to `temp_var if (temp_var := a) else b`."""
+    raise NotImplementedError("RedBaron does not support assignment expressions")
+
+
+def unravel_boolean_and(node: nodes.BooleanOperatorNode, *, temp_var: str):
+    """Convert `a and b` to `temp_var if not (temp_var := a) else b`."""
+    raise NotImplementedError("RedBaron does not support assignment expressions")
