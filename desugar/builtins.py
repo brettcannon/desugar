@@ -16,15 +16,23 @@ if typing.TYPE_CHECKING:
 #   - type()
 #   - isinstance()
 #   - issubclass()
-#   - type.mro()
 
 
 _NOTHING = builtins.object()  # C: NULL
 
 
+def _mro(type_: type) -> Iterable[type]:
+    """Fetch the MRO for a type."""
+    # The MRO is calculated at class creation time and set to `__mro__`.
+    # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L5338
+    # The `mro()` method is only called during creation in case a type overrides
+    # MRO calculation.
+    return type_.__mro__
+
+
 def _mro_getattr(type_: type, attr: str) -> Any:
     """Get an attribute from a type based on its MRO."""
-    for base in type_.mro():  # TODO: Look up how CPython specifically resolves this.
+    for base in _mro(type_):
         if attr in base.__dict__:  # Pretend this is fetched directly from the object.
             return base.__dict__[attr]
     else:
@@ -152,7 +160,13 @@ def any(iterable: Any, /) -> bool:
         return False
 
 
-class object:
+class type:
+    def mro(self):
+        """Return a type's method resolution order."""
+        return self.__mro__
+
+
+class object(type):
     def __getattribute__(self, attr: str, /) -> Any:
         """Attribute access."""
         # There should be no attribute access that isn't somehow justified in
@@ -177,7 +191,7 @@ class object:
                 pass  # At least a class attribute.
             else:
                 # At least a non-data descriptor.
-                for base in type_attr_type.mro():
+                for base in _mro(type_attr_type):
                     if "__set__" in base.__dict__ or "__delete__" in base.__dict__:
                         # Data descriptor.
                         return descriptor_type_get(type_attr, self, self_type)
