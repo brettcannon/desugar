@@ -161,68 +161,20 @@ def unravel_import(
             full_name = node.value.dumps()
             stmt = f"{parent} = __import__({full_name!r}, globals(), locals())"
         return [redbaron.RedBaron(stmt)[0]]
-
-
-# >>> redbaron.RedBaron("from a import b").help()
-# 0 -----------------------------------------------------
-# FromImportNode()
-#   # identifiers: from_import, from_import_, fromimport, fromimportnode
-#   # helpers: full_path_modules, full_path_names, modules, names
-#   value ->
-#     * NameNode()
-#         # identifiers: name, name_, namenode
-#         value='a'
-#   targets ->
-#     * NameAsNameNode()
-#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
-#         value='b'
-#         target=''
-
-# >>> redbaron.RedBaron("from a import b, c").help()
-# 0 -----------------------------------------------------
-# FromImportNode()
-#   # identifiers: from_import, from_import_, fromimport, fromimportnode
-#   # helpers: full_path_modules, full_path_names, modules, names
-#   value ->
-#     * NameNode()
-#         # identifiers: name, name_, namenode
-#         value='a'
-#   targets ->
-#     * NameAsNameNode()
-#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
-#         value='b'
-#         target=''
-#     * NameAsNameNode()
-#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
-#         value='c'
-#         target=''
-
-# >>> redbaron.RedBaron("from .a import b").help()
-# 0 -----------------------------------------------------
-# FromImportNode()
-#   # identifiers: from_import, from_import_, fromimport, fromimportnode
-#   # helpers: full_path_modules, full_path_names, modules, names
-#   value ->
-#     * NameNode()
-#         # identifiers: name, name_, namenode
-#         value='a'
-#   targets ->
-#     * NameAsNameNode()
-#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
-#         value='b'
-#         target=''
-
-# >>> redbaron.RedBaron("from .a import b as c").help()
-# 0 -----------------------------------------------------
-# FromImportNode()
-#   # identifiers: from_import, from_import_, fromimport, fromimportnode
-#   # helpers: full_path_modules, full_path_names, modules, names
-#   value ->
-#     * NameNode()
-#         # identifiers: name, name_, namenode
-#         value='a'
-#   targets ->
-#     * NameAsNameNode()
-#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
-#         value='b'
-#         target='c'
+    else:
+        parent = node.value.dumps()
+        index = 0
+        for char in parent:
+            if char == ".":
+                index += 1
+            else:
+                break
+        stmts = []
+        for from_ in node.targets:
+            if not (target := from_.target):
+                target = from_.value
+            child = from_.value
+            stmts.append(
+                f"{target} = __import__({parent[index:]!r}, globals(), locals(), [{child!r}], {index}).{child}"
+            )
+        return [redbaron.RedBaron(stmt)[0] for stmt in stmts]

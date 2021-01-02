@@ -50,27 +50,9 @@ go with all of the code in this repository.
 1. `a not in b` ➠ `operator.not_(operator.__contains__(b, a))`
 1. `a or b` ➠ `_temp if (_temp := a) else b`
 1. `a and b` ➠ `_temp if not (_temp := a) else b`
-1. `import` ➠ see below
-
-### `import`
-
-#### `import a.b`
-
-While you are "importing" `a.b`, you only bind the name `a` so the attribute
-access works.
-
-```python
-a = __import__('a.b', globals(), locals())
-```
-
-#### `import a.b as c`
-
-Since attribute access won't be used, this is the equivalent of
-`from a import b as c`.
-
-```python
-c = __import__('a', globals(), locals(), ['b']).b
-```
+1. `import a.b` ➠ `a = __import__('a.b', globals(), locals())`
+1. `import a.b as c` ➠ `c = __import__('a', globals(), locals(), ['b']).b`
+1. `from .a import b` ➠ `b = __import__('a', globals(), locals(), ['b'], 1).b`
 
 ## Syntax to (potentially) unravel
 
@@ -88,8 +70,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 #### Statements
 
 1. [`assert`](https://docs.python.org/3.8/reference/simple_stmts.html#the-assert-statement) \*
-
-1. [`import`/`from`/`as`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) \*
 
 1. [`pass`](https://docs.python.org/3.8/reference/simple_stmts.html#the-pass-statement) \*
 1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement)

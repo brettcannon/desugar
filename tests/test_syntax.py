@@ -212,19 +212,19 @@ class TestImport:
 
     def test_from_single(self):
         given = "from a import b"
-        expect = ["b = __import__('a', globals(), locals(), ['b']).b"]
+        expect = ["b = __import__('a', globals(), locals(), ['b'], 0).b"]
         self._test_import(given, expect)
 
     def test_from_deep(self):
         given = "from a.b import c"
-        expect = ["c = __import__('a.b', globals(), locals(), ['c']).c"]
+        expect = ["c = __import__('a.b', globals(), locals(), ['c'], 0).c"]
         self._test_import(given, expect)
 
     def test_from_multiple(self):
         given = "from a import b, c"
         expect = [
-            "b = __import__('a', globals(), locals(), ['b']).b",
-            "c = __import__('a', globals(), locals(), ['c']).c",
+            "b = __import__('a', globals(), locals(), ['b'], 0).b",
+            "c = __import__('a', globals(), locals(), ['c'], 0).c",
         ]
         self._test_import(given, expect)
 
@@ -235,5 +235,5 @@ class TestImport:
 
     def test_from_single_as(self):
         given = "from a import b as c"
-        expect = ["c = __import__('a', globals(), locals(), ['b']).b"]
+        expect = ["c = __import__('a', globals(), locals(), ['b'], 0).b"]
         self._test_import(given, expect)
