@@ -1,4 +1,5 @@
 # desugar
+
 Unravelling Python's syntactic sugar source code.
 
 There are [accompanying blog posts](https://snarky.ca/tag/syntactic-sugar/) to
@@ -36,8 +37,8 @@ go with all of the code in this repository.
 1. `~ a` ➠ `operator.__invert__(a)`
 1. `- a` ➠ `operator.__neg__(a)`
 1. `+ a` ➠ `operator.__pos__(a)`
-1. `a == b` ➠ `operator.__eq__(a, b)`  (including `object.__eq__()`)
-1. `a != b` ➠ `operator.__ne__(a, b)`  (including `object.__ne__()`)
+1. `a == b` ➠ `operator.__eq__(a, b)` (including `object.__eq__()`)
+1. `a != b` ➠ `operator.__ne__(a, b)` (including `object.__ne__()`)
 1. `a < b` ➠ `operator.__lt__(a, b)`
 1. `a <= b` ➠ `operator.__le__(a, b)`
 1. `a > b` ➠ `operator.__gt__(a, b)`
@@ -49,34 +50,58 @@ go with all of the code in this repository.
 1. `a not in b` ➠ `operator.not_(operator.__contains__(b, a))`
 1. `a or b` ➠ `_temp if (_temp := a) else b`
 1. `a and b` ➠ `_temp if not (_temp := a) else b`
+1. `import` ➠ see below
+
+### `import`
+
+#### `import a.b`
+
+While you are "importing" `a.b`, you only bind the name `a` so the attribute
+access works.
+
+```python
+a = __import__('a.b', globals(), locals())
+```
+
+#### `import a.b as c`
+
+Since attribute access won't be used, this is the equivalent of
+`from a import b as c`.
+
+```python
+c = __import__('a', globals(), locals(), ['b']).b
+```
 
 ## Syntax to (potentially) unravel
 
 ### Keywords
+
 Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/Lib/keyword.py).
 
 #### Expressions
+
 1. [`yield`](https://docs.python.org/3.8/reference/simple_stmts.html#the-yield-statement)
 1. [`await`](https://docs.python.org/3.8/reference/expressions.html#await) ~
 
 1. [`lambda`](https://docs.python.org/3.8/reference/expressions.html#lambda)
 
 #### Statements
-1. [`assert`](https://docs.python.org/3.8/reference/simple_stmts.html#the-assert-statement) *
 
-1. [`import`/`from`/`as`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) *
+1. [`assert`](https://docs.python.org/3.8/reference/simple_stmts.html#the-assert-statement) \*
 
-1. [`pass`](https://docs.python.org/3.8/reference/simple_stmts.html#the-pass-statement) *
+1. [`import`/`from`/`as`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) \*
+
+1. [`pass`](https://docs.python.org/3.8/reference/simple_stmts.html#the-pass-statement) \*
 1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement)
 1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement)
 
 1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
 1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
-1. [`for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-for-statement) *
-1. [`async for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) *
+1. [`for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-for-statement) \*
+1. [`async for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) \*
 
-1. [`with`](https://docs.python.org/3.8/reference/compound_stmts.html#the-with-statement) *
-1. [`async with`](https://docs.python.org/3.8/reference/compound_stmts.html#async-with) *
+1. [`with`](https://docs.python.org/3.8/reference/compound_stmts.html#the-with-statement) \*
+1. [`async with`](https://docs.python.org/3.8/reference/compound_stmts.html#async-with) \*
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
 1. [`async def`](https://docs.python.org/3.8/reference/compound_stmts.html#coroutine-function-definition) ~
@@ -93,31 +118,32 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. [`return`](https://docs.python.org/3.8/reference/simple_stmts.html#the-return-statement)
 
 ### Tokens
+
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
 
 1. [`=`](https://docs.python.org/3.8/reference/simple_stmts.html#assignment-statements)
 1. [`:=`](https://docs.python.org/3.8/reference/expressions.html#assignment-expressions)
 
-1. `[]` for [list display](https://docs.python.org/3.8/reference/expressions.html#list-displays) *
-1. `[]` for list [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) *
-1. `[]` for [subscriptions](https://docs.python.org/3.8/reference/expressions.html#subscriptions) (get, set, del), `:` for [slicing](https://docs.python.org/3.8/reference/expressions.html#slicings) *
+1. `[]` for [list display](https://docs.python.org/3.8/reference/expressions.html#list-displays) \*
+1. `[]` for list [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) \*
+1. `[]` for [subscriptions](https://docs.python.org/3.8/reference/expressions.html#subscriptions) (get, set, del), `:` for [slicing](https://docs.python.org/3.8/reference/expressions.html#slicings) \*
 
-1. `{}` for [set display](https://docs.python.org/3.8/reference/expressions.html#set-displays) *
-1. `{}` for set [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) *
+1. `{}` for [set display](https://docs.python.org/3.8/reference/expressions.html#set-displays) \*
+1. `{}` for set [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) \*
 
-1. `{}` for [dictionary display](https://docs.python.org/3.8/reference/expressions.html#dictionary-displays) *
-1. `{}` for dictionary [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) *
+1. `{}` for [dictionary display](https://docs.python.org/3.8/reference/expressions.html#dictionary-displays) \*
+1. `{}` for dictionary [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) \*
 
 1. `()` for [tuple display](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms)
 
 1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
 
-1. `@` for [decorators](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions) *
+1. `@` for [decorators](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions) \*
 
 1. `,`
-1. `;` *
+1. `;` \*
 
-1. `...` *
+1. `...` \*
 
 ### [Literals](https://docs.python.org/3.8/reference/lexical_analysis.html#literals)
 

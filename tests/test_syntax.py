@@ -182,3 +182,89 @@ class TestBooleanExpressions:
                 redbaron.RedBaron(given)[0], temp_var="_temp"
             )
             assert result.dumps() == expect
+
+
+class TestImport:
+    def test_top_level(self):
+        given = "import a"
+        expect = ["a = __import__('a', globals(), locals())"]
+        result = syntax.unravel_import(redbaron.RedBaron(given)[0])
+
+        assert [stmt.dumps() for stmt in result] == expect
+
+    def test_submodule(self):
+        given = "import a.b"
+        expect = ["a = __import__('a.b', globals(), locals())"]
+        result = syntax.unravel_import(redbaron.RedBaron(given)[0])
+
+        assert [stmt.dumps() for stmt in result] == expect
+
+    def test_top_level_as(self):
+        given = "import a as b"
+        expect = ["b = __import__('a', globals(), locals())"]
+        result = syntax.unravel_import(redbaron.RedBaron(given)[0])
+
+        assert [stmt.dumps() for stmt in result] == expect
+
+    def test_submodule_as(self):
+        given = "import a.b.c as d"
+        expect = ["d = __import__('a.b', globals(), locals(), ['c']).c"]
+        result = syntax.unravel_import(redbaron.RedBaron(given)[0])
+
+        assert [stmt.dumps() for stmt in result] == expect
+
+    def test_from_single(self):
+        given = "from a import b"
+        expect = [
+            "_temp = __import__('a', globals(), locals(), ['b'])",
+            "b = _temp.b",
+            "del _temp",
+        ]
+        result = syntax.unravel_import(redbaron.RedBaron(given)[0], temp_var="_temp")
+
+        assert [stmt.dumps() for stmt in result] == expect
+
+    def test_from_deep(self):
+        given = "from a.b import c"
+        expect = [
+            "_temp = __import__('a.b'', globals(), locals(), ['c'])",
+            "c = _temp.c",
+            "del _temp",
+        ]
+        result = syntax.unravel_import(redbaron.RedBaron(given)[0], temp_var="_temp")
+
+        assert [stmt.dumps() for stmt in result] == expect
+
+    def test_from_multiple(self):
+        given = "from a import b, c"
+        expect = [
+            "_temp = __import__('a', globals(), locals(), ['b', 'c'])",
+            "b = _temp.b",
+            "c = _temp.c",
+            "del _temp",
+        ]
+        result = syntax.unravel_import(redbaron.RedBaron(given)[0], temp_var="_temp")
+
+        assert [stmt.dumps() for stmt in result] == expect
+
+    def test_from_dot(self):
+        given = "from .a import b"
+        expect = [
+            "_temp = __import__('a', globals(), locals(), ['b'], 1)",
+            "b = _temp.b",
+            "del _temp",
+        ]
+        result = syntax.unravel_import(redbaron.RedBaron(given)[0], temp_var="_temp")
+
+        assert [stmt.dumps() for stmt in result] == expect
+
+    def test_from_single_as(self):
+        given = "from a import b as c"
+        expect = [
+            "_temp = __import__('a', globals(), locals(), ['b'])",
+            "c = _temp.b",
+            "del _temp",
+        ]
+        result = syntax.unravel_import(redbaron.RedBaron(given)[0], temp_var="_temp")
+
+        assert [stmt.dumps() for stmt in result] == expect

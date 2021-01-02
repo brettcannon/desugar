@@ -1,4 +1,6 @@
-from typing import Callable
+from __future__ import annotations
+
+from typing import Callable, Union
 
 import redbaron
 from redbaron import nodes
@@ -140,3 +142,87 @@ def unravel_boolean_or(node: nodes.BooleanOperatorNode, temp_var: str):
 def unravel_boolean_and(node: nodes.BooleanOperatorNode, *, temp_var: str):
     """Convert `a and b` to `temp_var if not (temp_var := a) else b`."""
     raise NotImplementedError("RedBaron does not support assignment expressions")
+
+
+def unravel_import(
+    node: Union[nodes.ImportNode, nodes.FromImportNode]
+) -> list[nodes.Node]:
+    if isinstance(node, nodes.ImportNode):
+        if (target := node.value[0].target) :
+            # `import a.b.c as d`
+            parent, _, child = node.value[0].value.dumps().rpartition(".")
+            if not parent:
+                stmt = f"{target} = __import__({child!r}, globals(), locals())"
+            else:
+                stmt = f"{target} = __import__({parent!r}, globals(), locals(), [{child!r}]).{child}"
+        else:
+            # `import a.b`
+            parent = node.value[0][0].dumps()
+            full_name = node.value.dumps()
+            stmt = f"{parent} = __import__({full_name!r}, globals(), locals())"
+        return [redbaron.RedBaron(stmt)[0]]
+
+
+# >>> redbaron.RedBaron("from a import b").help()
+# 0 -----------------------------------------------------
+# FromImportNode()
+#   # identifiers: from_import, from_import_, fromimport, fromimportnode
+#   # helpers: full_path_modules, full_path_names, modules, names
+#   value ->
+#     * NameNode()
+#         # identifiers: name, name_, namenode
+#         value='a'
+#   targets ->
+#     * NameAsNameNode()
+#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
+#         value='b'
+#         target=''
+
+# >>> redbaron.RedBaron("from a import b, c").help()
+# 0 -----------------------------------------------------
+# FromImportNode()
+#   # identifiers: from_import, from_import_, fromimport, fromimportnode
+#   # helpers: full_path_modules, full_path_names, modules, names
+#   value ->
+#     * NameNode()
+#         # identifiers: name, name_, namenode
+#         value='a'
+#   targets ->
+#     * NameAsNameNode()
+#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
+#         value='b'
+#         target=''
+#     * NameAsNameNode()
+#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
+#         value='c'
+#         target=''
+
+# >>> redbaron.RedBaron("from .a import b").help()
+# 0 -----------------------------------------------------
+# FromImportNode()
+#   # identifiers: from_import, from_import_, fromimport, fromimportnode
+#   # helpers: full_path_modules, full_path_names, modules, names
+#   value ->
+#     * NameNode()
+#         # identifiers: name, name_, namenode
+#         value='a'
+#   targets ->
+#     * NameAsNameNode()
+#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
+#         value='b'
+#         target=''
+
+# >>> redbaron.RedBaron("from .a import b as c").help()
+# 0 -----------------------------------------------------
+# FromImportNode()
+#   # identifiers: from_import, from_import_, fromimport, fromimportnode
+#   # helpers: full_path_modules, full_path_names, modules, names
+#   value ->
+#     * NameNode()
+#         # identifiers: name, name_, namenode
+#         value='a'
+#   targets ->
+#     * NameAsNameNode()
+#         # identifiers: name_as_name, name_as_name_, nameasname, nameasnamenode
+#         value='b'
+#         target='c'
