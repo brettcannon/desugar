@@ -51,8 +51,9 @@ go with all of the code in this repository.
 1. `a or b` ➠ `_temp if (_temp := a) else b`
 1. `a and b` ➠ `_temp if not (_temp := a) else b`
 1. `import a.b` ➠ `a = __import__('a.b', globals(), locals())`
-1. `import a.b as c` ➠ `c = __import__('a', globals(), locals(), ['b']).b`
+1. `import a.b as c` ➠ `c = __import__('a', globals(), locals(), ['b'], 0).b`
 1. `from .a import b` ➠ `b = __import__('a', globals(), locals(), ['b'], 1).b`
+1. `from .a import b as c` ➠ `c = __import__('a', globals(), locals(), ['b'], 1).b`
 
 ## Syntax to (potentially) unravel
 
