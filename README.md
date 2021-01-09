@@ -54,6 +54,15 @@ go with all of the code in this repository.
 1. `import a.b as c` ➠ `c = __import__('a', globals(), locals(), ['b'], 0).b`
 1. `from .a import b` ➠ `b = __import__('a', globals(), locals(), ['b'], 1).b`
 1. `from .a import b as c` ➠ `c = __import__('a', globals(), locals(), ['b'], 1).b`
+1. `assert a, b` ➠ see below
+
+### `assert a, b`
+
+```Python
+if __debug__:
+    if a:
+        raise AssertionError(b)
+```
 
 ## Syntax to (potentially) unravel
 
@@ -115,7 +124,7 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `{}` for [dictionary display](https://docs.python.org/3.8/reference/expressions.html#dictionary-displays) \*
 1. `{}` for dictionary [comprehensions](https://docs.python.org/3.8/reference/expressions.html#displays-for-lists-sets-and-dictionaries) \*
 
-1. `()` for [tuple display](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms)
+1. `()` for [tuple display](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms) \*
 
 1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
 

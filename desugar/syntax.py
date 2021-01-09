@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import textwrap
 from typing import Callable, Union
 
 import redbaron
@@ -147,6 +148,7 @@ def unravel_boolean_and(node: nodes.BooleanOperatorNode, *, temp_var: str):
 def unravel_import(
     node: Union[nodes.ImportNode, nodes.FromImportNode]
 ) -> list[nodes.Node]:
+    """Convert the various forms of an import statement to calls of `__import__()`."""
     if isinstance(node, nodes.ImportNode):
         if (target := node.value[0].target) :
             # `import a.b.c as d`
@@ -178,3 +180,50 @@ def unravel_import(
                 f"{target} = __import__({parent[index:]!r}, globals(), locals(), [{child!r}], {index}).{child}"
             )
         return [redbaron.RedBaron(stmt)[0] for stmt in stmts]
+
+
+def unravel_assert(node: nodes.AsAssertNode) -> nodes.IfelseblockNode:
+    """Convert `assert a, b` to:
+
+    ```
+    if __debug__:
+        if a:
+            raise AssertionError(b)
+    ```
+    """
+    assertion = node.value.dumps()
+    if message := node.message:
+        stmt = f"""
+            if __debug__:
+                if {assertion}:
+                    raise AssertionError({message.dumps()})
+        """
+    else:
+        stmt = f"""
+            if __debug__:
+                if {assertion}:
+                    raise AssertionError
+        """
+    return redbaron.RedBaron(textwrap.dedent(stmt).strip())[0]
+
+
+# >>> redbaron.RedBaron("assert a")[0].help()
+# AssertNode()
+#   # identifiers: assert, assert_, assertnode
+#   value ->
+#     NameNode()
+#       # identifiers: name, name_, namenode
+#       value='a'
+#   message ->
+#     None
+# >>> redbaron.RedBaron("assert a, b")[0].help()
+# AssertNode()
+#   # identifiers: assert, assert_, assertnode
+#   value ->
+#     NameNode()
+#       # identifiers: name, name_, namenode
+#       value='a'
+#   message ->
+#     NameNode()
+#       # identifiers: name, name_, namenode
+#       value='b'

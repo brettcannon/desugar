@@ -1,3 +1,5 @@
+import textwrap
+
 import pytest
 import redbaron
 
@@ -237,3 +239,44 @@ class TestImport:
         given = "from a import b as c"
         expect = ["c = __import__('a', globals(), locals(), ['b'], 0).b"]
         self._test_import(given, expect)
+
+
+class TestAssert:
+    def test_no_message(self):
+        given = "assert a"
+        expect = textwrap.dedent(
+            """
+            if __debug__:
+                if a:
+                    raise AssertionError
+            """
+        ).strip()
+        print(expect)
+        result = syntax.unravel_assert(redbaron.RedBaron(given)[0])
+        assert result.dumps().strip() == expect
+
+    def test_str_message(self):
+        given = 'assert a, "oh no!"'
+        expect = textwrap.dedent(
+            """
+            if __debug__:
+                if a:
+                    raise AssertionError("oh no!")
+            """
+        ).strip()
+        print(expect)
+        result = syntax.unravel_assert(redbaron.RedBaron(given)[0])
+        assert result.dumps().strip() == expect
+
+    def test_var_message(self):
+        given = "assert a, b"
+        expect = textwrap.dedent(
+            """
+            if __debug__:
+                if a:
+                    raise AssertionError(b)
+            """
+        ).strip()
+        print(expect)
+        result = syntax.unravel_assert(redbaron.RedBaron(given)[0])
+        assert result.dumps().strip() == expect
