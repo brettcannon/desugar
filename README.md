@@ -79,8 +79,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 #### Statements
 
-1. [`assert`](https://docs.python.org/3.8/reference/simple_stmts.html#the-assert-statement) \*
-
 1. [`pass`](https://docs.python.org/3.8/reference/simple_stmts.html#the-pass-statement) \*
 1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement)
 1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement)

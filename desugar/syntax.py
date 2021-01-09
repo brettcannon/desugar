@@ -205,25 +205,3 @@ def unravel_assert(node: nodes.AsAssertNode) -> nodes.IfelseblockNode:
                     raise AssertionError
         """
     return redbaron.RedBaron(textwrap.dedent(stmt).strip())[0]
-
-
-# >>> redbaron.RedBaron("assert a")[0].help()
-# AssertNode()
-#   # identifiers: assert, assert_, assertnode
-#   value ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='a'
-#   message ->
-#     None
-# >>> redbaron.RedBaron("assert a, b")[0].help()
-# AssertNode()
-#   # identifiers: assert, assert_, assertnode
-#   value ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='a'
-#   message ->
-#     NameNode()
-#       # identifiers: name, name_, namenode
-#       value='b'
