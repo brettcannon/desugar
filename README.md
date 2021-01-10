@@ -60,7 +60,7 @@ go with all of the code in this repository.
 
 ```Python
 if __debug__:
-    if a:
+    if not a:
         raise AssertionError(b)
 ```
 
