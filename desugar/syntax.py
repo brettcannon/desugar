@@ -195,13 +195,13 @@ def unravel_assert(node: nodes.AsAssertNode) -> nodes.IfelseblockNode:
     if message := node.message:
         stmt = f"""
             if __debug__:
-                if {assertion}:
+                if not {assertion}:
                     raise AssertionError({message.dumps()})
         """
     else:
         stmt = f"""
             if __debug__:
-                if {assertion}:
+                if not {assertion}:
                     raise AssertionError
         """
     return redbaron.RedBaron(textwrap.dedent(stmt).strip())[0]

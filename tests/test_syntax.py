@@ -247,7 +247,7 @@ class TestAssert:
         expect = textwrap.dedent(
             """
             if __debug__:
-                if a:
+                if not a:
                     raise AssertionError
             """
         ).strip()
@@ -260,7 +260,7 @@ class TestAssert:
         expect = textwrap.dedent(
             """
             if __debug__:
-                if a:
+                if not a:
                     raise AssertionError("oh no!")
             """
         ).strip()
@@ -273,7 +273,7 @@ class TestAssert:
         expect = textwrap.dedent(
             """
             if __debug__:
-                if a:
+                if not a:
                     raise AssertionError(b)
             """
         ).strip()
