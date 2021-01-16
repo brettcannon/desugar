@@ -10,7 +10,17 @@ import builtins
 import typing
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Iterable, Literal, Union
+    from typing import (
+        Any,
+        Callable,
+        Iterable,
+        Iterator,
+        Literal,
+        Sequence,
+        Tuple,
+        Type,
+        Union,
+    )
 
 # TODO:
 #   - type()
@@ -21,7 +31,7 @@ if typing.TYPE_CHECKING:
 _NOTHING = builtins.object()  # C: NULL
 
 
-def _mro(type_: type) -> Iterable[type]:
+def _mro(type_: Type) -> Iterable[type]:
     """Fetch the MRO for a type."""
     # The MRO is calculated at class creation time and set to `__mro__`.
     # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L5338
@@ -30,7 +40,7 @@ def _mro(type_: type) -> Iterable[type]:
     return type_.__mro__
 
 
-def _mro_getattr(type_: type, attr: str) -> Any:
+def _mro_getattr(type_: Type, attr: str) -> Any:
     """Get an attribute from a type based on its MRO."""
     for base in _mro(type_):
         if attr in base.__dict__:  # Pretend this is fetched directly from the object.
@@ -143,7 +153,7 @@ def _is_true(obj: Any, /) -> bool:
         else:
             raise TypeError(
                 f"expected a 'bool' from {obj_type.__name__}.__bool__(), "
-                f"not {type(boolean).__name__!r}"
+                f"not {builtins.type(boolean).__name__!r}"
             )
 
 
@@ -201,29 +211,36 @@ class object(type):
             return self.__dict__[attr]
         elif descriptor_type_get is not _NOTHING:
             # Non-data descriptor.
-            return descriptor_type_get(type_attr, self, self_type)
+            return typing.cast(Callable, descriptor_type_get)(
+                type_attr, self, self_type
+            )
         elif type_attr is not _NOTHING:
             # Class attribute.
             return type_attr
         else:
             raise AttributeError(f"{self.__name__!r} object has no attribute {attr!r}")
 
-    def __eq__(self, other: Any, /) -> Union[Literal[True], NotImplemented]:
-        """Implement equality via identity.
 
-        If the objects are not equal then return NotImplemented to give the
-        other object's __eq__ implementation a chance to participate in the
-        comparison.
+_NotImplementedType = builtins.type(NotImplemented)
 
-        """
-        # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
-        return (self is other) or NotImplemented
 
-    def __ne__(self, other: Any, /) -> Union[bool, NotImplemented]:
-        """Implement inequality by delegating to __eq__."""
-        # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
-        result = self.__eq__(other)
-        if result is not NotImplemented:
-            return not result
-        else:
-            return NotImplemented
+def __eq__(self, other: Any, /) -> Union[Literal[True], _NotImplementedType]:
+    """Implement equality via identity.
+
+    If the objects are not equal then return NotImplemented to give the
+    other object's __eq__ implementation a chance to participate in the
+    comparison.
+
+    """
+    # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
+    return (self is other) or NotImplemented
+
+
+def __ne__(self, other: Any, /) -> Union[bool, _NotImplementedType]:
+    """Implement inequality by delegating to __eq__."""
+    # https://github.com/python/cpython/blob/v3.8.3/Objects/typeobject.c#L3834-L3880
+    result = self.__eq__(other)
+    if result is not NotImplemented:
+        return not result
+    else:
+        return NotImplemented

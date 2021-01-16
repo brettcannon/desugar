@@ -96,7 +96,7 @@ class TestGetattr:
     def test_getattribute_from_type(self, getattr):
         """__getattribute__() is not fetched from the instance."""
         ins = ObjectExample()
-        ins.__getattribute__ = lambda self, attr: 42
+        ins.__getattribute__ = lambda self, attr: 42  # type: ignore
         assert getattr(ins, "ins_attr") == "instance attribute"
 
     def test_attr_type(self, getattr):
