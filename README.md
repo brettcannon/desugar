@@ -54,14 +54,85 @@ go with all of the code in this repository.
 1. `import a.b as c` ➠ `c = __import__('a', globals(), locals(), ['b'], 0).b`
 1. `from .a import b` ➠ `b = __import__('a', globals(), locals(), ['b'], 1).b`
 1. `from .a import b as c` ➠ `c = __import__('a', globals(), locals(), ['b'], 1).b`
-1. `assert a, b` ➠ see below
+1. `assert ...` ➠ see below
+1. `for ...` ➠ see below (including `builtins.iter()` and `builtins.next()`)
 
-### `assert a, b`
+### `assert ...`
+
+#### With message
+
+```Python
+assert a, b
+```
+
+➠
 
 ```Python
 if __debug__:
     if not a:
         raise AssertionError(b)
+```
+
+#### Without a message
+
+```Python
+assert a
+```
+
+➠
+
+```Python
+if __debug__:
+    if not a:
+        raise AssertionError
+```
+
+### `for ...`
+
+#### Without `else`
+
+```Python
+for a in b:
+    c
+```
+
+➠
+
+```Python
+_iter = iter(b)
+while _looping:
+    try:
+        a = next(_iter)
+    except StopIteration:
+        break
+    else:
+        c
+```
+
+#### With `else`
+
+```Python
+for a in b:
+    c
+else:
+    d
+```
+
+➠
+
+```Python
+_iter = iter(b)
+_looping = True
+while _looping:
+    try:
+        a = next(_iter)
+    except StopIteration:
+        _looping = False
+        continue
+    else:
+        c
+else:
+    d
 ```
 
 ## Syntax to (potentially) unravel
@@ -85,7 +156,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
 1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
-1. [`for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-for-statement) \*
 1. [`async for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) \*
 
 1. [`with`](https://docs.python.org/3.8/reference/compound_stmts.html#the-with-statement) \*
