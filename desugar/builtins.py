@@ -168,7 +168,99 @@ def any(iterable: Any, /) -> bool:
         return False
 
 
-class type:
+_SequenceItem = typing.TypeVar("_SequenceItem")
+
+
+def _seq_iter(seq: Sequence[_SequenceItem]) -> Iterator[_SequenceItem]:
+    """Yields the items of the sequence starting at 0."""
+    # Python/iterobject.c:PySeqIter_Type
+    # Slightly cheating as the CPython type supports pickling.
+    index = 0
+    while True:
+        try:
+            yield seq[index]
+            index += 1
+        except (IndexError, StopIteration):
+            return
+
+
+_CallableIter = typing.TypeVar("_CallableIter")
+
+
+def _call_iter(
+    callable: Callable[[], _CallableIter], sentinel: _CallableIter
+) -> Iterator[_CallableIter]:
+    """Yields values returned by 'callable' until a value equal to 'sentinel' is found."""
+    # Python/iterobject.c:PyCallIter_Type
+    # Slightly cheating as the CPython type supports pickling.
+    while True:
+        try:
+            val = callable()
+        except StopIteration:
+            raise
+        else:
+            if val == sentinel:
+                return
+            else:
+                yield val
+
+
+def iter(
+    obj: Union[Callable[[], _CallableIter], Iterable, Sequence],
+    /,
+    sentinel: _CallableIter = _NOTHING,
+) -> Iterator:
+    """Return an iterator for the object.
+
+    If 'sentinel' is unspecified, the first argument must either be an iterable
+    or a sequence. If the argument is a sequence, an iterator will be returned
+    which will index into the argument starting at 0 and continue until
+    IndexError or StopIteration is raised.
+
+    With 'sentinel' specified, the first argument is expected to be a callable
+    which takes no arguments. The returned iterator will execute the callable on
+    each iteration until an object equal to 'sentinel' is returned.
+    """
+    # Python/bltinmodule.c:builtin_iter
+    obj_type = builtins.type(obj)
+    if sentinel is _NOTHING:
+        # Python/abstract.c:PyObject_GetIter
+        try:
+            __iter__ = _mro_getattr(obj_type, "__iter__")
+        except AttributeError:
+            try:
+                _mro_getattr(obj_type, "__getitem__")
+            except AttributeError:
+                raise TypeError(f"{obj_type.__name__!r} is not iterable")
+            else:
+                return _seq_iter(typing.cast(Sequence, obj))
+        else:
+            iterator = __iter__(obj)
+            # Python/abstract.c:PyIter_Check()
+            iterator_type = builtins.type(iterator)
+            try:
+                _mro_getattr(iterator_type, "__next__")
+            except AttributeError:
+                raise TypeError(
+                    f"{obj_type.__name__!r}.__iter__() returned a non-iterator of type {builtins.type(__iter__)!r}"
+                )
+            else:
+                return __iter__(obj)
+    else:
+        # Python/object.c:PyCallable_Check
+        try:
+            _mro_getattr(obj_type, "__call__")
+        except AttributeError:
+            raise TypeError(f"{obj_type.__name__!r} must be callable")
+        else:
+            return _call_iter(typing.cast(Callable, obj), sentinel)
+
+
+class type(typing.Type):
+
+    __mro__: Tuple[Any]
+    __name__: str
+
     def mro(self):
         """Return a type's method resolution order."""
         return self.__mro__

@@ -356,3 +356,97 @@ class TestNe:
                 return 0
 
         assert __ne__(EqFalseNumber(), EqFalseNumber()) is True
+
+
+@pytest.mark.parametrize("iter", [builtins.iter, desugar.builtins.iter])
+class TestIter:
+    def test_iterable(self, iter):
+        """Return tp.__iter__(obj) when available."""
+
+        iterator = builtins.iter([])
+
+        class Iterable:
+            def __iter__(self):
+                return iterator
+
+        assert iter(Iterable()) is iterator
+
+    def test_non_iterator(self, iter):
+        """TypeError is raised if __iter__() returns a non-iterator."""
+
+        class NonIterable:
+            def __iter__(self):
+                return 42
+
+        with pytest.raises(TypeError):
+            iter(NonIterable())
+
+    def test_sequence(self, iter):
+        """Create an iterator to go through a sequence, stopping on IndexError."""
+
+        class Sequence:
+            def __getitem__(self, index):
+                if index < 3:
+                    return index
+                else:
+                    raise IndexError
+
+        iterator = iter(Sequence())
+
+        assert builtins.next(iterator) == 0
+        assert builtins.next(iterator) == 1
+        assert builtins.next(iterator) == 2
+        with pytest.raises(StopIteration):
+            builtins.next(iterator)
+
+    def test_sequence_StopIteration(self, iter):
+        """Sequence iterator stops on StopIteration."""
+
+        class Sequence:
+            def __getitem__(self, index):
+                if index < 3:
+                    return index
+                else:
+                    raise StopIteration
+
+        iterator = iter(Sequence())
+
+        assert builtins.next(iterator) == 0
+        assert builtins.next(iterator) == 1
+        assert builtins.next(iterator) == 2
+        with pytest.raises(StopIteration):
+            builtins.next(iterator)
+
+    def test_raise_TypeError(self, iter):
+        """With no sentinel, raise TypeError if __iter__() or __getitem__() not defined."""
+
+        def func():
+            pass
+
+        with pytest.raises(TypeError):
+            iter(func)
+
+    def test_callable(self, iter):
+        """If a sentinel is provided, then keep calling the argument until the sentinel is seen."""
+        count = -1
+
+        def callable():
+            nonlocal count
+            count += 1
+            return count
+
+        iterator = iter(callable, 3)
+
+        assert builtins.next(iterator) == 0
+        assert builtins.next(iterator) == 1
+        assert builtins.next(iterator) == 2
+        with pytest.raises(StopIteration):
+            builtins.next(iterator)
+
+    def test_callable_StopIteration(self, iter):
+        """Callable can raise StopIteration."""
+
+    def test_uncallable(self, iter):
+        """TypeError is raise if the argument isn't callable."""
+        with pytest.raises(TypeError):
+            iter(object(), 42)
