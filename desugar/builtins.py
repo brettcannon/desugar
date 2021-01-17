@@ -8,19 +8,17 @@ from __future__ import annotations
 import builtins
 
 import typing
-
-if typing.TYPE_CHECKING:
-    from typing import (
-        Any,
-        Callable,
-        Iterable,
-        Iterator,
-        Literal,
-        Sequence,
-        Tuple,
-        Type,
-        Union,
-    )
+from typing import (
+    Any,
+    Callable,
+    Iterable,
+    Iterator,
+    Literal,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 
 # TODO:
 #   - type()
