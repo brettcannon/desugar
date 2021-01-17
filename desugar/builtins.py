@@ -20,6 +20,8 @@ from typing import (
     Union,
 )
 
+T = typing.TypeVar("T")
+
 # TODO:
 #   - type()
 #   - isinstance()
@@ -168,10 +170,7 @@ def any(iterable: Any, /) -> bool:
         return False
 
 
-_SequenceItem = typing.TypeVar("_SequenceItem")
-
-
-def _seq_iter(seq: Sequence[_SequenceItem]) -> Iterator[_SequenceItem]:
+def _seq_iter(seq: Sequence[T]) -> Iterator[T]:
     """Yields the items of the sequence starting at 0."""
     # Python/iterobject.c:PySeqIter_Type
     # Slightly cheating as the CPython type supports pickling.
@@ -184,12 +183,7 @@ def _seq_iter(seq: Sequence[_SequenceItem]) -> Iterator[_SequenceItem]:
             return
 
 
-_CallableIter = typing.TypeVar("_CallableIter")
-
-
-def _call_iter(
-    callable: Callable[[], _CallableIter], sentinel: _CallableIter
-) -> Iterator[_CallableIter]:
+def _call_iter(callable: Callable[[], T], sentinel: Any) -> Iterator[T]:
     """Yields values returned by 'callable' until a value equal to 'sentinel' is found."""
     # Python/iterobject.c:PyCallIter_Type
     # Slightly cheating as the CPython type supports pickling.
@@ -206,10 +200,10 @@ def _call_iter(
 
 
 def iter(
-    obj: Union[Callable[[], _CallableIter], Iterable, Sequence],
+    obj: Union[Callable[[], T], Iterable[T], Sequence[T]],
     /,
-    sentinel: _CallableIter = _NOTHING,
-) -> Iterator:
+    sentinel: Any = _NOTHING,
+) -> Iterator[T]:
     """Return an iterator for the object.
 
     If 'sentinel' is unspecified, the first argument must either be an iterable
@@ -233,7 +227,7 @@ def iter(
             except AttributeError:
                 raise TypeError(f"{obj_type.__name__!r} is not iterable")
             else:
-                return _seq_iter(typing.cast(Sequence, obj))
+                return _seq_iter(typing.cast(Sequence[T], obj))
         else:
             iterator = __iter__(obj)
             # Python/abstract.c:PyIter_Check()
@@ -256,12 +250,7 @@ def iter(
             return _call_iter(typing.cast(Callable, obj), sentinel)
 
 
-_IteratorNext = typing.TypeVar("_IteratorNext")
-
-
-def next(
-    iterator: Iterator[_IteratorNext], /, default: Any = _NOTHING
-) -> _IteratorNext:
+def next(iterator: Iterator[Any], /, default: Any = _NOTHING) -> Any:
     """Return the next value from the iterator by calling __next__().
 
     If a 'default' argument is provided, it is returned if StopIteration is
