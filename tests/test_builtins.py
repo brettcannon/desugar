@@ -382,6 +382,8 @@ class TestIter:
             iter(NonIterable())
 
     def test_iter_is_None(self, iter):
+        """If __iter__() is set to None, raise TypeError."""
+
         class NotIterable:
             __iter__ = None
 
