@@ -416,6 +416,8 @@ class TestIter:
         assert builtins.next(iterator) == 2
         with pytest.raises(StopIteration):
             builtins.next(iterator)
+        with pytest.raises(StopIteration):
+            builtins.next(iterator)
 
     def test_raise_TypeError(self, iter):
         """With no sentinel, raise TypeError if __iter__() or __getitem__() not defined."""
@@ -442,6 +444,8 @@ class TestIter:
         assert builtins.next(iterator) == 2
         with pytest.raises(StopIteration):
             builtins.next(iterator)
+        with pytest.raises(StopIteration):
+            builtins.next(iterator)
 
     def test_callable_StopIteration(self, iter):
         """Callable can raise StopIteration."""
@@ -450,3 +454,31 @@ class TestIter:
         """TypeError is raise if the argument isn't callable."""
         with pytest.raises(TypeError):
             iter(object(), 42)
+
+
+@pytest.mark.parametrize("next", [builtins.next, desugar.builtins.next])
+class TestNext:
+    def test_next(self, next):
+        """Calls __next__()."""
+        iterator = builtins.iter(range(3))
+
+        assert next(iterator) == 0
+        assert next(iterator) == 1
+        assert next(iterator) == 2
+        with pytest.raises(StopIteration):
+            next(iterator)
+
+    def test_missing_next(self, next):
+        """Raises TypeError if __next__() isn't defined."""
+        with pytest.raises(TypeError):
+            next(42)
+
+    def test_default(self, next):
+        """If 'default' is given, then it is returned when StopIteration is raised."""
+        iterator = builtins.iter(range(3))
+
+        default = object()
+        assert next(iterator, default) == 0
+        assert next(iterator, default) == 1
+        assert next(iterator, default) == 2
+        assert next(iterator, default) == default

@@ -256,6 +256,35 @@ def iter(
             return _call_iter(typing.cast(Callable, obj), sentinel)
 
 
+_IteratorNext = typing.TypeVar("_IteratorNext")
+
+
+def next(
+    iterator: Iterator[_IteratorNext], /, default: Any = _NOTHING
+) -> _IteratorNext:
+    """Return the next value from the iterator by calling __next__().
+
+    If a 'default' argument is provided, it is returned if StopIteration is
+    raised by the iterator.
+    """
+    # Python/bltinmodule.c:builtin_next
+    iterator_type = builtins.type(iterator)
+    try:
+        __next__ = _mro_getattr(iterator_type, "__next__")
+    except AttributeError:
+        raise TypeError(f"{iterator_type.__name__!r} is not an iterator")
+    else:
+        try:
+            val = __next__(iterator)
+        except StopIteration:
+            if default is _NOTHING:
+                raise
+            else:
+                return default
+        else:
+            return val
+
+
 class type(typing.Type):
 
     __mro__: Tuple[Any]
