@@ -10,7 +10,6 @@ home-page = "https://github.com/brettcannon/desugar"
 classifiers = ["License :: OSI Approved :: MIT License"]
 requires-python = ">=3.8"
 description-file = "README.md"
-requires = ["redbaron"]
 
 [tool.flit.metadata.requires-extra]
 test = ["pytest==5.4.3"]
