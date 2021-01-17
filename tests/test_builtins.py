@@ -381,6 +381,13 @@ class TestIter:
         with pytest.raises(TypeError):
             iter(NonIterable())
 
+    def test_iter_is_None(self, iter):
+        class NotIterable:
+            __iter__ = None
+
+        with pytest.raises(TypeError):
+            iter(NotIterable())
+
     def test_sequence(self, iter):
         """Create an iterator to go through a sequence, stopping on IndexError."""
 
