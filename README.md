@@ -107,6 +107,7 @@ while _looping:
         break
     else:
         c
+del _iter
 ```
 
 #### With `else`
@@ -133,6 +134,7 @@ while _looping:
         c
 else:
     d
+del _iter, _looping
 ```
 
 ## Syntax to (potentially) unravel
