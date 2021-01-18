@@ -188,15 +188,11 @@ def _call_iter(callable: Callable[[], T], sentinel: Any) -> Iterator[T]:
     # Python/iterobject.c:PyCallIter_Type
     # Slightly cheating as the CPython type supports pickling.
     while True:
-        try:
-            val = callable()
-        except StopIteration:
-            raise
+        val = callable()
+        if val == sentinel:
+            return
         else:
-            if val == sentinel:
-                return
-            else:
-                yield val
+            yield val
 
 
 def iter(
@@ -230,7 +226,7 @@ def iter(
                 return _seq_iter(typing.cast(Sequence[T], obj))
         else:
             iterator = __iter__(obj)
-            # Python/abstract.c:PyIter_Check()
+            # Python/abstract.c:PyIter_Check
             iterator_type = builtins.type(iterator)
             try:
                 _mro_getattr(iterator_type, "__next__")
@@ -258,7 +254,7 @@ def next(iterator: Iterator[Any], /, default: Any = _NOTHING) -> Any:
     """
     # Python/bltinmodule.c:builtin_next
     iterator_type = builtins.type(iterator)
-    try:
+    try:  # Python/abstract.c:PyIter_Check
         __next__ = _mro_getattr(iterator_type, "__next__")
     except AttributeError:
         raise TypeError(f"{iterator_type.__name__!r} is not an iterator")
