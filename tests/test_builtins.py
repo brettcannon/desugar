@@ -458,6 +458,24 @@ class TestIter:
 
     def test_callable_StopIteration(self, iter):
         """Callable can raise StopIteration."""
+        count = -1
+
+        def callable():
+            nonlocal count
+            if count >= 3:
+                raise StopIteration
+            count += 1
+            return count
+
+        iterator = iter(callable, 3)
+
+        assert builtins.next(iterator) == 0
+        assert builtins.next(iterator) == 1
+        assert builtins.next(iterator) == 2
+        with pytest.raises(StopIteration):
+            builtins.next(iterator)
+        with pytest.raises(StopIteration):
+            builtins.next(iterator)
 
     def test_uncallable(self, iter):
         """TypeError is raise if the argument isn't callable."""
