@@ -127,6 +127,7 @@ def len(obj: object, /) -> int:
 
 
 def _is_true(obj: Any, /) -> bool:
+    """Detect if the argument is "truthy"."""
     if obj is True:
         return True
     elif obj is False:
@@ -171,7 +172,7 @@ def any(iterable: Any, /) -> bool:
 
 
 def _seq_iter(seq: Sequence[T]) -> Iterator[T]:
-    """Yields the items of the sequence starting at 0."""
+    """Yield the items of the sequence starting at 0."""
     # Python/iterobject.c:PySeqIter_Type
     # Slightly cheating as the CPython type supports pickling.
     index = 0
@@ -184,7 +185,7 @@ def _seq_iter(seq: Sequence[T]) -> Iterator[T]:
 
 
 def _call_iter(callable: Callable[[], T], sentinel: Any) -> Iterator[T]:
-    """Yields values returned by 'callable' until a value equal to 'sentinel' is found."""
+    """Yield values returned by 'callable' until a value equal to 'sentinel' is found."""
     # Python/iterobject.c:PyCallIter_Type
     # Slightly cheating as the CPython type supports pickling.
     while True:
