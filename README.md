@@ -100,7 +100,7 @@ for a in b:
 
 ```Python
 _iter = iter(b)
-while _looping:
+while True:
     try:
         a = next(_iter)
     except StopIteration:
