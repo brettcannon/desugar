@@ -56,6 +56,7 @@ go with all of the code in this repository.
 1. `from .a import b as c` ➠ `c = __import__('a', globals(), locals(), ['b'], 1).b`
 1. `assert ...` ➠ see below
 1. `for ...` ➠ see below (including `builtins.iter()` and `builtins.next()`)
+1. `pass` ➠ `"pass"`
 
 ### `assert ...`
 
@@ -152,7 +153,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 #### Statements
 
-1. [`pass`](https://docs.python.org/3.8/reference/simple_stmts.html#the-pass-statement) \*
 1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement)
 1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement)
 
