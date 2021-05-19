@@ -57,6 +57,7 @@ go with all of the code in this repository.
 1. `assert ...` ➠ see below
 1. `for ...` ➠ see below (including `builtins.iter()` and `builtins.next()`)
 1. `pass` ➠ `"pass"`
+1. `with ...` ➠ see below
 
 ### `assert ...`
 
@@ -136,6 +137,29 @@ while _looping:
 else:
     d
 del _iter, _looping
+```
+
+### `with ...`
+
+```Python
+with a as b:
+    c
+```
+
+➠
+
+```Python
+_enter = type(a).__enter__
+_exit = type(a).__exit__
+b = _enter(a)
+
+try:
+    c
+except:
+    if not _exit(a, *sys.exc_info()):
+        raise
+else:
+    _exit(a, None, None, None)
 ```
 
 ## Syntax to (potentially) unravel
