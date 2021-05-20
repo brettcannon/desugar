@@ -184,7 +184,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
 1. [`async for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) \*
 
-1. [`with`](https://docs.python.org/3.8/reference/compound_stmts.html#the-with-statement) \*
 1. [`async with`](https://docs.python.org/3.8/reference/compound_stmts.html#async-with) \*
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
