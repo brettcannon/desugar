@@ -58,6 +58,8 @@ go with all of the code in this repository.
 1. `for ...` ➠ see below (including `builtins.iter()` and `builtins.next()`)
 1. `pass` ➠ `"pass"`
 1. `with ...` ➠ see below
+1. `async def ...` ➠ see below
+1. `await ...` ➠ `desugar.builtins._await(...)`
 
 ### `assert ...`
 
@@ -162,6 +164,20 @@ else:
     _exit(a, None, None, None)
 ```
 
+### `async def ...`
+```Python
+async def spam():
+    ...
+```
+
+➠
+
+```Python
+@types.coroutine
+def spam():
+    ...
+```
+
 ## Syntax to (potentially) unravel
 
 ### Keywords
@@ -171,8 +187,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 #### Expressions
 
 1. [`yield`](https://docs.python.org/3.8/reference/simple_stmts.html#the-yield-statement)
-1. [`await`](https://docs.python.org/3.8/reference/expressions.html#await) ~
-
 1. [`lambda`](https://docs.python.org/3.8/reference/expressions.html#lambda)
 
 #### Statements
@@ -182,12 +196,12 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
 1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
-1. [`async for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) \*
 
+1. [`async for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) \*
 1. [`async with`](https://docs.python.org/3.8/reference/compound_stmts.html#async-with) \*
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
-1. [`async def`](https://docs.python.org/3.8/reference/compound_stmts.html#coroutine-function-definition) ~
+
 1. [`class`](https://docs.python.org/3.8/reference/compound_stmts.html#class-definitions) ~
 
 1. [`try`/`except`/`else`/`finally`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement)

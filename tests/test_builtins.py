@@ -1,4 +1,6 @@
 import builtins
+import collections.abc
+import types
 import warnings
 
 import pytest
@@ -509,3 +511,28 @@ class TestNext:
         assert next(iterator, default) == 1
         assert next(iterator, default) == 2
         assert next(iterator, default) == default
+
+
+class TestAwait:
+
+    def test_await(self):
+        """An object defining `__await__` has that awaited on."""
+        class Await(collections.abc.Awaitable):
+
+            def __await__(self):
+                yield from range(3)
+
+        assert list(range(3)) == list(desugar.builtins._await(Await()))
+
+    def test_coroutine(self):
+        """An object marked as a coroutine can be awaited on."""
+        @types.coroutine
+        def coro():
+            yield from range(3)
+
+        assert list(range(3)) == list(desugar.builtins._await(coro()))
+
+    def test_not_coroutine(self):
+        """An object that isn't awaitable triggers a TypeError."""
+        with pytest.raises(TypeError):
+            list(desugar.builtins._await(None))

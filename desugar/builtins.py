@@ -7,6 +7,7 @@
 from __future__ import annotations
 import builtins
 
+import inspect
 import typing
 from typing import (
     Any,
@@ -269,6 +270,21 @@ def next(iterator: Iterator[Any], /, default: Any = _NOTHING) -> Any:
                 return default
         else:
             return val
+
+
+def _await(coroutine):
+    """Simulate `await coroutine`."""
+    if not inspect.isawaitable(coroutine):
+        msg = f"object {builtins.type(coroutine)} can't be used in 'await' expression"
+        raise TypeError(msg)
+    coroutine_type = builtins.type(coroutine)
+    try:
+        __await__ = _mro_getattr(coroutine_type, "__await__")
+    except AttributeError:
+        awaitable = coroutine
+    else:
+        awaitable = __await__(coroutine)
+    yield from awaitable
 
 
 class type(typing.Type):
