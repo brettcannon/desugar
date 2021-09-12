@@ -12,5 +12,5 @@ requires-python = ">=3.8"
 description-file = "README.md"
 
 [tool.flit.metadata.requires-extra]
-test = ["pytest==5.4.3"]
+test = ["pytest==6.2.5", "pytest-asyncio==0.15.1"]
 dev = ["black==20.8b1"]

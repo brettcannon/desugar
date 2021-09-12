@@ -542,6 +542,7 @@ class TestAwait:
 class TestAiter:
     def test_iterable(self):
         """Calls __aiter__()."""
+
         class AsyncIterator:
             async def __anext__(self):
                 return 42
@@ -562,6 +563,7 @@ class TestAiter:
 
     def test_non_iterator(self):
         """If __aiter__() returns an object w/o __anext__() then raise a TypeError."""
+
         class NonAsyncIterable:
             def __aiter__(self):
                 return 42
@@ -571,6 +573,7 @@ class TestAiter:
 
     def test_non_async_anext(self):
         """Raise TypeError if aiter() would return a non-async __anext__() object."""
+
         class AsyncIterator:
             def __anext__(self):
                 return 42
@@ -582,3 +585,39 @@ class TestAiter:
         with pytest.raises(TypeError):
             desugar.builtins.aiter(AsyncIterable())
 
+
+# Testing against Python requires Python 3.10.
+class TestAnext:
+    @pytest.mark.asyncio
+    async def test_iterator(self):
+        expected_value = 42
+
+        class Iterator:
+            async def __anext__(self):
+                return expected_value
+
+        assert (await desugar.builtins.anext(Iterator())) == expected_value
+
+    @pytest.mark.asyncio
+    async def test_iterator_end(self):
+        class Iterator:
+            async def __anext__(self):
+                raise StopAsyncIteration
+
+        with pytest.raises(StopAsyncIteration):
+            await desugar.builtins.anext(Iterator())
+
+    @pytest.mark.asyncio
+    async def test_non_iterator(self):
+        with pytest.raises(TypeError):
+            await desugar.builtins.anext(object())
+
+    @pytest.mark.asyncio
+    async def test_default(self):
+        class Iterator:
+            async def __anext__(self):
+                raise StopAsyncIteration
+
+        default = object()
+
+        assert (await desugar.builtins.anext(Iterator(), default)) is default

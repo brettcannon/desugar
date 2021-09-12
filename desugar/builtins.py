@@ -264,14 +264,12 @@ def next(iterator: Iterator[Any], /, default: Any = _NOTHING) -> Any:
         raise TypeError(f"{iterator_type.__name__!r} is not an iterator")
     else:
         try:
-            val = __next__(iterator)
+            return __next__(iterator)
         except StopIteration:
             if default is _NOTHING:
                 raise
             else:
                 return default
-        else:
-            return val
 
 
 def aiter(iterable: AsyncIterable[T], /) -> AsyncIterator[T]:
@@ -291,6 +289,26 @@ def aiter(iterable: AsyncIterable[T], /) -> AsyncIterator[T]:
         if not inspect.iscoroutinefunction(__anext__):
             raise TypeError(f"{iterator_type.__name__!r} is not an async iterator")
         return iterator
+
+
+async def anext(iterator: AsyncIterator[Any], default: Any = _NOTHING, /) -> Any:
+    """Return the next item from the async iterator by calling __anext__().
+
+    If `default` is provided and `StopAsyncIteration` is raised, then return
+    `default`.
+    """
+    iterator_type = builtins.type(iterator)
+    try:
+        __anext__ = _mro_getattr(iterator_type, "__anext__")
+    except AttributeError:
+        raise TypeError(f"{iterator_type.__name__!r} is not an async iterator")
+    try:
+        return await __anext__(iterator)
+    except StopAsyncIteration:
+        if default is not _NOTHING:
+            return default
+        else:
+            raise
 
 
 def _await(coroutine):
