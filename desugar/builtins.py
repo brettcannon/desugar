@@ -11,6 +11,8 @@ import inspect
 import typing
 from typing import (
     Any,
+    AsyncIterable,
+    AsyncIterator,
     Callable,
     Iterable,
     Iterator,
@@ -270,6 +272,25 @@ def next(iterator: Iterator[Any], /, default: Any = _NOTHING) -> Any:
                 return default
         else:
             return val
+
+
+def aiter(iterable: AsyncIterable[T], /) -> AsyncIterator[T]:
+    """Return the async iterator for the async iterable by calling __aiter__()."""
+    iterable_type = builtins.type(iterable)
+    try:
+        __aiter__ = _mro_getattr(iterable_type, "__aiter__")
+    except AttributeError:
+        raise TypeError(f"{iterable_type.__name__!r} is not async iterable")
+    else:
+        iterator = __aiter__(iterable)
+        iterator_type = builtins.type(iterator)
+        try:
+            __anext__ = _mro_getattr(iterator_type, "__anext__")
+        except AttributeError:
+            raise TypeError(f"{iterator_type.__name__!r} is not an async iterator")
+        if not inspect.iscoroutinefunction(__anext__):
+            raise TypeError(f"{iterator_type.__name__!r} is not an async iterator")
+        return iterator
 
 
 def _await(coroutine):

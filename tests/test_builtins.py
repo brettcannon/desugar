@@ -514,11 +514,10 @@ class TestNext:
 
 
 class TestAwait:
-
     def test_await(self):
         """An object defining `__await__` has that awaited on."""
-        class Await(collections.abc.Awaitable):
 
+        class Await(collections.abc.Awaitable):
             def __await__(self):
                 yield from range(3)
 
@@ -526,6 +525,7 @@ class TestAwait:
 
     def test_coroutine(self):
         """An object marked as a coroutine can be awaited on."""
+
         @types.coroutine
         def coro():
             yield from range(3)
@@ -536,3 +536,49 @@ class TestAwait:
         """An object that isn't awaitable triggers a TypeError."""
         with pytest.raises(TypeError):
             list(desugar.builtins._await(None))
+
+
+# Testing w/ Python requires Python 3.10.
+class TestAiter:
+    def test_iterable(self):
+        """Calls __aiter__()."""
+        class AsyncIterator:
+            async def __anext__(self):
+                return 42
+
+        class AsyncIterable:
+            def __aiter__(self):
+                return AsyncIterator()
+
+        assert isinstance(
+            desugar.builtins.aiter(AsyncIterable()),
+            AsyncIterator,
+        )
+
+    def test_non_iterable(self):
+        """No __aiter() then TypeError."""
+        with pytest.raises(TypeError):
+            desugar.builtins.aiter(object())
+
+    def test_non_iterator(self):
+        """If __aiter__() returns an object w/o __anext__() then raise a TypeError."""
+        class NonAsyncIterable:
+            def __aiter__(self):
+                return 42
+
+        with pytest.raises(TypeError):
+            desugar.builtins.aiter(NonAsyncIterable())
+
+    def test_non_async_anext(self):
+        """Raise TypeError if aiter() would return a non-async __anext__() object."""
+        class AsyncIterator:
+            def __anext__(self):
+                return 42
+
+        class AsyncIterable:
+            def __aiter__(self):
+                return AsyncIterator()
+
+        with pytest.raises(TypeError):
+            desugar.builtins.aiter(AsyncIterable())
+
