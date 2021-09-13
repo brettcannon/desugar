@@ -199,6 +199,8 @@ def _call_iter(callable: Callable[[], T], sentinel: Any) -> Iterator[T]:
             yield val
 
 
+# TODO: The return type is technically wrong as `__iter__` is not required,
+# just `__next__`.
 def iter(
     obj: Union[Callable[[], T], Iterable[T], Sequence[T]],
     /,
@@ -272,8 +274,14 @@ def next(iterator: Iterator[Any], /, default: Any = _NOTHING) -> Any:
                 return default
 
 
+# TODO: technically the return type is wrong as only `__anext__` is required;
+# `__aiter__` is optional.
 def aiter(iterable: AsyncIterable[T], /) -> AsyncIterator[T]:
-    """Return the async iterator for the async iterable by calling __aiter__()."""
+    """Return the async iterator for the async iterable by calling __aiter__().
+
+    If the async iterator does not define an awaitable `__anext__`,
+    raise `TypeError`.
+    """
     iterable_type = builtins.type(iterable)
     try:
         __aiter__ = _mro_getattr(iterable_type, "__aiter__")
