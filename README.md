@@ -60,6 +60,7 @@ go with all of the code in this repository.
 1. `with ...` ➠ see below
 1. `async def ...` ➠ see below
 1. `await ...` ➠ `desugar.builtins._await(...)`
+1. `async for` ➠ see below (including `builtins.aiter()` and `builtins.anext()`)
 
 ### `assert ...`
 
@@ -178,6 +179,56 @@ def spam():
     ...
 ```
 
+### `async for ...`
+
+#### Without `else`
+
+```Python
+async for a in b:
+    c
+```
+
+➠
+
+```Python
+_iter = aiter(b)
+while True:
+    try:
+        a = await anext(_iter)
+    except StopAsyncIteration:
+        break
+    else:
+        c
+del _iter
+```
+
+#### With `else`
+
+```Python
+async for a in b:
+    c
+else:
+    d
+```
+
+➠
+
+```Python
+_iter = aiter(b)
+_looping = True
+while _looping:
+    try:
+        a = await anext(_iter)
+    except StopAsyncIteration:
+        _looping = False
+        continue
+    else:
+        c
+else:
+    d
+del _iter, _looping
+```
+
 ## Syntax to (potentially) unravel
 
 ### Keywords
@@ -197,7 +248,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
 1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
 
-1. [`async for`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) \*
 1. [`async with`](https://docs.python.org/3.8/reference/compound_stmts.html#async-with) \*
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
