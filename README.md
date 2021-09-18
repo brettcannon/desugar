@@ -61,6 +61,7 @@ go with all of the code in this repository.
 1. `async def ...` ➠ see below
 1. `await ...` ➠ `desugar.builtins._await(...)`
 1. `async for` ➠ see below (including `builtins.aiter()` and `builtins.anext()`)
+1. `async with` ➠ see below
 
 ### `assert ...`
 
@@ -229,6 +230,29 @@ else:
 del _iter, _looping
 ```
 
+### `async with ...`
+
+```Python
+async with a as b:
+    c
+```
+
+➠
+
+```Python
+_enter = type(a).__aenter__
+_exit = type(a).__aexit__
+b = await _enter(a)
+
+try:
+    c
+except:
+    if not await _exit(a, *sys.exc_info()):
+        raise
+else:
+    await _exit(a, None, None, None)
+```
+
 ## Syntax to (potentially) unravel
 
 ### Keywords
@@ -247,8 +271,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
 1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
-
-1. [`async with`](https://docs.python.org/3.8/reference/compound_stmts.html#async-with) \*
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
 
