@@ -305,7 +305,7 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 
 1. `()` for [tuple display](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms) \*
 
-1. `()` for [generator expressions](https://docs.python.org/3.8/reference/expressions.html#generator-expressions) \*
+1. `()` for [generator expressions](https://docs.python.org/3.8/reference/expressions.html#generator-expressions)
 
 1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
 
