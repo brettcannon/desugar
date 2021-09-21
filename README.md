@@ -13,13 +13,13 @@ go with all of the code in this repository.
 1. [`a * b`](https://docs.python.org/3.8/reference/expressions.html#binary-arithmetic-operations) ➠ [`operator.__mul__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
 1. [`a @ b`](https://docs.python.org/3.8/reference/expressions.html#binary-arithmetic-operations) ➠ [`operator.__matmul__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
 1. [`a / b`](https://docs.python.org/3.8/reference/expressions.html#binary-arithmetic-operations) ➠ [`operator.__truediv__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
-1. [`a // b`](https://docs.python.org/3.8/reference/expressions.html#binary-arithmetic-operations) ➠ `operator.__floordiv__(a, b)`
+1. [`a // b`](https://docs.python.org/3.8/reference/expressions.html#binary-arithmetic-operations) ➠ [`operator.__floordiv__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
 1. [`a % b`](https://docs.python.org/3.8/reference/expressions.html#binary-arithmetic-operations) ➠ [`operator.__mod__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
 1. [`a ** b`](https://docs.python.org/3.8/reference/expressions.html#binary-arithmetic-operations) ➠ [`operator.__pow__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
 1. [`a << b`](https://docs.python.org/3.8/reference/expressions.html#shifting-operations) ➠ [`operator.__lshift__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
 1. [`a >> b`](https://docs.python.org/3.8/reference/expressions.html#shifting-operations) ➠ [`operator.__rshift__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
 1. [`a & b`](https://docs.python.org/3.8/reference/expressions.html#binary-bitwise-operations) ➠ [`operator.__and__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
-1. [`a ^ b`](https://docs.python.org/3.8/reference/expressions.html#binary-bitwise-operations) ➠ `operator.__xor__(a, b)`
+1. [`a ^ b`](https://docs.python.org/3.8/reference/expressions.html#binary-bitwise-operations) ➠ [`operator.__xor__(a, b)`](https://docs.python.org/3.8/reference/expressions.html#binary-bitwise-operations)
 1. [`a | b`](https://docs.python.org/3.8/reference/expressions.html#binary-bitwise-operations) ➠ [`operator.__or__(a, b)`](https://snarky.ca/unravelling-binary-arithmetic-operations-in-python/)
 1. [`a += b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__iadd__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
 1. [`a -= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__isub__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
