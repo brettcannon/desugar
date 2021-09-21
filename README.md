@@ -46,16 +46,16 @@ go with all of the code in this repository.
 1. `a is b` ➠ `operator.is_(a, b)`
 1. `a is not b` ➠ `operator.is_not(a, b)`
 1. `not a` ➠ `operator.not_(a)`
-1. `a in b` ➠ `operator.__contains__(b, a)`
-1. `a not in b` ➠ `operator.not_(operator.__contains__(b, a))`
-1. `a or b` ➠ `_temp if (_temp := a) else b`
-1. `a and b` ➠ `_temp if not (_temp := a) else b`
-1. `import a.b` ➠ `a = __import__('a.b', globals(), locals())`
-1. `import a.b as c` ➠ `c = __import__('a', globals(), locals(), ['b'], 0).b`
-1. `from .a import b` ➠ `b = __import__('a', globals(), locals(), ['b'], 1).b`
-1. `from .a import b as c` ➠ `c = __import__('a', globals(), locals(), ['b'], 1).b`
-1. `assert ...` ➠ see below
-1. `for ...` ➠ see below (including `builtins.iter()` and `builtins.next()`)
+1. [`a in b`](https://docs.python.org/3.8/reference/expressions.html#membership-test-operations) ➠ [`operator.__contains__(b, a)`](https://snarky.ca/unravelling-membership-testing/)
+1. [`a not in b`](https://docs.python.org/3.8/reference/expressions.html#membership-test-operations) ➠ [`operator.not_(operator.__contains__(b, a))`](https://snarky.ca/unravelling-membership-testing/)
+1. [`a or b`](https://docs.python.org/3.8/reference/expressions.html#boolean-operations) ➠ [`_temp if (_temp := a) else b`](https://snarky.ca/unravelling-boolean-operations/)
+1. [`a and b`](https://docs.python.org/3.8/reference/expressions.html#boolean-operations) ➠ [`_temp if not (_temp := a) else b`](https://snarky.ca/unravelling-boolean-operations/)
+1. [`import a.b`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) ➠ [`a = __import__('a.b', globals(), locals())`](https://snarky.ca/unravelling-the-import-statement/)
+1. [`import a.b as c`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) ➠ [`c = __import__('a', globals(), locals(), ['b'], 0).b`](https://snarky.ca/unravelling-the-import-statement/)
+1. [`from .a import b`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) ➠ [`b = __import__('a', globals(), locals(), ['b'], 1).b`](https://snarky.ca/unravelling-the-import-statement/)
+1. [`from .a import b as c`](https://docs.python.org/3.8/reference/simple_stmts.html#the-import-statement) ➠ [`c = __import__('a', globals(), locals(), ['b'], 1).b`](https://snarky.ca/unravelling-the-import-statement/)
+1. [`assert ...`](https://docs.python.org/3.8/reference/simple_stmts.html#the-assert-statement) ➠ see below ([post](https://snarky.ca/unravelling-assertions/))
+1. [`for ...`](https://docs.python.org/3.8/reference/compound_stmts.html#the-for-statement) ➠ see below ([including `builtins.iter()` and `builtins.next()`](https://snarky.ca/unravelling-for-statements/))
 1. `pass` ➠ `"pass"`
 1. [`with ...`](https://docs.python.org/3.8/reference/compound_stmts.html#the-with-statement) ➠ see below ([post](https://snarky.ca/unravelling-the-with-statement/))
 1. [`async def ...`](https://docs.python.org/3.8/reference/compound_stmts.html#coroutine-function-definition) ➠ see below ([post](https://snarky.ca/unravelling-async-and-await/))
