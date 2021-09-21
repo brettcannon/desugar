@@ -21,31 +21,31 @@ go with all of the code in this repository.
 1. `a & b` ➠ `operator.__and__(a, b)`
 1. `a ^ b` ➠ `operator.__xor__(a, b)`
 1. `a | b` ➠ `operator.__or__(a, b)`
-1. `a += b` ➠ `a = operator.__iadd__(a, b)`
-1. `a -= b` ➠ `a = operator.__isub__(a, b)`
-1. `a *= b` ➠ `a = operator.__imul__(a, b)`
-1. `a @= b` ➠ `a = operator.__imatmul__(a, b)`
-1. `a /= b` ➠ `a = operator.__itruediv__(a, b)`
-1. `a //= b` ➠ `a = operator.__ifloordiv__(a, b)`
-1. `a %= b` ➠ `a = operator.__imod__(a, b)`
-1. `a **= b` ➠ `a = operator.__ipow__(a, b)`
-1. `a <<= b` ➠ `a = operator.__ilshift__(a, b)`
-1. `a >>= b` ➠ `a = operator.__irshift__(a, b)`
-1. `a &= b` ➠ `a = operator.__iand__(a, b)`
-1. `a ^= b` ➠ `a = operator.__ixor__(a, b)`
-1. `a |= b` ➠ `a = operator.__ior__(a, b)`
-1. `~ a` ➠ `operator.__invert__(a)`
-1. `- a` ➠ `operator.__neg__(a)`
-1. `+ a` ➠ `operator.__pos__(a)`
-1. `a == b` ➠ `operator.__eq__(a, b)` (including `object.__eq__()`)
-1. `a != b` ➠ `operator.__ne__(a, b)` (including `object.__ne__()`)
-1. `a < b` ➠ `operator.__lt__(a, b)`
-1. `a <= b` ➠ `operator.__le__(a, b)`
-1. `a > b` ➠ `operator.__gt__(a, b)`
-1. `a >= b` ➠ `operator.__ge__(a, b)`
-1. `a is b` ➠ `operator.is_(a, b)`
-1. `a is not b` ➠ `operator.is_not(a, b)`
-1. `not a` ➠ `operator.not_(a)`
+1. [`a += b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__iadd__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a -= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__isub__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a *= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__imul__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a @= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__imatmul__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a /= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__itruediv__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a //= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__ifloordiv__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a %= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__imod__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a **= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__ipow__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a <<= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__ilshift__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a >>= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__irshift__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a &= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__iand__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a ^= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__ixor__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`a |= b`](https://docs.python.org/3/reference/simple_stmts.html#augmented-assignment-statements) ➠ [`a = operator.__ior__(a, b)`](https://snarky.ca/unravelling-augmented-arithmetic-assignment/)
+1. [`~ a`](https://docs.python.org/3.8/reference/expressions.html#unary-arithmetic-and-bitwise-operations) ➠ [`operator.__invert__(a)`](https://snarky.ca/unravelling-unary-arithmetic-operators/)
+1. [`- a`](https://docs.python.org/3.8/reference/expressions.html#unary-arithmetic-and-bitwise-operations) ➠ [`operator.__neg__(a)`](https://snarky.ca/unravelling-unary-arithmetic-operators/)
+1. [`+ a`](https://docs.python.org/3.8/reference/expressions.html#unary-arithmetic-and-bitwise-operations) ➠ [`operator.__pos__(a)`](https://snarky.ca/unravelling-unary-arithmetic-operators/)
+1. [`a == b`](https://docs.python.org/3.8/reference/expressions.html#value-comparisons) ➠ [`operator.__eq__(a, b)`](https://snarky.ca/unravelling-rich-comparison-operators/) (including `object.__eq__()`)
+1. [`a != b`](https://docs.python.org/3.8/reference/expressions.html#value-comparisons) ➠ [`operator.__ne__(a, b)`](https://snarky.ca/unravelling-rich-comparison-operators/) (including `object.__ne__()`)
+1. [`a < b`](https://docs.python.org/3.8/reference/expressions.html#value-comparisons) ➠ [`operator.__lt__(a, b)`](https://snarky.ca/unravelling-rich-comparison-operators/)
+1. [`a <= b`](https://docs.python.org/3.8/reference/expressions.html#value-comparisons) ➠ [`operator.__le__(a, b)`](https://snarky.ca/unravelling-rich-comparison-operators/)
+1. [`a > b`](https://docs.python.org/3.8/reference/expressions.html#value-comparisons) ➠ [`operator.__gt__(a, b)`](https://snarky.ca/unravelling-rich-comparison-operators/)
+1. [`a >= b`](https://docs.python.org/3.8/reference/expressions.html#value-comparisons) ➠ [`operator.__ge__(a, b)`](https://snarky.ca/unravelling-rich-comparison-operators/)
+1. [`a is b`](https://docs.python.org/3.8/reference/expressions.html#is-not) ➠ [`operator.is_(a, b)`](https://snarky.ca/unravelling-is-and-is-not/)
+1. [`a is not b`](https://docs.python.org/3.8/reference/expressions.html#is-not) ➠ [`operator.is_not(a, b)`](https://snarky.ca/unravelling-is-and-is-not/)
+1. [`not a`](https://docs.python.org/3.8/reference/expressions.html#boolean-operations) ➠ [`operator.not_(a)`](https://snarky.ca/unravelling-not-in-python/)
 1. [`a in b`](https://docs.python.org/3.8/reference/expressions.html#membership-test-operations) ➠ [`operator.__contains__(b, a)`](https://snarky.ca/unravelling-membership-testing/)
 1. [`a not in b`](https://docs.python.org/3.8/reference/expressions.html#membership-test-operations) ➠ [`operator.not_(operator.__contains__(b, a))`](https://snarky.ca/unravelling-membership-testing/)
 1. [`a or b`](https://docs.python.org/3.8/reference/expressions.html#boolean-operations) ➠ [`_temp if (_temp := a) else b`](https://snarky.ca/unravelling-boolean-operations/)
