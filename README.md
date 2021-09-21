@@ -57,11 +57,11 @@ go with all of the code in this repository.
 1. `assert ...` ➠ see below
 1. `for ...` ➠ see below (including `builtins.iter()` and `builtins.next()`)
 1. `pass` ➠ `"pass"`
-1. `with ...` ➠ see below
-1. `async def ...` ➠ see below
-1. `await ...` ➠ `desugar.builtins._await(...)`
-1. `async for` ➠ see below (including `builtins.aiter()` and `builtins.anext()`)
-1. `async with` ➠ see below
+1. [`with ...`](https://docs.python.org/3.8/reference/compound_stmts.html#the-with-statement) ➠ see below ([post](https://snarky.ca/unravelling-the-with-statement/))
+1. [`async def ...`](https://docs.python.org/3.8/reference/compound_stmts.html#coroutine-function-definition) ➠ see below ([post](https://snarky.ca/unravelling-async-and-await/))
+1. [`await ...`](https://docs.python.org/3.8/reference/expressions.html#await-expression) ➠ [`desugar.builtins._await(...)`](https://snarky.ca/unravelling-async-and-await/)
+1. [`async for`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) ➠ see below ([including `builtins.aiter()` and `builtins.anext()`](https://snarky.ca/unravelling-async-for-loops/))
+1. [`async with`](https://docs.python.org/3.8/reference/compound_stmts.html#async-with) ➠ see below ([post](https://snarky.ca/unravelling-the-async-with-statement/))
 
 ### `assert ...`
 
@@ -305,7 +305,7 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 
 1. `()` for [tuple display](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms) \*
 
-1. `()` for [generator expressions](https://docs.python.org/3.8/reference/expressions.html#generator-expressions)
+1. `()` for [generator expressions](https://docs.python.org/3.8/reference/expressions.html#generator-expressions) (and [why they can't be unravelled](https://snarky.ca/not-unravelling-generator-expressions/))
 
 1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
 
