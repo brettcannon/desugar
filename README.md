@@ -65,6 +65,11 @@ go with all of the code in this repository.
 1. [`[c for b in a]`](https://snarky.ca/unravelling-comprehensions/) ➠ [`list(c for b in a)`](https://snarky.ca/unravelling-comprehensions/)
 1. [`{c for b in a}`](https://snarky.ca/unravelling-comprehensions/) ➠ [`set(c for b in a)`](https://snarky.ca/unravelling-comprehensions/)
 1. [`{c: d for b in a}`](https://snarky.ca/unravelling-comprehensions/) ➠ [`dict((c, d) for b in a)`](https://snarky.ca/unravelling-comprehensions/)
+1. [`[a, b]`](https://docs.python.org/3.8/reference/expressions.html#list-displays) ➠ [`list((a, b))`](https://snarky.ca/unravelling-data-structure-displays/) (includes iterable unpacking)
+1. [`{a, b}`](ttps://docs.python.org/3.8/reference/expressions.html#set-displays) ➠ [`set((a, b))`](https://snarky.ca/unravelling-data-structure-displays/) (includes iterable unpacking)
+1. [`(a, b)`](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms)) ➠ [`(lambda *args: args)(a, b)`](https://snarky.ca/unravelling-data-structure-displays/) (includes iterable unpacking)
+1. [`{a: b, c: d}`](https://docs.python.org/3.8/reference/expressions.html#dictionary-displays)) ➠ [`dict(((a, b), (c, d)))`](https://snarky.ca/unravelling-data-structure-displays/) (include dictionary unpacking)
+
 
 ### `assert ...`
 
@@ -296,14 +301,7 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. [`=`](https://docs.python.org/3.8/reference/simple_stmts.html#assignment-statements)
 1. [`:=`](https://docs.python.org/3.8/reference/expressions.html#assignment-expressions)
 
-1. `[]` for [list display](https://docs.python.org/3.8/reference/expressions.html#list-displays) \*
 1. `[]` for [subscriptions](https://docs.python.org/3.8/reference/expressions.html#subscriptions) (get, set, del), `:` for [slicing](https://docs.python.org/3.8/reference/expressions.html#slicings) \*
-
-1. `{}` for [set display](https://docs.python.org/3.8/reference/expressions.html#set-displays) \*
-
-1. `{}` for [dictionary display](https://docs.python.org/3.8/reference/expressions.html#dictionary-displays) \*
-
-1. `()` for [tuple display](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms) \*
 
 1. `()` for [generator expressions](https://docs.python.org/3.8/reference/expressions.html#generator-expressions) (and [why they can't be unravelled](https://snarky.ca/not-unravelling-generator-expressions/))
 

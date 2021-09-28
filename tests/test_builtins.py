@@ -621,3 +621,84 @@ class TestAnext:
         default = object()
 
         assert (await desugar.builtins.anext(Iterator(), default)) is default
+
+
+@pytest.mark.parametrize("list", [builtins.list, desugar.builtins.list])
+class TestList:
+
+    def test_no_arguments(self, list):
+        """No arguments leads to an empty list."""
+        ins = list()
+        assert not len(ins)
+        assert isinstance(ins, list)
+
+    def test_iterable(self, list):
+        """An iterable populates the list."""
+        ins = list((1, 2, 3))
+        assert ins == [1, 2, 3]
+        assert isinstance(ins, list)
+
+    def test_None(self, list):
+        """Passing in None raises a TypeError."""
+        with pytest.raises(TypeError):
+            list(None)
+
+
+@pytest.mark.parametrize("set", [builtins.set, desugar.builtins.set])
+class TestSet:
+
+    def test_no_arguments(self, set):
+        """No arguments leads to an empty set."""
+        ins = set()
+        assert not len(ins)
+        assert isinstance(ins, set)
+
+    def test_iterable(self, set):
+        """An iterable populates the set."""
+        ins = set((1, 2, 3))
+        assert ins == {1, 2, 3}
+        assert isinstance(ins, set)
+
+    def test_None(self, set):
+        """Passing in None raises a TypeError."""
+        with pytest.raises(TypeError):
+            set(None)
+
+
+@pytest.mark.parametrize("dict", [builtins.dict, desugar.builtins.dict])
+class TestDict:
+
+    def test_no_arguments(self, dict):
+        given = dict()
+        assert not len(given)
+        assert isinstance(given, dict)
+
+    def test_mapping(self, dict):
+        expect = {'a': 1, 'b': 2}
+        given = dict(expect)
+        assert given == expect
+        assert expect.keys() == given.keys()  # Order preserved.
+
+    def test_iterable(self, dict):
+        expect = {'a': 1, 'b': 2}
+        given = dict(list(expect.items()))
+        assert given == expect
+        assert expect.keys() == given.keys()  # Order preserved.
+
+    def test_kwargs(self, dict):
+        expect = {'a': 1, 'b': 2}
+        given = dict(a=1, b=2)
+        assert given == expect
+        assert expect.keys() == given.keys()  # Order preserved.
+
+    def test_mapping_and_kwargs(self, dict):
+        expect = {'a': 1, 'b': 2}
+        given = dict({'a': 1}, b=2)
+        assert given == expect
+        assert given.keys() == expect.keys()  # Order preserved.
+
+    def test_iterable_and_kwargs(self, dict):
+        expect = {'a': 1, 'b': 2}
+        given = dict([('a', 1)], b=2)
+        assert given == expect
+        assert given.keys() == expect.keys()  # Order preserved.

@@ -412,3 +412,53 @@ def __ne__(self, other: Any, /) -> Union[bool, _NotImplementedType]:
         return not result
     else:
         return NotImplemented
+
+
+
+class list(builtins.list):
+
+    """An implementation of list()."""
+
+    def __init__(self, iterable=_NOTHING, /) -> None:
+        """Populate a list from an iterable."""
+        if iterable is not _NOTHING:
+            for item in iterable:
+                self.append(item)
+
+
+class set(builtins.set):
+
+    """An implementation of set()."""
+
+    def __init__(self, iterable=_NOTHING, /) -> None:
+        """Populate a set from an iterable."""
+        if iterable is not _NOTHING:
+            for item in iterable:
+                self.add(item)
+
+class dict(builtins.dict):
+
+    """An implementation of dict()."""
+
+    def __init__(self, iterable_or_mapping=_NOTHING, /, **kwargs) -> None:
+        """Populate a dictionary.
+
+        If given a mapping (defined as an object with a `keys` method),
+        iterate over the keys from that method and assign them to the dict.
+        Otherwise assume the positional argument is an iterable of key/value
+        pairs.
+
+        Any keyword arguments are treated as keys and values to add to the dict.
+
+        """
+        if iterable_or_mapping is not _NOTHING:
+            if hasattr(iterable_or_mapping, "keys"):
+                mapping = iterable_or_mapping
+                for key in mapping.keys():
+                    self[key] = mapping[key]
+            else:
+                iterable = iterable_or_mapping
+                for key, val in iterable:
+                    self[key] = val
+
+        self.update(kwargs)
