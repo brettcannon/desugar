@@ -69,6 +69,7 @@ go with all of the code in this repository.
 1. [`{a, b}`](ttps://docs.python.org/3.8/reference/expressions.html#set-displays) ➠ [`set((a, b))`](https://snarky.ca/unravelling-data-structure-displays/) (includes iterable unpacking)
 1. [`(a, b)`](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms)) ➠ [`(lambda *args: args)(a, b)`](https://snarky.ca/unravelling-data-structure-displays/) (includes iterable unpacking)
 1. [`{a: b, c: d}`](https://docs.python.org/3.8/reference/expressions.html#dictionary-displays)) ➠ [`dict(((a, b), (c, d)))`](https://snarky.ca/unravelling-data-structure-displays/) (include dictionary unpacking)
+1. [`@decorator`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions) ➠ see below ([post](https://snarky.ca/unravelling-decorators/))
 
 
 ### `assert ...`
@@ -261,6 +262,26 @@ else:
     await _exit(a, None, None, None)
 ```
 
+### `@decorator`
+
+```Python
+@decorator
+def func():
+    ...
+```
+
+➠
+
+```Python
+def func():
+    ...
+    
+_temp_func_name = func
+del func
+
+func = decorator(_temp_func_name)
+```
+
 ## Syntax to (potentially) unravel
 
 ### Keywords
@@ -306,8 +327,6 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `()` for [generator expressions](https://docs.python.org/3.8/reference/expressions.html#generator-expressions) (and [why they can't be unravelled](https://snarky.ca/not-unravelling-generator-expressions/))
 
 1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
-
-1. `@` for [decorators](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions) \*
 
 1. `,`
 1. `;` \*
