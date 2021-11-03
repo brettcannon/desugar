@@ -303,7 +303,7 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
 
-1. [`class`](https://docs.python.org/3.8/reference/compound_stmts.html#class-definitions) ~
+1. [`class`](https://docs.python.org/3.8/reference/compound_stmts.html#class-definitions) ([data model](https://docs.python.org/3.8/reference/datamodel.html?highlight=__init_subclass__#customizing-class-creation)) ~
 
 1. [`try`/`except`/`else`/`finally`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement)
 
