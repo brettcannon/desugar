@@ -331,8 +331,6 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `,`
 1. `;` \*
 
-1. `...` \*
-
 ### [Literals](https://docs.python.org/3.8/reference/lexical_analysis.html#literals)
 
 The list below ignores literals which are represented via syntax above.
@@ -341,8 +339,9 @@ For instance, lists are ignored as they are represented by `[]` tokens.
 1. `None`
 1. `False`
 1. `True`
-1. Bytes (`b`, `r`)
-1. Strings (`u`, `f`, `r`; single line, multi-line) \*
-1. Integers (base-10, `b`, `o`, `x`)
-1. Floats (point, `e`)
-1. Complex/imaginary numbers
+1. `...`
+3. Bytes (`b`, `r`)
+4. Strings (`u`, `f`, `r`; single line, multi-line) \*
+5. Integers (base-10, `b`, `o`, `x`)
+6. Floats (point, `e`)
+7. Complex/imaginary numbers
