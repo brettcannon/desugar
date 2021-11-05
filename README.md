@@ -298,21 +298,21 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement) \*
 1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement) \*
 
-1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
-1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
+1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement) (\* for `elif` and `else`)
+1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement) (\* for `else`)
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
 
 1. [`class`](https://docs.python.org/3.8/reference/compound_stmts.html#class-definitions) ([data model](https://docs.python.org/3.8/reference/datamodel.html?highlight=__init_subclass__#customizing-class-creation)) ~
 
-1. [`try`/`except`/`else`/`finally`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement)
+1. [`try`/`except`/`else`/`finally`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement) (\* for `else` and `finally`)
 
 1. [`global`](https://docs.python.org/3.8/reference/simple_stmts.html#the-global-statement)
 1. [`nonlocal`](https://docs.python.org/3.8/reference/simple_stmts.html#the-nonlocal-statement)
 
 1. [`del`](https://docs.python.org/3.8/reference/simple_stmts.html#the-del-statement)
 
-1. [`raise`/`from`](https://docs.python.org/3.8/reference/simple_stmts.html#the-raise-statement)
+1. [`raise`/`from`](https://docs.python.org/3.8/reference/simple_stmts.html#the-raise-statement) (\* for `from`)
 1. [`return`](https://docs.python.org/3.8/reference/simple_stmts.html#the-return-statement)
 
 ### Tokens
