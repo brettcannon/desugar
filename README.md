@@ -337,11 +337,11 @@ The list below ignores literals which are represented via syntax above.
 For instance, lists are ignored as they are represented by `[]` tokens.
 
 1. `None`
-1. `False`
-1. `True`
-1. `...`
-3. Bytes (`b`, `r`)
+1. `False` (\* relies on `bool()` being magical)
+1. `True` (\* relies on `bool()` being magical)
+1. `...` \*
+3. Bytes (`b`, `r`) \*
 4. Strings (`u`, `f`, `r`; single line, multi-line) \*
-5. Integers (base-10, `b`, `o`, `x`)
-6. Floats (point, `e`)
-7. Complex/imaginary numbers
+5. Integers (base-10, `b`, `o`, `x`) (\* for various prefixes)
+6. Floats (point, `e`) \*
+7. Complex/imaginary numbers \*
