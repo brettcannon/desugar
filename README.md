@@ -295,8 +295,8 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 #### Statements
 
-1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement)
-1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement)
+1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement) \*
+1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement) \*
 
 1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
 1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
