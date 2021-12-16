@@ -70,6 +70,8 @@ go with all of the code in this repository.
 1. [`(a, b)`](https://docs.python.org/3.8/reference/expressions.html#parenthesized-forms)) ➠ [`(lambda *args: args)(a, b)`](https://snarky.ca/unravelling-data-structure-displays/) (includes iterable unpacking)
 1. [`{a: b, c: d}`](https://docs.python.org/3.8/reference/expressions.html#dictionary-displays)) ➠ [`dict(((a, b), (c, d)))`](https://snarky.ca/unravelling-data-structure-displays/) (include dictionary unpacking)
 1. [`@decorator`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions) ➠ see below ([post](https://snarky.ca/unravelling-decorators/))
+1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
+1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
 
 
 ### `assert ...`
@@ -275,11 +277,49 @@ def func():
 ```Python
 def func():
     ...
-    
+
 _temp_func_name = func
 del func
 
 func = decorator(_temp_func_name)
+```
+
+### `break`
+```Python
+while x:
+    break
+```
+
+➠
+
+```Python
+class _BreakStatement(Exception):
+    pass
+
+try:
+    while x:
+        raise _BreakStatement
+except BreakStatement:
+    pass
+```
+
+### `continue`
+```Python
+while x:
+    continue
+```
+
+➠
+
+```Python
+class _ContinueStatement(Exception):
+    pass
+
+while x:
+    try:
+        raise _ContinueStatement
+    except ContinueStatement:
+        pass
 ```
 
 ## Syntax to (potentially) unravel
@@ -294,9 +334,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. [`lambda`](https://docs.python.org/3.8/reference/expressions.html#lambda)
 
 #### Statements
-
-1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement) \*
-1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement) \*
 
 1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement) (\* for `elif` and `else`)
 1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement) (\* for `else`)
