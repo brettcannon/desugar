@@ -72,6 +72,7 @@ go with all of the code in this repository.
 1. [`@decorator`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions) ➠ see below ([post](https://snarky.ca/unravelling-decorators/))
 1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
 1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
+1. `else` clause on [`while`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
 
 
 ### `assert ...`
@@ -322,6 +323,29 @@ while x:
         pass
 ```
 
+### `else` clause on a loop
+```Python
+while x:
+    break
+else:
+    ...
+```
+
+➠
+
+```Python
+class _BreakStatement(Exception):
+    pass
+
+try:
+    while x:
+        raise _BreakStatement
+except _BreakStatement:
+    pass
+else:
+    ...
+```
+
 ## Syntax to (potentially) unravel
 
 ### Keywords
@@ -336,7 +360,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 #### Statements
 
 1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement) (\* for `elif` and `else`)
-1. [`while`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement) (\* for `else`)
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
 
