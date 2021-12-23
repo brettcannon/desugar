@@ -418,13 +418,14 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 ### [Literals](https://docs.python.org/3.8/reference/lexical_analysis.html#literals)
 
 The list below ignores literals which are represented via syntax above.
-For instance, lists are ignored as they are represented by `[]` tokens.
+For instance, lists are ignored as they are represented by `[]` tokens
+(and they are technically considered _displays).
 
-1. `None`
+1. `None` \* (relies on all functions returning `None`)
 1. `False` (\* relies on `bool()` being magical)
 1. `True` (\* relies on `bool()` being magical)
 3. Bytes (`b`, `r`) \*
 4. Strings (`u`, `f`, `r`; single line, multi-line) \*
 5. Integers (base-10, `b`, `o`, `x`) (\* for various prefixes)
-6. Floats (point, `e`) \*
+6. Floats (point, `e`) (\* for `e`; don't want to mess w/ [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754))
 7. Complex/imaginary numbers \*
