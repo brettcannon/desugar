@@ -73,6 +73,7 @@ go with all of the code in this repository.
 1. [`break`](https://docs.python.org/3.8/reference/simple_stmts.html#the-break-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
 1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
 1. `else` clause on [`while`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
+1. `elif` and `else` clauses on [`if`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
 
 
 ### `assert ...`
@@ -346,6 +347,30 @@ else:
     ...
 ```
 
+### `elif`/`else` on an `if` statement
+```Python
+if A:
+    B
+elif C:
+    D
+else:
+    E
+```
+
+➠
+
+```Python
+_B_ran = _D_ran = False
+if A:
+    _B_ran = True
+    B
+if not _B_ran and C:
+    _D_ran = True
+    D
+if not (_B_ran or _D_ran):
+    E
+```
+
 ## Syntax to (potentially) unravel
 
 ### Keywords
@@ -358,8 +383,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. [`lambda`](https://docs.python.org/3.8/reference/expressions.html#lambda)
 
 #### Statements
-
-1. [`if`/`elif`/`else`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement) (\* for `elif` and `else`)
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
 
