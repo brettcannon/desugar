@@ -74,6 +74,8 @@ go with all of the code in this repository.
 1. [`continue`](https://docs.python.org/3.8/reference/simple_stmts.html#the-continue-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
 1. `else` clause on [`while`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
 1. `elif` and `else` clauses on [`if`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
+1. `else` clause on [`try`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement) ➠ see below ([post](https://snarky.ca/unravelling-finally-and-else-from-try/))
+1. `finally` clause on [`try`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement) ➠ see below ([post](https://snarky.ca/unravelling-finally-and-else-from-try/))
 
 
 ### `assert ...`
@@ -371,6 +373,55 @@ if not (_B_ran or _D_ran):
     E
 ```
 
+### `try`
+
+#### `else`
+```Python
+try:
+    A
+except:
+    B
+else:
+    C
+```
+
+➠
+
+```Python
+_A_finished = False
+try:
+    A
+    _A_finished = True
+except:
+    B
+if _A_finished:
+    C
+```
+
+#### `finally`
+```Python
+try:
+    A
+except Exception:
+    B
+finally:
+    C
+```
+
+➠
+
+```Python
+try:
+    try:
+        A
+    except Exception:
+        B
+except BaseException:
+    C
+    raise
+C
+```
+
 ## Syntax to (potentially) unravel
 
 ### Keywords
@@ -387,8 +438,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
 
 1. [`class`](https://docs.python.org/3.8/reference/compound_stmts.html#class-definitions) ([data model](https://docs.python.org/3.8/reference/datamodel.html?highlight=__init_subclass__#customizing-class-creation)) ~
-
-1. [`try`/`except`/`else`/`finally`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement) (\* for `else` and `finally`)
 
 1. [`global`](https://docs.python.org/3.8/reference/simple_stmts.html#the-global-statement)
 1. [`nonlocal`](https://docs.python.org/3.8/reference/simple_stmts.html#the-nonlocal-statement)
