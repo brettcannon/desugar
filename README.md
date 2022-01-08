@@ -76,7 +76,7 @@ go with all of the code in this repository.
 1. `elif` and `else` clauses on [`if`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement) ➠ see below ([post](https://snarky.ca/unravelling-break-and-continue/))
 1. `else` clause on [`try`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement) ➠ see below ([post](https://snarky.ca/unravelling-finally-and-else-from-try/))
 1. `finally` clause on [`try`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement) ➠ see below ([post](https://snarky.ca/unravelling-finally-and-else-from-try/))
-
+1. [`raise A from B`](https://docs.python.org/3.8/reference/simple_stmts.html#the-raise-statement) ➠ see below ([post](https://snarky.ca/unravelling-from/))
 
 ### `assert ...`
 
@@ -422,6 +422,28 @@ except BaseException:
 C
 ```
 
+### `raise A from B`
+```Python
+raise A from B
+```
+
+➠
+
+```Python
+_raise = A
+if isinstance(_raise, type) and issubclass(_raise, BaseException):
+        _raise = _raise()
+elif not isinstance(_raise, BaseException):
+    raise TypeError("exceptions must derive from BaseException")
+
+_from = B
+if isinstance(_from, type) and issubclass(_from, BaseException):
+        _from = _from()
+_raise.__cause__ = _from
+
+raise _raise
+```
+
 ## Syntax to (potentially) unravel
 
 ### Keywords
@@ -444,7 +466,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 
 1. [`del`](https://docs.python.org/3.8/reference/simple_stmts.html#the-del-statement)
 
-1. [`raise`/`from`](https://docs.python.org/3.8/reference/simple_stmts.html#the-raise-statement) (\* for `from`)
 1. [`return`](https://docs.python.org/3.8/reference/simple_stmts.html#the-return-statement)
 
 ### Tokens
