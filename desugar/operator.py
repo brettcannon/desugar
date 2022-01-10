@@ -320,3 +320,42 @@ def __contains__(container: Any, item: Any, /) -> bool:
 
 
 contains = __contains__
+
+
+def __getitem__(container: Any, index: Any, /) -> Any:
+    """Return the item in the container at the specified index."""
+    container_type = type(container)
+    try:
+        getitem_method = debuiltins._mro_getattr(container_type, "__getitem__")
+    except AttributeError:
+        raise TypeError(f"{container_type.__name__!r} object is not subscriptable")
+    return getitem_method(container, index)
+
+
+getitem = __getitem__
+
+
+def __setitem__(container: Any, index: Any, value: Any, /) -> None:
+    """Set the item in the container at the specified index."""
+    container_type = type(container)
+    try:
+        setitem_method = debuiltins._mro_getattr(container_type, "__setitem__")
+    except AttributeError:
+        raise TypeError(f"{container_type.__name__!r} object is not subscriptable")
+    return setitem_method(container, index, value)
+
+
+setitem = __setitem__
+
+
+def __delitem__(container: Any, index: Any, /) -> None:
+    """Delete the item in the container at the specified index."""
+    container_type = type(container)
+    try:
+        delitem_method = debuiltins._mro_getattr(container_type, "__delitem__")
+    except AttributeError:
+        raise TypeError(f"{container_type.__name__!r} object is not subscriptable")
+    return delitem_method(container, index)
+
+
+delitem = __setitem__
