@@ -439,7 +439,8 @@ elif not isinstance(_raise, BaseException):
 _from = B
 if isinstance(_from, type) and issubclass(_from, BaseException):
         _from = _from()
-_raise.__cause__ = _from
+if _from is not None:
+    _raise.__cause__ = _from
 
 raise _raise
 ```
