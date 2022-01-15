@@ -77,6 +77,10 @@ go with all of the code in this repository.
 1. `else` clause on [`try`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement) ➠ see below ([post](https://snarky.ca/unravelling-finally-and-else-from-try/))
 1. `finally` clause on [`try`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement) ➠ see below ([post](https://snarky.ca/unravelling-finally-and-else-from-try/))
 1. [`raise A from B`](https://docs.python.org/3.8/reference/simple_stmts.html#the-raise-statement) ➠ see below ([post](https://snarky.ca/unravelling-from/))
+1. [`x[A, B]`](https://docs.python.org/3.8/reference/expressions.html#subscriptions) ➠ `type(x).__getitem__(x, (A, B))`
+1. [`x[A, B] = C`](https://docs.python.org/3.8/reference/expressions.html#subscriptions) ➠ [`type(x).__setitem__(x, (A, B), C)`](https://snarky.ca/unravelling-subscriptions-in-python/)
+1. [`del x[A, B]`](https://docs.python.org/3.8/reference/expressions.html#subscriptions) ➠ [`type(x).__delitem__(x, (A, B))`](https://snarky.ca/unravelling-subscriptions-in-python/)
+1. [`A:B:C`](https://docs.python.org/3.8/reference/expressions.html#slicings) ➠ [`slice(A, B, C)`](https://snarky.ca/unravelling-subscriptions-in-python/)
 
 ### `assert ...`
 
@@ -476,7 +480,6 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. [`=`](https://docs.python.org/3.8/reference/simple_stmts.html#assignment-statements)
 1. [`:=`](https://docs.python.org/3.8/reference/expressions.html#assignment-expressions)
 
-1. `[]` for [subscriptions](https://docs.python.org/3.8/reference/expressions.html#subscriptions) (get, set, del), `:` for [slicing](https://docs.python.org/3.8/reference/expressions.html#slicings) \*
 
 1. `()` for [generator expressions](https://docs.python.org/3.8/reference/expressions.html#generator-expressions) (and [why they can't be unravelled](https://snarky.ca/not-unravelling-generator-expressions/))
 
