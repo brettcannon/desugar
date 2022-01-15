@@ -493,7 +493,7 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 
 The list below ignores literals which are represented via syntax above.
 For instance, lists are ignored as they are represented by `[]` tokens
-(and they are technically considered _displays).
+(and they are technically considered _displays_).
 
 1. `None` \* (relies on all functions returning `None`)
 1. `False` (\* relies on `bool()` being magical)
