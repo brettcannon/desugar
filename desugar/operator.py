@@ -358,4 +358,4 @@ def __delitem__(container: Any, index: Any, /) -> None:
     return delitem_method(container, index)
 
 
-delitem = __setitem__
+delitem = __delitem__
