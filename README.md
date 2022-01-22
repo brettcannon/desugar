@@ -502,3 +502,8 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `,`
 1. `;` \*
 1. `...` \*
+
+### Literals
+
+1. Integers
+1. Floats
