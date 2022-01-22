@@ -81,6 +81,12 @@ go with all of the code in this repository.
 1. [`x[A, B] = C`](https://docs.python.org/3.8/reference/expressions.html#subscriptions) ➠ [`type(x).__setitem__(x, (A, B), C)`](https://snarky.ca/unravelling-subscriptions-in-python/)
 1. [`del x[A, B]`](https://docs.python.org/3.8/reference/expressions.html#subscriptions) ➠ [`type(x).__delitem__(x, (A, B))`](https://snarky.ca/unravelling-subscriptions-in-python/)
 1. [`A:B:C`](https://docs.python.org/3.8/reference/expressions.html#slicings) ➠ [`slice(A, B, C)`](https://snarky.ca/unravelling-subscriptions-in-python/)
+1. [`4+3j`](https://docs.python.org/3.8/reference/lexical_analysis.html#imaginary-literals) ➠ [`complex(4, 3)`](https://snarky.ca/unravelling-literals/)
+1. [`True`](https://docs.python.org/3.8/reference/lexical_analysis.html#keywords) ➠ [`bool(1)`](https://snarky.ca/unravelling-literals/)
+1. [`False`](https://docs.python.org/3.8/reference/lexical_analysis.html#keywords) ➠ [`bool(0)`](https://snarky.ca/unravelling-literals/)
+1. [`None`](https://docs.python.org/3.8/reference/lexical_analysis.html#keywords) ➠ [see below](https://snarky.ca/unravelling-literals/)
+1. [`b"ABC"`](https://docs.python.org/3.8/reference/lexical_analysis.html#string-and-bytes-literals) ➠ [`bytes([65, 66, 67])`](https://snarky.ca/unravelling-literals/)
+1. [`"ABC"`](https://docs.python.org/3.8/reference/lexical_analysis.html#string-and-bytes-literals) ➠ [`bytes([65, 66, 67]).decode("utf-8")`](https://snarky.ca/unravelling-literals/)
 
 ### `assert ...`
 
@@ -449,6 +455,14 @@ if _from is not None:
 raise _raise
 ```
 
+### `None`
+```Python
+def _None():
+    pass
+
+_None()
+```
+
 ## Syntax to (potentially) unravel
 
 ### Keywords
@@ -488,18 +502,3 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `,`
 1. `;` \*
 1. `...` \*
-
-### [Literals](https://docs.python.org/3.8/reference/lexical_analysis.html#literals)
-
-The list below ignores literals which are represented via syntax above.
-For instance, lists are ignored as they are represented by `[]` tokens
-(and they are technically considered _displays_).
-
-1. `None` \* (relies on all functions returning `None`)
-1. `False` (\* relies on `bool()` being magical)
-1. `True` (\* relies on `bool()` being magical)
-3. Bytes (`b`, `r`) \*
-4. Strings (`u`, `f`, `r`; single line, multi-line) \*
-5. Integers (base-10, `b`, `o`, `x`) (\* for various prefixes)
-6. Floats (point, `e`) (\* for `e`; don't want to mess w/ [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754))
-7. Complex/imaginary numbers \*
