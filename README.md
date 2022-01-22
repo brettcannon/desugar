@@ -505,5 +505,5 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 
 ### Literals
 
-1. Integers
-1. Floats
+1. [Integers](https://docs.python.org/3.8/reference/lexical_analysis.html#integer-literals)
+1. [Floats](https://docs.python.org/3.8/reference/lexical_analysis.html#floating-point-literals)
