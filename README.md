@@ -87,6 +87,7 @@ go with all of the code in this repository.
 1. [`None`](https://docs.python.org/3.8/reference/lexical_analysis.html#keywords) ➠ [see below](https://snarky.ca/unravelling-literals/)
 1. [`b"ABC"`](https://docs.python.org/3.8/reference/lexical_analysis.html#string-and-bytes-literals) ➠ [`bytes([65, 66, 67])`](https://snarky.ca/unravelling-literals/)
 1. [`"ABC"`](https://docs.python.org/3.8/reference/lexical_analysis.html#string-and-bytes-literals) ➠ [`bytes([65, 66, 67]).decode("utf-8")`](https://snarky.ca/unravelling-literals/)
+1. [`...`](https://docs.python.org/3/reference/datamodel.html?highlight=ellipsis#the-standard-type-hierarchy) ➠ [`Ellipsis`](https://snarky.ca/unravelling-ellipsis/)
 
 ### `assert ...`
 
@@ -501,7 +502,6 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 
 1. `,`
 1. `;` \*
-1. `...` \*
 
 ### Literals
 
