@@ -89,6 +89,7 @@ go with all of the code in this repository.
 1. [`"ABC"`](https://docs.python.org/3.8/reference/lexical_analysis.html#string-and-bytes-literals) ➠ [`bytes([65, 66, 67]).decode("utf-8")`](https://snarky.ca/unravelling-literals/)
 1. [`...`](https://docs.python.org/3/reference/datamodel.html?highlight=ellipsis#the-standard-type-hierarchy) ➠ [`Ellipsis`](https://snarky.ca/unravelling-ellipsis/)
 1. [`class A: ...`](https://docs.python.org/3.8/reference/datamodel.html#metaclasses) ➠ [see below](https://snarky.ca/unravelling-pythons-classes/)
+`. `;` ➠ newline plus proper indentation
 
 ### `assert ...`
 
@@ -556,7 +557,6 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
 
 1. `,`
-1. `;` \*
 
 ### Literals
 
