@@ -88,6 +88,7 @@ go with all of the code in this repository.
 1. [`b"ABC"`](https://docs.python.org/3.8/reference/lexical_analysis.html#string-and-bytes-literals) ➠ [`bytes([65, 66, 67])`](https://snarky.ca/unravelling-literals/)
 1. [`"ABC"`](https://docs.python.org/3.8/reference/lexical_analysis.html#string-and-bytes-literals) ➠ [`bytes([65, 66, 67]).decode("utf-8")`](https://snarky.ca/unravelling-literals/)
 1. [`...`](https://docs.python.org/3/reference/datamodel.html?highlight=ellipsis#the-standard-type-hierarchy) ➠ [`Ellipsis`](https://snarky.ca/unravelling-ellipsis/)
+1. [`class A: ...`](https://docs.python.org/3.8/reference/datamodel.html#metaclasses) ➠ [see below](https://snarky.ca/unravelling-pythons-classes/)
 
 ### `assert ...`
 
@@ -458,17 +459,73 @@ raise _raise
 
 ### `None`
 ```Python
+None
+```
+
+➠
+
+```Python
 def _None():
     pass
 
 _None()
 ```
 
-## Syntax to (potentially) unravel
+### `class`
+
+```Python
+class Example(SuperClass):
+  """Docstring."""
+  a: int = 3
+  def c(self): return 42
+```
+
+➠
+
+```Python
+def _exec_Example(_ns):
+    _temp_ns = {}
+
+    _temp_ns["__module__"] = _ns["__module__"] = __name__
+    _temp_ns[__"qualname__"] = _ns["__qualname__"] = "Example"
+    _temp_ns["__doc__"] = _ns["__doc__"] = """Docstring."""
+    _temp_ns["__annotations__"] = _ns["__annotations__"] = {"a": int}
+
+    _temp_ns["a"] = _ns["a"] = 3
+
+    def _method_c(self):
+        return 42
+    _method_c.__name__ = "c"
+    _method_c.__qualname__ = "Example.c"
+    temp_ns["c"] = _ns["c"] = _method_c
+    del _method_c
+
+def _class_Example():
+    # Resolving MRO entries.
+    bases = types.resolve_bases((SuperClass, ))
+    # Determining the appropriate metaclass **and**
+    # preparing the class namespace.
+    meta, ns, kwds = types.prepare_class("Example", bases)
+    # Executing the class body.
+    _exec_Example(ns)
+    # Creating the class object.
+    cls = meta("Example", bases, ns)
+    ## Class decorators, if there were any.
+    ## Make the namespace read-only.
+    cls.__dict__ = read_only_proxy(ns)
+
+    return cls
+
+ Example = _class_Example()
+```
+
+## Syntax that can't be unravelled
 
 ### Keywords
 
 Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/Lib/keyword.py).
+
+Nothing; all unravelled!
 
 #### Expressions
 
@@ -478,8 +535,6 @@ Taken from the [`keyword` module](https://github.com/python/cpython/blob/v3.8.3/
 #### Statements
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
-
-1. [`class`](https://docs.python.org/3.8/reference/compound_stmts.html#class-definitions) ([data model](https://docs.python.org/3.8/reference/datamodel.html?highlight=__init_subclass__#customizing-class-creation)) ~
 
 1. [`global`](https://docs.python.org/3.8/reference/simple_stmts.html#the-global-statement)
 1. [`nonlocal`](https://docs.python.org/3.8/reference/simple_stmts.html#the-nonlocal-statement)
