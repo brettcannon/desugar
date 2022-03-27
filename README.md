@@ -62,6 +62,7 @@ go with all of the code in this repository.
 1. [`await ...`](https://docs.python.org/3.8/reference/expressions.html#await-expression) ➠ [`desugar.builtins._await(...)`](https://snarky.ca/unravelling-async-and-await/)
 1. [`async for`](https://docs.python.org/3.8/reference/compound_stmts.html#async-for) ➠ see below ([including `builtins.aiter()` and `builtins.anext()`](https://snarky.ca/unravelling-async-for-loops/))
 1. [`async with`](https://docs.python.org/3.8/reference/compound_stmts.html#async-with) ➠ see below ([post](https://snarky.ca/unravelling-the-async-with-statement/))
+1. [`(c for b in a)`](https://docs.python.org/3/reference/expressions.html#generator-expressions) ➠ see below ([post](https://snarky.ca/not-unravelling-generator-expressions/))
 1. [`[c for b in a]`](https://snarky.ca/unravelling-comprehensions/) ➠ [`list(c for b in a)`](https://snarky.ca/unravelling-comprehensions/)
 1. [`{c for b in a}`](https://snarky.ca/unravelling-comprehensions/) ➠ [`set(c for b in a)`](https://snarky.ca/unravelling-comprehensions/)
 1. [`{c: d for b in a}`](https://snarky.ca/unravelling-comprehensions/) ➠ [`dict((c, d) for b in a)`](https://snarky.ca/unravelling-comprehensions/)
@@ -280,6 +281,23 @@ except:
 else:
     await _exit(a, None, None, None)
 ```
+
+### `(c for b in a)`
+
+```Python
+(c for b in a)
+```
+
+➠
+
+```Python
+def _gen_exp(_leftmost_iterable):
+    for b in _leftmost_iterable:
+        yield c
+
+_gen_exp(a)
+```
+
 
 ### `@decorator`
 
@@ -552,9 +570,6 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 
 1. [`=`](https://docs.python.org/3.8/reference/simple_stmts.html#assignment-statements)
 1. [`:=`](https://docs.python.org/3.8/reference/expressions.html#assignment-expressions)
-
-
-1. `()` for [generator expressions](https://docs.python.org/3.8/reference/expressions.html#generator-expressions) (and [why they can't be unravelled](https://snarky.ca/not-unravelling-generator-expressions/))
 
 1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
 
