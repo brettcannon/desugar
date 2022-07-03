@@ -564,6 +564,9 @@ Nothing; all unravelled!
 
 1. [`try`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement)/`except`
 
+1. [`if`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
+1. [`while`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
+
 ### Tokens
 
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
