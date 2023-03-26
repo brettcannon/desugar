@@ -85,12 +85,15 @@ go with all of the code in this repository.
 1. [`4+3j`](https://docs.python.org/3.8/reference/lexical_analysis.html#imaginary-literals) ➠ [`complex(4, 3)`](https://snarky.ca/unravelling-literals/)
 1. [`True`](https://docs.python.org/3.8/reference/lexical_analysis.html#keywords) ➠ [`bool(1)`](https://snarky.ca/unravelling-literals/)
 1. [`False`](https://docs.python.org/3.8/reference/lexical_analysis.html#keywords) ➠ [`bool(0)`](https://snarky.ca/unravelling-literals/)
-1. [`None`](https://docs.python.org/3.8/reference/lexical_analysis.html#keywords) ➠ [see below](https://snarky.ca/unravelling-literals/)
+1. [`None`](https://docs.python.org/3.8/reference/lexical_analysis.html#keywords) ➠ see below ([post](https://snarky.ca/unravelling-literals/))
 1. [`b"ABC"`](https://docs.python.org/3.8/reference/lexical_analysis.html#string-and-bytes-literals) ➠ [`bytes([65, 66, 67])`](https://snarky.ca/unravelling-literals/)
 1. [`"ABC"`](https://docs.python.org/3.8/reference/lexical_analysis.html#string-and-bytes-literals) ➠ [`bytes([65, 66, 67]).decode("utf-8")`](https://snarky.ca/unravelling-literals/)
 1. [`...`](https://docs.python.org/3/reference/datamodel.html?highlight=ellipsis#the-standard-type-hierarchy) ➠ [`Ellipsis`](https://snarky.ca/unravelling-ellipsis/)
-1. [`class A: ...`](https://docs.python.org/3.8/reference/datamodel.html#metaclasses) ➠ [see below](https://snarky.ca/unravelling-pythons-classes/)
+1. [`class A: ...`](https://docs.python.org/3.8/reference/datamodel.html#metaclasses) ➠ see below ([post](https://snarky.ca/unravelling-pythons-classes/))
 `. `;` ➠ newline plus proper indentation
+1. [`if ...: ...`](https://docs.python.org/3/reference/compound_stmts.html#the-if-statement) ➠ see below ([post](https://snarky.ca/unravelling-if-statements/))
+1. [`a := b`](https://docs.python.org/3/reference/expressions.html#assignment-expressions) see the [post](https://snarky.ca/unravelling-assignment-expressions/)
+1. [`lambda a: b`](https://docs.python.org/3.8/reference/expressions.html#lambda) ➠ see below ([post](https://snarky.ca/unraveling-lambda-expressions/))
 
 ### `assert ...`
 
@@ -380,6 +383,26 @@ else:
     ...
 ```
 
+### `if`
+```Python
+if A:
+    B
+```
+
+➠
+
+```Python
+class _Done(Exception):
+    pass
+
+try:
+    while A:
+        B
+        raise _Done
+except _Done:
+    pass
+```
+
 ### `elif`/`else` on an `if` statement
 ```Python
 if A:
@@ -538,7 +561,22 @@ def _class_Example():
  Example = _class_Example()
 ```
 
+### `lambda`
+```Python
+lambda A: B
+```
+
+➠
+
+```Python
+def _lambda(A):
+    return B
+_lambda.__name__ = "<lambda>"
+```
+
 ## Syntax that can't be unravelled
+
+[Summary post](https://snarky.ca/mvpy-minimum-viable-python/)
 
 ### Keywords
 
@@ -549,7 +587,6 @@ Nothing; all unravelled!
 #### Expressions
 
 1. [`yield`](https://docs.python.org/3.8/reference/simple_stmts.html#the-yield-statement)
-1. [`lambda`](https://docs.python.org/3.8/reference/expressions.html#lambda)
 
 #### Statements
 
@@ -572,7 +609,6 @@ Nothing; all unravelled!
 Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Lib/token.py).
 
 1. [`=`](https://docs.python.org/3.8/reference/simple_stmts.html#assignment-statements)
-1. [`:=`](https://docs.python.org/3.8/reference/expressions.html#assignment-expressions)
 
 1. `()` for [calls](https://docs.python.org/3.8/reference/expressions.html#calls)
 
@@ -581,4 +617,3 @@ Taken from the [`token` module](https://github.com/python/cpython/blob/v3.8.3/Li
 ### Literals
 
 1. [Integers](https://docs.python.org/3.8/reference/lexical_analysis.html#integer-literals)
-1. [Floats](https://docs.python.org/3.8/reference/lexical_analysis.html#floating-point-literals)
