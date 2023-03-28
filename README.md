@@ -94,6 +94,7 @@ go with all of the code in this repository.
 1. [`if ...: ...`](https://docs.python.org/3/reference/compound_stmts.html#the-if-statement) ➠ see below ([post](https://snarky.ca/unravelling-if-statements/))
 1. [`a := b`](https://docs.python.org/3/reference/expressions.html#assignment-expressions) see the [post](https://snarky.ca/unravelling-assignment-expressions/)
 1. [`lambda a: b`](https://docs.python.org/3.8/reference/expressions.html#lambda) ➠ see below ([post](https://snarky.ca/unraveling-lambda-expressions/))
+1. [`global A; A = 42`]() ➠ [`getattr(dict, "__setitem__")(globals(), "A", 42)`](https://snarky.ca/unravelling-global/)
 
 ### `assert ...`
 
