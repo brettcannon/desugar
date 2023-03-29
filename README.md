@@ -95,6 +95,7 @@ go with all of the code in this repository.
 1. [`a := b`](https://docs.python.org/3/reference/expressions.html#assignment-expressions) see the [post](https://snarky.ca/unravelling-assignment-expressions/)
 1. [`lambda a: b`](https://docs.python.org/3.8/reference/expressions.html#lambda) ➠ see below ([post](https://snarky.ca/unraveling-lambda-expressions/))
 1. [`global A; A = 42`]() ➠ [`getattr(dict, "__setitem__")(globals(), "A", 42)`](https://snarky.ca/unravelling-global/)
+1. [`del A`]() ➠ see below ([post](https://snarky.ca/unravelling-del/))
 
 ### `assert ...`
 
@@ -575,6 +576,33 @@ def _lambda(A):
 _lambda.__name__ = "<lambda>"
 ```
 
+### `del`
+```Python
+del A
+```
+
+➠
+
+#### Local
+```Python
+_DELETED = object()
+
+# `del A`
+A = _DELETED
+# Referencing `A`
+if A is _DELETED:
+    raise UnboundLocalError("cannot access local variable 'A' where it is not associated with a value")
+```
+
+#### Global
+```Python
+try:
+    gettattr(globals(), "__delitem__")("A")
+except KeyError:
+    raise NameError("name 'A' is not defined")
+```
+
+
 ## Syntax that can't be unravelled
 
 [Summary post](https://snarky.ca/mvpy-minimum-viable-python/)
@@ -593,16 +621,12 @@ Nothing; all unravelled!
 
 1. [`def`](https://docs.python.org/3.8/reference/compound_stmts.html#function-definitions)
 
-1. [`global`](https://docs.python.org/3.8/reference/simple_stmts.html#the-global-statement)
 1. [`nonlocal`](https://docs.python.org/3.8/reference/simple_stmts.html#the-nonlocal-statement)
-
-1. [`del`](https://docs.python.org/3.8/reference/simple_stmts.html#the-del-statement)
 
 1. [`return`](https://docs.python.org/3.8/reference/simple_stmts.html#the-return-statement)
 
 1. [`try`](https://docs.python.org/3.8/reference/compound_stmts.html#the-try-statement)/`except`
 
-1. [`if`](https://docs.python.org/3.8/reference/compound_stmts.html#the-if-statement)
 1. [`while`](https://docs.python.org/3.8/reference/compound_stmts.html#the-while-statement)
 
 ### Tokens
